@@ -834,8 +834,8 @@ $root.EventStore = (function() {
                             break;
                         }
                     }
-                    //if (!message.hasOwnProperty("event"))
-                        //throw $util.ProtocolError("missing required 'event'", { instance: message });
+//                    if (!message.hasOwnProperty("event"))
+//                        throw $util.ProtocolError("missing required 'event'", { instance: message });
                     return message;
                 };
 
@@ -9533,6 +9533,304 @@ $root.EventStore = (function() {
                 };
 
                 return UnsubscribeFromStream;
+            })();
+
+            Messages.Ping = (function() {
+
+                /**
+                 * Properties of a Ping.
+                 * @typedef EventStore.Client.Messages.Ping$Properties
+                 * @type {Object}
+                 */
+
+                /**
+                 * Constructs a new Ping.
+                 * @exports EventStore.Client.Messages.Ping
+                 * @constructor
+                 * @param {EventStore.Client.Messages.Ping$Properties=} [properties] Properties to set
+                 */
+                function Ping(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Creates a new Ping instance using the specified properties.
+                 * @param {EventStore.Client.Messages.Ping$Properties=} [properties] Properties to set
+                 * @returns {EventStore.Client.Messages.Ping} Ping instance
+                 */
+                Ping.create = function create(properties) {
+                    return new Ping(properties);
+                };
+
+                /**
+                 * Encodes the specified Ping message. Does not implicitly {@link EventStore.Client.Messages.Ping.verify|verify} messages.
+                 * @param {EventStore.Client.Messages.Ping$Properties} message Ping message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Ping.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Ping message, length delimited. Does not implicitly {@link EventStore.Client.Messages.Ping.verify|verify} messages.
+                 * @param {EventStore.Client.Messages.Ping$Properties} message Ping message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Ping.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Ping message from the specified reader or buffer.
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {EventStore.Client.Messages.Ping} Ping
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Ping.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.Ping();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Ping message from the specified reader or buffer, length delimited.
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {EventStore.Client.Messages.Ping} Ping
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Ping.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Ping message.
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {?string} `null` if valid, otherwise the reason why it is not
+                 */
+                Ping.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    return null;
+                };
+
+                /**
+                 * Creates a Ping message from a plain object. Also converts values to their respective internal types.
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {EventStore.Client.Messages.Ping} Ping
+                 */
+                Ping.fromObject = function fromObject(object) {
+                    if (object instanceof $root.EventStore.Client.Messages.Ping)
+                        return object;
+                    return new $root.EventStore.Client.Messages.Ping();
+                };
+
+                /**
+                 * Creates a Ping message from a plain object. Also converts values to their respective internal types.
+                 * This is an alias of {@link EventStore.Client.Messages.Ping.fromObject}.
+                 * @function
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {EventStore.Client.Messages.Ping} Ping
+                 */
+                Ping.from = Ping.fromObject;
+
+                /**
+                 * Creates a plain object from a Ping message. Also converts values to other types if specified.
+                 * @param {EventStore.Client.Messages.Ping} message Ping
+                 * @param {$protobuf.ConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Ping.toObject = function toObject() {
+                    return {};
+                };
+
+                /**
+                 * Creates a plain object from this Ping message. Also converts values to other types if specified.
+                 * @param {$protobuf.ConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Ping.prototype.toObject = function toObject(options) {
+                    return this.constructor.toObject(this, options);
+                };
+
+                /**
+                 * Converts this Ping to JSON.
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Ping.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                return Ping;
+            })();
+
+            Messages.Pong = (function() {
+
+                /**
+                 * Properties of a Pong.
+                 * @typedef EventStore.Client.Messages.Pong$Properties
+                 * @type {Object}
+                 */
+
+                /**
+                 * Constructs a new Pong.
+                 * @exports EventStore.Client.Messages.Pong
+                 * @constructor
+                 * @param {EventStore.Client.Messages.Pong$Properties=} [properties] Properties to set
+                 */
+                function Pong(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Creates a new Pong instance using the specified properties.
+                 * @param {EventStore.Client.Messages.Pong$Properties=} [properties] Properties to set
+                 * @returns {EventStore.Client.Messages.Pong} Pong instance
+                 */
+                Pong.create = function create(properties) {
+                    return new Pong(properties);
+                };
+
+                /**
+                 * Encodes the specified Pong message. Does not implicitly {@link EventStore.Client.Messages.Pong.verify|verify} messages.
+                 * @param {EventStore.Client.Messages.Pong$Properties} message Pong message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Pong.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    return writer;
+                };
+
+                /**
+                 * Encodes the specified Pong message, length delimited. Does not implicitly {@link EventStore.Client.Messages.Pong.verify|verify} messages.
+                 * @param {EventStore.Client.Messages.Pong$Properties} message Pong message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Pong.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+
+                /**
+                 * Decodes a Pong message from the specified reader or buffer.
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {EventStore.Client.Messages.Pong} Pong
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Pong.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.Pong();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                /**
+                 * Decodes a Pong message from the specified reader or buffer, length delimited.
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {EventStore.Client.Messages.Pong} Pong
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Pong.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+
+                /**
+                 * Verifies a Pong message.
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {?string} `null` if valid, otherwise the reason why it is not
+                 */
+                Pong.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    return null;
+                };
+
+                /**
+                 * Creates a Pong message from a plain object. Also converts values to their respective internal types.
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {EventStore.Client.Messages.Pong} Pong
+                 */
+                Pong.fromObject = function fromObject(object) {
+                    if (object instanceof $root.EventStore.Client.Messages.Pong)
+                        return object;
+                    return new $root.EventStore.Client.Messages.Pong();
+                };
+
+                /**
+                 * Creates a Pong message from a plain object. Also converts values to their respective internal types.
+                 * This is an alias of {@link EventStore.Client.Messages.Pong.fromObject}.
+                 * @function
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {EventStore.Client.Messages.Pong} Pong
+                 */
+                Pong.from = Pong.fromObject;
+
+                /**
+                 * Creates a plain object from a Pong message. Also converts values to other types if specified.
+                 * @param {EventStore.Client.Messages.Pong} message Pong
+                 * @param {$protobuf.ConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Pong.toObject = function toObject() {
+                    return {};
+                };
+
+                /**
+                 * Creates a plain object from this Pong message. Also converts values to other types if specified.
+                 * @param {$protobuf.ConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Pong.prototype.toObject = function toObject(options) {
+                    return this.constructor.toObject(this, options);
+                };
+
+                /**
+                 * Converts this Pong to JSON.
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Pong.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+
+                return Pong;
             })();
 
             Messages.SubscriptionDropped = (function() {
