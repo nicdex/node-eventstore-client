@@ -6,6 +6,7 @@ var ensure = require('./common/utils/ensure');
 var messages = require('./core/messages');
 var EventStoreConnectionLogicHandler = require('./core/eventStoreConnectionLogicHandler');
 
+var PingOperation = require('./clientOperations/pingOperation');
 var DeleteStreamOperation = require('./clientOperations/deleteStreamOperation');
 var AppendToStreamOperation = require('./clientOperations/appendToStreamOperation');
 var StartTransactionOperation = require('./clientOperations/startTransactionOperation');
@@ -696,6 +697,17 @@ EventStoreNodeConnection.prototype.getStreamMetadataRaw = function(stream, userC
 EventStoreNodeConnection.prototype.setSystemSettings = function() {
   //TODO: set system settings
   throw new Error("Not implemented.");
+};
+
+EventStoreNodeConnection.prototype.ping = function () {
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    function cb(err, result) {
+      if (err) return reject(err);
+      resolve(result);
+    }
+    self._enqueueOperation(new PingOperation(self._settings.log, cb, self._settings.requireMaster, self._settings.userCredentials));
+  });
 };
 
 EventStoreNodeConnection.prototype._enqueueOperation = function(operation) {

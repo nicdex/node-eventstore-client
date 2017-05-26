@@ -325,6 +325,13 @@ message StreamEventAppeared {
 message UnsubscribeFromStream {
 }
 
+message Ping {
+}
+
+message Pong {
+}
+
+
 message SubscriptionDropped {
 
 	enum SubscriptionDropReason {
