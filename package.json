@@ -1,6 +1,6 @@
 {
   "name": "node-eventstore-client",
-  "version": "0.1.9",
+  "version": "0.1.11",
   "description": "A port of the EventStore .Net ClientAPI to Node.js",
   "main": "index.js",
   "types": "index.d.ts",
