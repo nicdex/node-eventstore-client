@@ -43,6 +43,7 @@ const EmptyGuid = '00000000-0000-0000-0000-000000000000';
  * @property {Number} totalOperationCount
  */
 function EventStoreConnectionLogicHandler(esConnection, settings) {
+  EventEmitter.call(this);
   this._esConnection = esConnection;
   this._settings = settings;
   this._queue = new SimpleQueuedHandler();

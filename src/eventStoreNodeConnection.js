@@ -37,6 +37,7 @@ const MaxReadSize = 4096;
  * @constructor
  */
 function EventStoreNodeConnection(settings, clusterSettings, endpointDiscoverer, connectionName) {
+  EventEmitter.call(this);
   this._connectionName = connectionName || ['ES-', uuid.v4()].join('');
   this._settings = settings;
   this._clusterSettings = clusterSettings;
