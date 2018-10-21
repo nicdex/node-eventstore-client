@@ -128,6 +128,8 @@ EventStoreCatchUpSubscription.prototype._runSubscription = function() {
 
   var self = this;
   this._stopped = false;
+  this._isDropped = false;
+  this._dropData = null;
   if (this._verbose) this._log.debug("Catch-up Subscription to %s: pulling events...", logStreamName);
   this._readEventsTill(this._connection, this._resolveLinkTos, this._userCredentials, null, null)
       .then(function() {
