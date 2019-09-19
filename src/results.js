@@ -59,8 +59,8 @@ function RecordedEvent(ev) {
   this.eventId = guidParse.unparse(ev.eventId);
   this.eventNumber = ev.eventNumber;
   this.eventType = ev.eventType;
-  this.created = new Date(ev.createdEpoch ? ev.createdEpoch.toNumber() : 0);
-  this.createdEpoch = ev.createdEpoch ? ev.createdEpoch.toNumber() : 0;
+  this.created = new Date(ev.createdEpoch ? ev.createdEpoch : 0);
+  this.createdEpoch = ev.createdEpoch ? ev.createdEpoch : 0;
   this.data = ev.data ? ev.data : new Buffer(0);
   this.metadata = ev.metadata ? ev.metadata : new Buffer(0);
   this.isJson = ev.dataContentType === 1;
