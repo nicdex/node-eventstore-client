@@ -46,7 +46,7 @@ VolatileSubscriptionOperation.prototype._inspectPackage = function(pkg) {
     }
     return null;
   } catch(e) {
-    this._log.warn(e.stack);
+    console.warn(e.stack);
     return null;
   }
 };
