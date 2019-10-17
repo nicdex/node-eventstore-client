@@ -78,7 +78,7 @@ function testLiveEvent(name, event, evNumber) {
   this.ok(event.originalPosition instanceof client.Position, name + ".originalPosition is not an instance of Position");
   this.ok(event.originalStreamId, name + ".originalStreamId not defined (or null)");
   if (typeof evNumber === 'number') {
-    this.ok(event.originalEventNumber.toNumber() === evNumber, name + '.originalEventNumber expected ' + evNumber + ' got ' + event.originalEventNumber);
+    this.ok(Long.fromValue(event.originalEventNumber).toNumber() === evNumber, name + '.originalEventNumber expected ' + evNumber + ' got ' + event.originalEventNumber);
   } else {
     this.ok(typeof event.originalEventNumber === 'number', name + ".originalEventNumber is not a number");
   }
@@ -91,7 +91,7 @@ function testReadEvent(name, event, evNumber) {
   this.ok(event.originalPosition === null, name + ".originalPosition is not null");
   this.ok(event.originalStreamId, name + ".originalStreamId not defined (or null)");
   if (typeof evNumber === 'number') {
-    this.ok(event.originalEventNumber.toNumber() === evNumber, name + '.originalEventNumber expected ' + evNumber + ' got ' + event.originalEventNumber);
+    this.ok(Long.fromValue(event.originalEventNumber).toNumber() === evNumber, name + '.originalEventNumber expected ' + evNumber + ' got ' + event.originalEventNumber);
   } else {
     this.ok(typeof event.originalEventNumber === 'number', name + ".originalEventNumber is not a number");
   }

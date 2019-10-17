@@ -6,7 +6,7 @@ const resolveLinkTos = true;
 function resumeEvent(event) {
   return [
     event.originalEvent.eventType,
-    [event.originalEventNumber.toNumber(), event.originalStreamId].join('@'),
+    [Long.fromValue(event.originalEventNumber).toNumber(), event.originalStreamId].join('@'),
     event.originalPosition
   ].join(" ")
 }

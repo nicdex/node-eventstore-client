@@ -48,12 +48,12 @@ EventStoreStreamCatchUpSubscription.prototype._readEventsTill = function(
               return processEvents(slice.events, 0)
                   .then(function() {
                     self._nextReadEventNumber = slice.nextEventNumber;
-                    var done = Promise.resolve(lastEventNumber === null ? slice.isEndOfStream : slice.nextEventNumber.compare(lastEventNumber) > 0);
+                    var done = Promise.resolve(lastEventNumber === null ? slice.isEndOfStream : Long.fromValue(slice.nextEventNumber).compare(lastEventNumber) > 0);
                     if (!done && slice.isEndOfStream) return delay(100, false);
                     return done;
                   });
             case SliceReadStatus.StreamNotFound:
-              if (lastEventNumber && lastEventNumber.compare(-1) !== 0) {
+              if (lastEventNumber && Long.fromValue(lastEventNumber).compare(-1) !== 0) {
                 throw new Error(util.format("Impossible: stream %s disappeared in the middle of catching up subscription.", self.streamId));
               }
               return true;
@@ -81,7 +81,7 @@ EventStoreStreamCatchUpSubscription.prototype._readEventsTill = function(
 EventStoreStreamCatchUpSubscription.prototype._tryProcess = function(e) {
   var processed = false;
   var promise;
-  if (e.originalEventNumber.compare(this._lastProcessedEventNumber) > 0) {
+  if (Long.fromValue(e.originalEventNumber).compare(this._lastProcessedEventNumber) > 0) {
     promise = this._eventAppeared(this, e);
     this._lastProcessedEventNumber = e.originalEventNumber;
     processed = true;

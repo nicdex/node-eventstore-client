@@ -9,6 +9,10 @@
 
 })(this, function($protobuf) {
     "use strict";
+    
+    //force Long.js
+    $protobuf.$util.Long=Long
+    $protobuf.configure();
 
     // Common aliases
     var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
