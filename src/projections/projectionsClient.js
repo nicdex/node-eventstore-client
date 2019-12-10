@@ -113,7 +113,7 @@ ProjectionsClient.prototype.delete = function(httpEndPoint, name, deleteEmittedS
 
 ProjectionsClient.prototype.request = function(method, _url, data, userCredentials, expectedCode) {
   const options = url.parse(_url);
-  const httplib = options.protocol === 'https' ? https : http;
+  const httplib = options.protocol === 'https:' ? https : http;
   options.method = method;
   if (userCredentials) {
     options.auth = [userCredentials.username, userCredentials.password].join(':');
