@@ -1,9 +1,11 @@
+# THIS PROJECT IS NOW ARCHIVED ON GitHub, moved to [https://gitork.org/nicdex/node-eventstore-client](https://gitork.org/nicdex/node-eventstore-client)
+
 # node-eventstore-client
 A port of the EventStore .Net ClientAPI to Node.js
 
 ## Learning
 
-If you want to learn more about EventSourcing/CQRS/EventModeling, you can join the virtual workshop offered by my employer Adaptech Group, see info at [https://www.adaptechgroup.com/virtual-workshop/](https://www.adaptechgroup.com/virtual-workshop/).
+If you want to learn more about EventSourcing/EventModeling, you can join one of the monthly virtual workshops offered by my employer Adaptech Group, see info at [https://adaptechgroup.com/#workshop](https://adaptechgroup.com/#workshop).
 
 ## Status
 
