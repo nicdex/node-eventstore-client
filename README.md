@@ -1,5 +1,3 @@
-# THIS PROJECT IS NOW ARCHIVED ON GitHub, moved to [https://gitork.org/nicdex/node-eventstore-client](https://gitork.org/nicdex/node-eventstore-client)
-
 # node-eventstore-client
 A port of the EventStore .Net ClientAPI to Node.js
 
