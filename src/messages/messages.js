@@ -247,9 +247,9 @@
                         if (!message.hasOwnProperty("eventType"))
                             throw $util.ProtocolError("missing required 'eventType'", { instance: message });
                         if (!message.hasOwnProperty("dataContentType"))
-                            throw $util.ProtocolError("missing required 'dataContentType'", { instance: message });
+                            message.dataContentType = 0;
                         if (!message.hasOwnProperty("metadataContentType"))
-                            throw $util.ProtocolError("missing required 'metadataContentType'", { instance: message });
+                            message.metadataContentType = 0;
                         if (!message.hasOwnProperty("data"))
                             throw $util.ProtocolError("missing required 'data'", { instance: message });
                         return message;
@@ -624,15 +624,15 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("eventNumber"))
-                            throw $util.ProtocolError("missing required 'eventNumber'", { instance: message });
+                            message.eventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("eventId"))
                             throw $util.ProtocolError("missing required 'eventId'", { instance: message });
                         if (!message.hasOwnProperty("eventType"))
                             throw $util.ProtocolError("missing required 'eventType'", { instance: message });
                         if (!message.hasOwnProperty("dataContentType"))
-                            throw $util.ProtocolError("missing required 'dataContentType'", { instance: message });
+                            message.dataContentType = 0;
                         if (!message.hasOwnProperty("metadataContentType"))
-                            throw $util.ProtocolError("missing required 'metadataContentType'", { instance: message });
+                            message.metadataContentType = 0;
                         if (!message.hasOwnProperty("data"))
                             throw $util.ProtocolError("missing required 'data'", { instance: message });
                         return message;
@@ -1218,9 +1218,9 @@
                             }
                         }
                         if (!message.hasOwnProperty("commitPosition"))
-                            throw $util.ProtocolError("missing required 'commitPosition'", { instance: message });
+                            message.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("preparePosition"))
-                            throw $util.ProtocolError("missing required 'preparePosition'", { instance: message });
+                            message.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         return message;
                     };
     
@@ -1515,9 +1515,9 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("expectedVersion"))
-                            throw $util.ProtocolError("missing required 'expectedVersion'", { instance: message });
+                            message.expectedVersion = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                            message.requireMaster = false;
                         return message;
                     };
     
@@ -1841,11 +1841,11 @@
                             }
                         }
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         if (!message.hasOwnProperty("firstEventNumber"))
-                            throw $util.ProtocolError("missing required 'firstEventNumber'", { instance: message });
+                            message.firstEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("lastEventNumber"))
-                            throw $util.ProtocolError("missing required 'lastEventNumber'", { instance: message });
+                            message.lastEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         return message;
                     };
     
@@ -2234,9 +2234,9 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("expectedVersion"))
-                            throw $util.ProtocolError("missing required 'expectedVersion'", { instance: message });
+                            message.expectedVersion = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                            message.requireMaster = false;
                         return message;
                     };
     
@@ -2502,7 +2502,7 @@
                             }
                         }
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         return message;
                     };
     
@@ -2813,9 +2813,9 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("expectedVersion"))
-                            throw $util.ProtocolError("missing required 'expectedVersion'", { instance: message });
+                            message.expectedVersion = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                            message.requireMaster = false;
                         return message;
                     };
     
@@ -3058,9 +3058,9 @@
                             }
                         }
                         if (!message.hasOwnProperty("transactionId"))
-                            throw $util.ProtocolError("missing required 'transactionId'", { instance: message });
+                            message.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         return message;
                     };
     
@@ -3351,9 +3351,9 @@
                             }
                         }
                         if (!message.hasOwnProperty("transactionId"))
-                            throw $util.ProtocolError("missing required 'transactionId'", { instance: message });
+                            message.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                            message.requireMaster = false;
                         return message;
                     };
     
@@ -3615,9 +3615,9 @@
                             }
                         }
                         if (!message.hasOwnProperty("transactionId"))
-                            throw $util.ProtocolError("missing required 'transactionId'", { instance: message });
+                            message.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         return message;
                     };
     
@@ -3890,9 +3890,9 @@
                             }
                         }
                         if (!message.hasOwnProperty("transactionId"))
-                            throw $util.ProtocolError("missing required 'transactionId'", { instance: message });
+                            message.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                            message.requireMaster = false;
                         return message;
                     };
     
@@ -4182,13 +4182,13 @@
                             }
                         }
                         if (!message.hasOwnProperty("transactionId"))
-                            throw $util.ProtocolError("missing required 'transactionId'", { instance: message });
+                            message.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         if (!message.hasOwnProperty("firstEventNumber"))
-                            throw $util.ProtocolError("missing required 'firstEventNumber'", { instance: message });
+                            message.firstEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("lastEventNumber"))
-                            throw $util.ProtocolError("missing required 'lastEventNumber'", { instance: message });
+                            message.lastEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         return message;
                     };
     
@@ -4575,11 +4575,11 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("eventNumber"))
-                            throw $util.ProtocolError("missing required 'eventNumber'", { instance: message });
+                            message.eventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("resolveLinkTos"))
-                            throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
+                            message.resolveLinkTos = false;
                         if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                            message.requireMaster = false;
                         return message;
                     };
     
@@ -4829,7 +4829,7 @@
                             }
                         }
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         if (!message.hasOwnProperty("event"))
                             throw $util.ProtocolError("missing required 'event'", { instance: message });
                         return message;
@@ -5149,13 +5149,13 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("fromEventNumber"))
-                            throw $util.ProtocolError("missing required 'fromEventNumber'", { instance: message });
+                            message.fromEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("maxCount"))
-                            throw $util.ProtocolError("missing required 'maxCount'", { instance: message });
+                            message.maxCount = 0;
                         if (!message.hasOwnProperty("resolveLinkTos"))
-                            throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
+                            message.resolveLinkTos = false;
                         if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                            message.requireMaster = false;
                         return message;
                     };
     
@@ -5469,15 +5469,15 @@
                             }
                         }
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         if (!message.hasOwnProperty("nextEventNumber"))
-                            throw $util.ProtocolError("missing required 'nextEventNumber'", { instance: message });
+                            message.nextEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("lastEventNumber"))
-                            throw $util.ProtocolError("missing required 'lastEventNumber'", { instance: message });
+                            message.lastEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("isEndOfStream"))
-                            throw $util.ProtocolError("missing required 'isEndOfStream'", { instance: message });
+                            message.isEndOfStream = false;
                         if (!message.hasOwnProperty("lastCommitPosition"))
-                            throw $util.ProtocolError("missing required 'lastCommitPosition'", { instance: message });
+                            message.lastCommitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         return message;
                     };
     
@@ -5876,15 +5876,15 @@
                             }
                         }
                         if (!message.hasOwnProperty("commitPosition"))
-                            throw $util.ProtocolError("missing required 'commitPosition'", { instance: message });
+                            message.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("preparePosition"))
-                            throw $util.ProtocolError("missing required 'preparePosition'", { instance: message });
+                            message.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("maxCount"))
-                            throw $util.ProtocolError("missing required 'maxCount'", { instance: message });
+                            message.maxCount = 0;
                         if (!message.hasOwnProperty("resolveLinkTos"))
-                            throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
+                            message.resolveLinkTos = false;
                         if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                            message.requireMaster = false;
                         return message;
                     };
     
@@ -6213,13 +6213,13 @@
                             }
                         }
                         if (!message.hasOwnProperty("commitPosition"))
-                            throw $util.ProtocolError("missing required 'commitPosition'", { instance: message });
+                            message.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("preparePosition"))
-                            throw $util.ProtocolError("missing required 'preparePosition'", { instance: message });
+                            message.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("nextCommitPosition"))
-                            throw $util.ProtocolError("missing required 'nextCommitPosition'", { instance: message });
+                            message.nextCommitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("nextPreparePosition"))
-                            throw $util.ProtocolError("missing required 'nextPreparePosition'", { instance: message });
+                            message.nextPreparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         return message;
                     };
     
@@ -6767,31 +6767,31 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("resolveLinkTos"))
-                            throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
+                            message.resolveLinkTos = false;
                         if (!message.hasOwnProperty("startFrom"))
-                            throw $util.ProtocolError("missing required 'startFrom'", { instance: message });
+                            message.startFrom = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("messageTimeoutMilliseconds"))
-                            throw $util.ProtocolError("missing required 'messageTimeoutMilliseconds'", { instance: message });
+                            message.messageTimeoutMilliseconds = 0;
                         if (!message.hasOwnProperty("recordStatistics"))
-                            throw $util.ProtocolError("missing required 'recordStatistics'", { instance: message });
+                            message.recordStatistics = false;
                         if (!message.hasOwnProperty("liveBufferSize"))
-                            throw $util.ProtocolError("missing required 'liveBufferSize'", { instance: message });
+                            message.liveBufferSize = 0;
                         if (!message.hasOwnProperty("readBatchSize"))
-                            throw $util.ProtocolError("missing required 'readBatchSize'", { instance: message });
+                            message.readBatchSize = 0;
                         if (!message.hasOwnProperty("bufferSize"))
-                            throw $util.ProtocolError("missing required 'bufferSize'", { instance: message });
+                            message.bufferSize = 0;
                         if (!message.hasOwnProperty("maxRetryCount"))
-                            throw $util.ProtocolError("missing required 'maxRetryCount'", { instance: message });
+                            message.maxRetryCount = 0;
                         if (!message.hasOwnProperty("preferRoundRobin"))
-                            throw $util.ProtocolError("missing required 'preferRoundRobin'", { instance: message });
+                            message.preferRoundRobin = false;
                         if (!message.hasOwnProperty("checkpointAfterTime"))
-                            throw $util.ProtocolError("missing required 'checkpointAfterTime'", { instance: message });
+                            message.checkpointAfterTime = 0;
                         if (!message.hasOwnProperty("checkpointMaxCount"))
-                            throw $util.ProtocolError("missing required 'checkpointMaxCount'", { instance: message });
+                            message.checkpointMaxCount = 0;
                         if (!message.hasOwnProperty("checkpointMinCount"))
-                            throw $util.ProtocolError("missing required 'checkpointMinCount'", { instance: message });
+                            message.checkpointMinCount = 0;
                         if (!message.hasOwnProperty("subscriberMaxCount"))
-                            throw $util.ProtocolError("missing required 'subscriberMaxCount'", { instance: message });
+                            message.subscriberMaxCount = 0;
                         return message;
                     };
     
@@ -7509,31 +7509,31 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("resolveLinkTos"))
-                            throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
+                            message.resolveLinkTos = false;
                         if (!message.hasOwnProperty("startFrom"))
-                            throw $util.ProtocolError("missing required 'startFrom'", { instance: message });
+                            message.startFrom = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("messageTimeoutMilliseconds"))
-                            throw $util.ProtocolError("missing required 'messageTimeoutMilliseconds'", { instance: message });
+                            message.messageTimeoutMilliseconds = 0;
                         if (!message.hasOwnProperty("recordStatistics"))
-                            throw $util.ProtocolError("missing required 'recordStatistics'", { instance: message });
+                            message.recordStatistics = false;
                         if (!message.hasOwnProperty("liveBufferSize"))
-                            throw $util.ProtocolError("missing required 'liveBufferSize'", { instance: message });
+                            message.liveBufferSize = 0;
                         if (!message.hasOwnProperty("readBatchSize"))
-                            throw $util.ProtocolError("missing required 'readBatchSize'", { instance: message });
+                            message.readBatchSize = 0;
                         if (!message.hasOwnProperty("bufferSize"))
-                            throw $util.ProtocolError("missing required 'bufferSize'", { instance: message });
+                            message.bufferSize = 0;
                         if (!message.hasOwnProperty("maxRetryCount"))
-                            throw $util.ProtocolError("missing required 'maxRetryCount'", { instance: message });
+                            message.maxRetryCount = 0;
                         if (!message.hasOwnProperty("preferRoundRobin"))
-                            throw $util.ProtocolError("missing required 'preferRoundRobin'", { instance: message });
+                            message.preferRoundRobin = false;
                         if (!message.hasOwnProperty("checkpointAfterTime"))
-                            throw $util.ProtocolError("missing required 'checkpointAfterTime'", { instance: message });
+                            message.checkpointAfterTime = 0;
                         if (!message.hasOwnProperty("checkpointMaxCount"))
-                            throw $util.ProtocolError("missing required 'checkpointMaxCount'", { instance: message });
+                            message.checkpointMaxCount = 0;
                         if (!message.hasOwnProperty("checkpointMinCount"))
-                            throw $util.ProtocolError("missing required 'checkpointMinCount'", { instance: message });
+                            message.checkpointMinCount = 0;
                         if (!message.hasOwnProperty("subscriberMaxCount"))
-                            throw $util.ProtocolError("missing required 'subscriberMaxCount'", { instance: message });
+                            message.subscriberMaxCount = 0;
                         return message;
                     };
     
@@ -7855,7 +7855,7 @@
                             }
                         }
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         return message;
                     };
     
@@ -8106,7 +8106,7 @@
                             }
                         }
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         return message;
                     };
     
@@ -8357,7 +8357,7 @@
                             }
                         }
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         return message;
                     };
     
@@ -8624,7 +8624,7 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("allowedInFlightMessages"))
-                            throw $util.ProtocolError("missing required 'allowedInFlightMessages'", { instance: message });
+                            message.allowedInFlightMessages = 0;
                         return message;
                     };
     
@@ -9102,7 +9102,7 @@
                         if (!message.hasOwnProperty("subscriptionId"))
                             throw $util.ProtocolError("missing required 'subscriptionId'", { instance: message });
                         if (!message.hasOwnProperty("action"))
-                            throw $util.ProtocolError("missing required 'action'", { instance: message });
+                            message.action = 0;
                         return message;
                     };
     
@@ -9404,7 +9404,7 @@
                             }
                         }
                         if (!message.hasOwnProperty("lastCommitPosition"))
-                            throw $util.ProtocolError("missing required 'lastCommitPosition'", { instance: message });
+                            message.lastCommitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         if (!message.hasOwnProperty("subscriptionId"))
                             throw $util.ProtocolError("missing required 'subscriptionId'", { instance: message });
                         return message;
@@ -9845,7 +9845,7 @@
                         if (!message.hasOwnProperty("eventStreamId"))
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("resolveLinkTos"))
-                            throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
+                            message.resolveLinkTos = false;
                         return message;
                     };
     
@@ -10054,7 +10054,7 @@
                             }
                         }
                         if (!message.hasOwnProperty("lastCommitPosition"))
-                            throw $util.ProtocolError("missing required 'lastCommitPosition'", { instance: message });
+                            message.lastCommitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         return message;
                     };
     
@@ -10880,7 +10880,7 @@
                             }
                         }
                         if (!message.hasOwnProperty("reason"))
-                            throw $util.ProtocolError("missing required 'reason'", { instance: message });
+                            message.reason = 0;
                         return message;
                     };
     
@@ -11617,11 +11617,11 @@
                             }
                         }
                         if (!message.hasOwnProperty("result"))
-                            throw $util.ProtocolError("missing required 'result'", { instance: message });
+                            message.result = 0;
                         if (!message.hasOwnProperty("totalTimeMs"))
-                            throw $util.ProtocolError("missing required 'totalTimeMs'", { instance: message });
+                            message.totalTimeMs = 0;
                         if (!message.hasOwnProperty("totalSpaceSaved"))
-                            throw $util.ProtocolError("missing required 'totalSpaceSaved'", { instance: message });
+                            message.totalSpaceSaved = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
                         return message;
                     };
     
@@ -11893,7 +11893,7 @@
                             }
                         }
                         if (!message.hasOwnProperty("version"))
-                            throw $util.ProtocolError("missing required 'version'", { instance: message });
+                            message.version = 0;
                         return message;
                     };
     
