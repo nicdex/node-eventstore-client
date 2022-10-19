@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const url = require('url');
 const util = require('util');
 const ProjectionCommandFailedError = require('../errors/projectionCommandFailedError');
@@ -112,6 +113,7 @@ ProjectionsClient.prototype.delete = function(httpEndPoint, name, deleteEmittedS
 
 ProjectionsClient.prototype.request = function(method, _url, data, userCredentials, expectedCode) {
   const options = url.parse(_url);
+  const httplib = options.protocol === 'https:' ? https : http;
   options.method = method;
   if (userCredentials) {
     options.auth = [userCredentials.username, userCredentials.password].join(':');
@@ -121,7 +123,7 @@ ProjectionsClient.prototype.request = function(method, _url, data, userCredentia
     const timeout = setTimeout(function () {
       reject(new Error(util.format('Request timed out for %s on %s', method, _url)))
     }, self._operationTimeout);
-    const req = http.request(options, function (res) {
+    const req = httplib.request(options, function (res) {
       const hasExpectedCode = res.statusCode === expectedCode;
       var result = '';
       res.setEncoding('utf8');
