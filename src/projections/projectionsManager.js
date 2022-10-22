@@ -6,12 +6,13 @@ const ProjectionsClient = require('./projectionsClient');
  * @param {Logger} log              Instance of Logger to use for logging.
  * @param {string} httpEndPoint     HTTP endpoint of an Event Store server.
  * @param {number} operationTimeout Operation timeout in milliseconds.
+ * @param {boolean} [rejectUnauthorized] Reject authorized SSL certs (if using SSL) - set to false is using self-signed certs
  * @constructor
  */
-function ProjectionsManager(log, httpEndPoint, operationTimeout) {
+function ProjectionsManager(log, httpEndPoint, operationTimeout, rejectUnauthorized) {
   ensure.notNull(log, "log");
   ensure.notNull(httpEndPoint, "httpEndPoint");
-  this._client = new ProjectionsClient(log, operationTimeout);
+  this._client = new ProjectionsClient(log, operationTimeout, rejectUnauthorized);
   this._httpEndPoint = httpEndPoint;
 }
 

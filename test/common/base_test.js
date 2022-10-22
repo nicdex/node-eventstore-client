@@ -12,6 +12,8 @@ protobufJS.configure();
 
 var settings = {
   log: new NoopLogger(),
+  useSslConnection: true,
+  validateServer: false
 };
 if (process.env.TESTS_VERBOSE_LOGGING === '1') {
   settings.verboseLogging = true;

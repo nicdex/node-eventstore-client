@@ -15,9 +15,10 @@ function safeParseJson(json) {
   }
 }
 
-function ProjectionsClient(log, operationTimeout) {
+function ProjectionsClient(log, operationTimeout, rejectUnauthorized) {
   this._log = log;
   this._operationTimeout = operationTimeout;
+  this._rejectUnauthorized = typeof rejectUnauthorized === 'undefined' ? true : !!rejectUnauthorized;
 }
 
 ProjectionsClient.prototype.enable = function(httpEndPoint, name, userCredentials) {
@@ -117,6 +118,9 @@ ProjectionsClient.prototype.request = function(method, _url, data, userCredentia
   options.method = method;
   if (userCredentials) {
     options.auth = [userCredentials.username, userCredentials.password].join(':');
+  }
+  if (!this._rejectUnauthorized) {
+    options.rejectUnauthorized = false;
   }
   var self = this;
   return new Promise(function (resolve, reject) {
