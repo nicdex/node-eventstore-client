@@ -24,14 +24,22 @@ If you want to learn more about EventSourcing/EventModeling, you can join one of
 
 Install using `npm install node-eventstore-client`
 
+Versions to install to match EventStore versions:
+
+- 0.1.x for ES prior to 3.9.4
+- 0.2.x for ES from 3.9.4 to 20.10
+- 21.10.x for ES 21.10
+
+*I am working on making version match LTS and latest release of EventStore so that TCP protocol matches*
+
 ### Dependencies
 
-- Node.js >= 4.0
+- Node.js >= 12
 - Modules: [long](https://www.npmjs.org/package/long), [protobufjs](https://www.npmjs.org/package/protobufjs), [uuid](https://www.npmjs.org/package/uuid), [strict-event-emitter-types](https://www.npmjs.com/package/strict-event-emitter-types) (installed via `npm install`)
 
 ### Install and run an Eventstore on localhost
 
-See https://eventstore.org/docs/introduction/4.1.0/
+See https://eventstore.com
 
 *Note: If you are using a version of EventStore prior to 3.9.4, you need to use version 0.1.x of this package `npm install node-eventstore-client@^0.1`.*  
 

@@ -1,11 +1,11 @@
 {
   "name": "node-eventstore-client",
-  "version": "0.2.17",
+  "version": "21.10.0",
   "description": "A port of the EventStore .Net ClientAPI to Node.js",
   "main": "index.js",
   "types": "index.d.ts",
   "engines": {
-    "node": ">=5.10"
+    "node": ">=12"
   },
   "engineStrict": true,
   "scripts": {
@@ -23,7 +23,7 @@
     "compose:cluster:start": "docker-compose -f docker-compose-cluster.yaml up --build -d",
     "compose:single:stop": "docker-compose -f docker-compose-single.yaml down -v --remove-orphans",
     "compose:cluster:stop": "docker-compose -f docker-compose-cluster.yaml down -v --remove-orphans",
-    "compose:wait": "while [[ \"$(curl -s -o /dev/null -w ''%{http_code}'' localhost:2113/ping)\" != \"200\" ]]; do sleep 5; done",
+    "compose:wait": "while [ \"$(curl -s -o /dev/null -w ''%{http_code}'' -k https://localhost:2113/ping)\" != \"200\" ]; do sleep 5; done",
     "compose:single:test": "docker-compose -f docker-compose-single.yaml exec nodejs bash -c \"npm i && npm run build && EVENTSTORE_CONNECTION_TYPE=tcp EVENTSTORE_HOST=192.168.33.10 npm run test-debug\"",
     "compose:cluster:test": "docker-compose -f docker-compose-cluster.yaml exec nodejs bash -c \"npm i && npm run build && EVENTSTORE_CONNECTION_TYPE=gossip EVENTSTORE_HOST=192.168.33.10 EVENTSTORE_HOST_1=192.168.33.10 EVENTSTORE_HOST_2=192.168.33.11 EVENTSTORE_HOST_3=192.168.33.12 npm run test-debug\"",
     "compose:gossip:test": "docker-compose -f docker-compose-cluster.yaml exec nodejs bash -c \"npm i && npm run build && EVENTSTORE_CONNECTION_TYPE=dns EVENTSTORE_HOST=192.168.33.10 npm run test-debug\"",
@@ -58,12 +58,12 @@
   },
   "homepage": "https://github.com/nicdex/node-eventstore-client#readme",
   "dependencies": {
-    "@types/long": "^3.0.32",
-    "@types/node": ">=5.10",
-    "long": "^3.2.0",
-    "protobufjs": "^6.8.8",
+    "@types/node": ">=12",
+    "long": "^5.2.0",
+    "protobufjs": "^7.1.2",
+    "protobufjs-cli": "^1.0.2",
     "strict-event-emitter-types": "^1.2.0",
-    "uuid": "^3.0.1"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "jest": "^26.4.2",

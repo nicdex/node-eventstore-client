@@ -12,22 +12,21 @@ services:
       - EVENTSTORE_HTTP_PORT=2113
       - EVENTSTORE_INT_IP=192.168.33.10
       - EVENTSTORE_EXT_IP=192.168.33.10
-      - EVENTSTORE_CERTIFICATE_FILE=/eventstore.p12
-      - EVENTSTORE_CERTIFICATE_PASSWORD=eventstore
-      - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/ssl/certs
+      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node1/node1.crt
+      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node1/node1.key
+      - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
     ports:
       - "1113:1113"
       - "2113:2113"
     volumes:
       - eventstore-data:/var/lib/eventstore
-      - ./certs/eventstore.p12:/eventstore.p12:ro
-      - ./certs/eventstore-local.crt:/etc/ssl/certs/eventstore.crt:ro
+      - ./certs:/etc/eventstore/certs:ro
     networks:
       app_net:
         ipv4_address: 192.168.33.10
 
   nodejs:
-    image: node:14
+    image: node:12
     working_dir: /var/code
     volumes:
       - .:/var/code

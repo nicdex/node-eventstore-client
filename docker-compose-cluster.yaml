@@ -2,124 +2,109 @@ version: '3.4'
 
 services:
   eventstore.db:
-    image: eventstore/eventstore:release-5.0.8
+    image: eventstore/eventstore:21.10.8-buster-slim
     environment:
-      - EVENTSTORE_WORKER_THREADS=5
       - EVENTSTORE_CLUSTER_SIZE=3
+      - EVENTSTORE_CLUSTER_DNS=cluster.tests.node-eventstore-client.local
+      - EVENTSTORE_ADVERTISE_HOST_TO_CLIENT_AS=node1.tests.node-eventstore-client.local
+      - EVENTSTORE_ADVERTISE_HTTP_PORT_TO_CLIENT_AS=2113
+      - EVENTSTORE_ADVERTISE_TCP_PORT_TO_CLIENT_AS=1113
+#      - EVENTSTORE_DISCOVER_VIA_DNS=false
+#      - EVENTSTORE_GOSSIP_SEED=192.168.33.10:2113,192.168.33.11:2113,192.168.33.12:2113
       - EVENTSTORE_RUN_PROJECTIONS=All
-      - EVENTSTORE_DB=/var/lib/eventstore-data
-      - EVENTSTORE_INDEX=/var/lib/eventstore-index
-      - EVENTSTORE_LOG=/var/log/eventstore
-      - EVENTSTORE_CLUSTER_GOSSIP_PORT=2112
-      - EVENTSTORE_INT_TCP_PORT=1112
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=True
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
       - EVENTSTORE_EXT_TCP_PORT=1113
-      - EVENTSTORE_INT_HTTP_PORT=2112
-      - EVENTSTORE_EXT_HTTP_PORT=2113
-      - EVENTSTORE_DISCOVER_VIA_DNS=true
-      - EVENTSTORE_CLUSTER_DNS=eventstore.local
+      - EVENTSTORE_HTTP_PORT=2113
       - EVENTSTORE_INT_IP=192.168.33.10
       - EVENTSTORE_EXT_IP=192.168.33.10
+      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node1/node1.crt
+      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node1/node1.key
+      - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
     ports:
       - "1112:1112"
       - "1113:1113"
-      - "2112:2112"
       - "2113:2113"
     networks:
       app_net:
         aliases:
-          - eventstore.local 
+          - cluster.tests.node-eventstore-client.local
+          - node1.tests.node-eventstore-client.local
         ipv4_address: 192.168.33.10
     volumes:
-      - type: volume
-        source: eventstore-volume-data
-        target: /var/lib/eventstore-data
-      - type: volume
-        source: eventstore-volume-index
-        target: /var/lib/eventstore-index
-      - type: volume
-        source: eventstore-volume-logs
-        target: /var/log/eventstore
+      - eventstore1-data:/var/lib/eventstore
+      - ./certs:/etc/eventstore/certs:ro
 
   eventstore.db2:
-    image: eventstore/eventstore:release-5.0.8
+    image: eventstore/eventstore:21.10.8-buster-slim
     environment:
-      - EVENTSTORE_WORKER_THREADS=5
       - EVENTSTORE_CLUSTER_SIZE=3
+      - EVENTSTORE_CLUSTER_DNS=cluster.tests.node-eventstore-client.local
+      - EVENTSTORE_ADVERTISE_HOST_TO_CLIENT_AS=node2.tests.node-eventstore-client.local
+      - EVENTSTORE_ADVERTISE_HTTP_PORT_TO_CLIENT_AS=2113
+      - EVENTSTORE_ADVERTISE_TCP_PORT_TO_CLIENT_AS=1113
+#      - EVENTSTORE_DISCOVER_VIA_DNS=false
+#      - EVENTSTORE_GOSSIP_SEED=192.168.33.10:2113,192.168.33.11:2113,192.168.33.12:2113
       - EVENTSTORE_RUN_PROJECTIONS=All
-      - EVENTSTORE_DB=/var/lib/eventstore-data
-      - EVENTSTORE_INDEX=/var/lib/eventstore-index
-      - EVENTSTORE_LOG=/var/log/eventstore
-      - EVENTSTORE_CLUSTER_GOSSIP_PORT=2112
-      - EVENTSTORE_INT_TCP_PORT=1112
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=True
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
       - EVENTSTORE_EXT_TCP_PORT=1113
-      - EVENTSTORE_INT_HTTP_PORT=2112
-      - EVENTSTORE_EXT_HTTP_PORT=2113
-      - EVENTSTORE_DISCOVER_VIA_DNS=true
-      - EVENTSTORE_CLUSTER_DNS=eventstore.local
+      - EVENTSTORE_HTTP_PORT=2113
       - EVENTSTORE_INT_IP=192.168.33.11
       - EVENTSTORE_EXT_IP=192.168.33.11
+      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node2/node2.crt
+      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node2/node2.key
+      - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
     expose:
       - "1113"
       - "1112"
-      - "2112"
       - "2113"
     networks:
       app_net:
         aliases:
-          - eventstore.local 
+          - cluster.tests.node-eventstore-client.local
+          - node2.tests.node-eventstore-client.local
         ipv4_address: 192.168.33.11
     volumes:
-      - type: volume
-        source: eventstore-volume-data2
-        target: /var/lib/eventstore-data
-      - type: volume
-        source: eventstore-volume-index2
-        target: /var/lib/eventstore-index
-      - type: volume
-        source: eventstore-volume-logs2
-        target: /var/log/eventstore
+      - eventstore2-data:/var/lib/eventstore
+      - ./certs:/etc/eventstore/certs:ro
 
   eventstore.db3:
-    image: eventstore/eventstore:release-5.0.8
+    image: eventstore/eventstore:21.10.8-buster-slim
     environment:
-      - EVENTSTORE_WORKER_THREADS=5
       - EVENTSTORE_CLUSTER_SIZE=3
+      - EVENTSTORE_CLUSTER_DNS=cluster.tests.node-eventstore-client.local
+      - EVENTSTORE_ADVERTISE_HOST_TO_CLIENT_AS=node3.tests.node-eventstore-client.local
+      - EVENTSTORE_ADVERTISE_HTTP_PORT_TO_CLIENT_AS=2113
+      - EVENTSTORE_ADVERTISE_TCP_PORT_TO_CLIENT_AS=1113
+#      - EVENTSTORE_DISCOVER_VIA_DNS=false
+#      - EVENTSTORE_GOSSIP_SEED=192.168.33.10:2113,192.168.33.11:2113,192.168.33.12:2113
       - EVENTSTORE_RUN_PROJECTIONS=All
-      - EVENTSTORE_DB=/var/lib/eventstore-data
-      - EVENTSTORE_INDEX=/var/lib/eventstore-index
-      - EVENTSTORE_LOG=/var/log/eventstore
-      - EVENTSTORE_CLUSTER_GOSSIP_PORT=2112
-      - EVENTSTORE_INT_TCP_PORT=1112
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=True
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
       - EVENTSTORE_EXT_TCP_PORT=1113
-      - EVENTSTORE_INT_HTTP_PORT=2112
-      - EVENTSTORE_EXT_HTTP_PORT=2113
-      - EVENTSTORE_DISCOVER_VIA_DNS=true
-      - EVENTSTORE_CLUSTER_DNS=eventstore.local
+      - EVENTSTORE_HTTP_PORT=2113
       - EVENTSTORE_INT_IP=192.168.33.12
       - EVENTSTORE_EXT_IP=192.168.33.12
+      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node3/node3.crt
+      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node3/node3.key
+      - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
     expose:
       - "1113"
       - "1112"
-      - "2112"
       - "2113"
     networks:
       app_net:
         aliases:
-          - eventstore.local 
+          - cluster.tests.node-eventstore-client.local
+          - node3.tests.node-eventstore-client.local
         ipv4_address: 192.168.33.12
     volumes:
-      - type: volume
-        source: eventstore-volume-data3
-        target: /var/lib/eventstore-data
-      - type: volume
-        source: eventstore-volume-index3
-        target: /var/lib/eventstore-index
-      - type: volume
-        source: eventstore-volume-logs3
-        target: /var/log/eventstore
+      - eventstore3-data:/var/lib/eventstore-data
+      - ./certs:/etc/eventstore/certs:ro
 
   nodejs:
-    image: node:14
+    image: node:12
     working_dir: /var/code
     volumes:
       - .:/var/code
@@ -129,15 +114,9 @@ services:
       - app_net
 
 volumes:
-  eventstore-volume-data:
-  eventstore-volume-index:
-  eventstore-volume-logs:
-  eventstore-volume-data2:
-  eventstore-volume-index2:
-  eventstore-volume-logs2:
-  eventstore-volume-data3:
-  eventstore-volume-index3:
-  eventstore-volume-logs3:
+  eventstore1-data:
+  eventstore2-data:
+  eventstore3-data:
 
 networks:
   app_net:

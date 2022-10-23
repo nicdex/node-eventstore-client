@@ -137,9 +137,9 @@ SubscriptionOperation.prototype.inspectPackage = function(pkg) {
           case ClientMessage.NotHandled.NotHandledReason.TooBusy:
             return new InspectionResult(InspectionDecision.Retry, "NotHandled - TooBusy");
 
-          case ClientMessage.NotHandled.NotHandledReason.NotMaster:
-            var masterInfo = ClientMessage.NotHandled.MasterInfo.decode(message.additionalInfo);
-            return new InspectionResult(InspectionDecision.Reconnect, "NotHandled - NotMaster",
+          case ClientMessage.NotHandled.NotHandledReason.NotLeader:
+            var masterInfo = ClientMessage.NotHandled.LeaderInfo.decode(message.additionalInfo);
+            return new InspectionResult(InspectionDecision.Reconnect, "NotHandled - NotLeader",
                 {host: masterInfo.externalTcpAddress, port: masterInfo.externalTcpPort},
                 {host: masterInfo.externalSecureTcpAddress, port: masterInfo.externalSecureTcpPort});
 

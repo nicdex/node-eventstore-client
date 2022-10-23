@@ -24,7 +24,7 @@ util.inherits(CommitTransactionOperation, OperationBase);
 CommitTransactionOperation.prototype._createRequestDto = function() {
   return new ClientMessage.TransactionCommit({
     transactionId: this._transactionId,
-    requireMaster: this._requireMaster
+    requireLeader: this._requireMaster
   });
 };
 

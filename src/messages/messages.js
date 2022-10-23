@@ -1,60 +1,57 @@
 /*eslint-disable block-scoped-var, id-length, no-control-regex, no-magic-numbers, no-prototype-builtins, no-redeclare, no-shadow, no-var, sort-vars*/
 (function(global, factory) { /* global define, require, module */
 
-    /* CommonJS */if (typeof require === 'function' && typeof module === 'object' && module && module.exports)
-        module.exports = factory(require("../utils/modules"));
+    /* AMD */ if (typeof define === 'function' && define.amd)
+        define(["protobufjs/minimal"], factory);
 
-})(this, function($moduleUtil) {
+    /* CommonJS */ else if (typeof require === 'function' && typeof module === 'object' && module && module.exports)
+        module.exports = factory(require("protobufjs/minimal"), require("../utils/modules"));
+
+})(this, function($protobuf, $moduleUtil) {
     "use strict";
 
     // This fixes bug #91 by giving us an isolate copy of protobufjs library so any tampering with it doesn't affect us
-    var $moduleName = 'protobufjs/minimal';
-    var $id = require.resolve($moduleName);
-    var $uncached = $moduleUtil.uncache($id);
-    var $protobuf = require($moduleName);
-    if ($uncached) {
-        $moduleUtil.recache($uncached);
-    } else {
-        $moduleUtil.uncache($id);
-    }
+    var old = $moduleUtil.uncache(require.resolve('protobufjs/minimal'));
+    $protobuf = require('protobufjs/minimal');
+    $moduleUtil.recache(old);
 
     // Common aliases
     var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
-    
+
     // Exported root namespace
     var $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
-    
+
     $root.EventStore = (function() {
-    
+
         /**
          * Namespace EventStore.
          * @exports EventStore
          * @namespace
          */
         var EventStore = {};
-    
+
         EventStore.Client = (function() {
-    
+
             /**
              * Namespace Client.
              * @memberof EventStore
              * @namespace
              */
             var Client = {};
-    
+
             Client.Messages = (function() {
-    
+
                 /**
                  * Namespace Messages.
                  * @memberof EventStore.Client
                  * @namespace
                  */
                 var Messages = {};
-    
+
                 /**
                  * OperationResult enum.
                  * @name EventStore.Client.Messages.OperationResult
-                 * @enum {string}
+                 * @enum {number}
                  * @property {number} Success=0 Success value
                  * @property {number} PrepareTimeout=1 PrepareTimeout value
                  * @property {number} CommitTimeout=2 CommitTimeout value
@@ -76,9 +73,9 @@
                     values[valuesById[7] = "AccessDenied"] = 7;
                     return values;
                 })();
-    
+
                 Messages.NewEvent = (function() {
-    
+
                     /**
                      * Properties of a NewEvent.
                      * @memberof EventStore.Client.Messages
@@ -90,7 +87,7 @@
                      * @property {Uint8Array} data NewEvent data
                      * @property {Uint8Array|null} [metadata] NewEvent metadata
                      */
-    
+
                     /**
                      * Constructs a new NewEvent.
                      * @memberof EventStore.Client.Messages
@@ -105,7 +102,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * NewEvent eventId.
                      * @member {Uint8Array} eventId
@@ -113,7 +110,7 @@
                      * @instance
                      */
                     NewEvent.prototype.eventId = $util.newBuffer([]);
-    
+
                     /**
                      * NewEvent eventType.
                      * @member {string} eventType
@@ -121,7 +118,7 @@
                      * @instance
                      */
                     NewEvent.prototype.eventType = "";
-    
+
                     /**
                      * NewEvent dataContentType.
                      * @member {number} dataContentType
@@ -129,7 +126,7 @@
                      * @instance
                      */
                     NewEvent.prototype.dataContentType = 0;
-    
+
                     /**
                      * NewEvent metadataContentType.
                      * @member {number} metadataContentType
@@ -137,7 +134,7 @@
                      * @instance
                      */
                     NewEvent.prototype.metadataContentType = 0;
-    
+
                     /**
                      * NewEvent data.
                      * @member {Uint8Array} data
@@ -145,7 +142,7 @@
                      * @instance
                      */
                     NewEvent.prototype.data = $util.newBuffer([]);
-    
+
                     /**
                      * NewEvent metadata.
                      * @member {Uint8Array} metadata
@@ -153,7 +150,7 @@
                      * @instance
                      */
                     NewEvent.prototype.metadata = $util.newBuffer([]);
-    
+
                     /**
                      * Creates a new NewEvent instance using the specified properties.
                      * @function create
@@ -165,7 +162,7 @@
                     NewEvent.create = function create(properties) {
                         return new NewEvent(properties);
                     };
-    
+
                     /**
                      * Encodes the specified NewEvent message. Does not implicitly {@link EventStore.Client.Messages.NewEvent.verify|verify} messages.
                      * @function encode
@@ -183,11 +180,11 @@
                         writer.uint32(/* id 3, wireType 0 =*/24).int32(message.dataContentType);
                         writer.uint32(/* id 4, wireType 0 =*/32).int32(message.metadataContentType);
                         writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.data);
-                        if (message.metadata != null && message.hasOwnProperty("metadata"))
+                        if (message.metadata != null && Object.hasOwnProperty.call(message, "metadata"))
                             writer.uint32(/* id 6, wireType 2 =*/50).bytes(message.metadata);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified NewEvent message, length delimited. Does not implicitly {@link EventStore.Client.Messages.NewEvent.verify|verify} messages.
                      * @function encodeDelimited
@@ -200,7 +197,7 @@
                     NewEvent.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a NewEvent message from the specified reader or buffer.
                      * @function decode
@@ -219,24 +216,30 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.eventId = reader.bytes();
-                                break;
-                            case 2:
-                                message.eventType = reader.string();
-                                break;
-                            case 3:
-                                message.dataContentType = reader.int32();
-                                break;
-                            case 4:
-                                message.metadataContentType = reader.int32();
-                                break;
-                            case 5:
-                                message.data = reader.bytes();
-                                break;
-                            case 6:
-                                message.metadata = reader.bytes();
-                                break;
+                            case 1: {
+                                    message.eventId = reader.bytes();
+                                    break;
+                                }
+                            case 2: {
+                                    message.eventType = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.dataContentType = reader.int32();
+                                    break;
+                                }
+                            case 4: {
+                                    message.metadataContentType = reader.int32();
+                                    break;
+                                }
+                            case 5: {
+                                    message.data = reader.bytes();
+                                    break;
+                                }
+                            case 6: {
+                                    message.metadata = reader.bytes();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -254,7 +257,7 @@
                             throw $util.ProtocolError("missing required 'data'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a NewEvent message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -270,7 +273,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a NewEvent message.
                      * @function verify
@@ -297,7 +300,7 @@
                                 return "metadata: buffer expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a NewEvent message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -313,7 +316,7 @@
                         if (object.eventId != null)
                             if (typeof object.eventId === "string")
                                 $util.base64.decode(object.eventId, message.eventId = $util.newBuffer($util.base64.length(object.eventId)), 0);
-                            else if (object.eventId.length)
+                            else if (object.eventId.length >= 0)
                                 message.eventId = object.eventId;
                         if (object.eventType != null)
                             message.eventType = String(object.eventType);
@@ -324,16 +327,16 @@
                         if (object.data != null)
                             if (typeof object.data === "string")
                                 $util.base64.decode(object.data, message.data = $util.newBuffer($util.base64.length(object.data)), 0);
-                            else if (object.data.length)
+                            else if (object.data.length >= 0)
                                 message.data = object.data;
                         if (object.metadata != null)
                             if (typeof object.metadata === "string")
                                 $util.base64.decode(object.metadata, message.metadata = $util.newBuffer($util.base64.length(object.metadata)), 0);
-                            else if (object.metadata.length)
+                            else if (object.metadata.length >= 0)
                                 message.metadata = object.metadata;
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a NewEvent message. Also converts values to other types if specified.
                      * @function toObject
@@ -387,7 +390,7 @@
                             object.metadata = options.bytes === String ? $util.base64.encode(message.metadata, 0, message.metadata.length) : options.bytes === Array ? Array.prototype.slice.call(message.metadata) : message.metadata;
                         return object;
                     };
-    
+
                     /**
                      * Converts this NewEvent to JSON.
                      * @function toJSON
@@ -398,28 +401,43 @@
                     NewEvent.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for NewEvent
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.NewEvent
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    NewEvent.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.NewEvent";
+                    };
+
                     return NewEvent;
                 })();
-    
+
                 Messages.EventRecord = (function() {
-    
+
                     /**
                      * Properties of an EventRecord.
                      * @memberof EventStore.Client.Messages
                      * @interface IEventRecord
                      * @property {string} eventStreamId EventRecord eventStreamId
-                     * @property {number|Long} eventNumber EventRecord eventNumber
+                     * @property {Long} eventNumber EventRecord eventNumber
                      * @property {Uint8Array} eventId EventRecord eventId
                      * @property {string} eventType EventRecord eventType
                      * @property {number} dataContentType EventRecord dataContentType
                      * @property {number} metadataContentType EventRecord metadataContentType
                      * @property {Uint8Array} data EventRecord data
                      * @property {Uint8Array|null} [metadata] EventRecord metadata
-                     * @property {number|Long|null} [created] EventRecord created
-                     * @property {number|Long|null} [createdEpoch] EventRecord createdEpoch
+                     * @property {Long|null} [created] EventRecord created
+                     * @property {Long|null} [createdEpoch] EventRecord createdEpoch
                      */
-    
+
                     /**
                      * Constructs a new EventRecord.
                      * @memberof EventStore.Client.Messages
@@ -434,7 +452,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * EventRecord eventStreamId.
                      * @member {string} eventStreamId
@@ -442,15 +460,15 @@
                      * @instance
                      */
                     EventRecord.prototype.eventStreamId = "";
-    
+
                     /**
                      * EventRecord eventNumber.
-                     * @member {number|Long} eventNumber
+                     * @member {Long} eventNumber
                      * @memberof EventStore.Client.Messages.EventRecord
                      * @instance
                      */
                     EventRecord.prototype.eventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * EventRecord eventId.
                      * @member {Uint8Array} eventId
@@ -458,7 +476,7 @@
                      * @instance
                      */
                     EventRecord.prototype.eventId = $util.newBuffer([]);
-    
+
                     /**
                      * EventRecord eventType.
                      * @member {string} eventType
@@ -466,7 +484,7 @@
                      * @instance
                      */
                     EventRecord.prototype.eventType = "";
-    
+
                     /**
                      * EventRecord dataContentType.
                      * @member {number} dataContentType
@@ -474,7 +492,7 @@
                      * @instance
                      */
                     EventRecord.prototype.dataContentType = 0;
-    
+
                     /**
                      * EventRecord metadataContentType.
                      * @member {number} metadataContentType
@@ -482,7 +500,7 @@
                      * @instance
                      */
                     EventRecord.prototype.metadataContentType = 0;
-    
+
                     /**
                      * EventRecord data.
                      * @member {Uint8Array} data
@@ -490,7 +508,7 @@
                      * @instance
                      */
                     EventRecord.prototype.data = $util.newBuffer([]);
-    
+
                     /**
                      * EventRecord metadata.
                      * @member {Uint8Array} metadata
@@ -498,23 +516,23 @@
                      * @instance
                      */
                     EventRecord.prototype.metadata = $util.newBuffer([]);
-    
+
                     /**
                      * EventRecord created.
-                     * @member {number|Long} created
+                     * @member {Long} created
                      * @memberof EventStore.Client.Messages.EventRecord
                      * @instance
                      */
                     EventRecord.prototype.created = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * EventRecord createdEpoch.
-                     * @member {number|Long} createdEpoch
+                     * @member {Long} createdEpoch
                      * @memberof EventStore.Client.Messages.EventRecord
                      * @instance
                      */
                     EventRecord.prototype.createdEpoch = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * Creates a new EventRecord instance using the specified properties.
                      * @function create
@@ -526,7 +544,7 @@
                     EventRecord.create = function create(properties) {
                         return new EventRecord(properties);
                     };
-    
+
                     /**
                      * Encodes the specified EventRecord message. Does not implicitly {@link EventStore.Client.Messages.EventRecord.verify|verify} messages.
                      * @function encode
@@ -546,15 +564,15 @@
                         writer.uint32(/* id 5, wireType 0 =*/40).int32(message.dataContentType);
                         writer.uint32(/* id 6, wireType 0 =*/48).int32(message.metadataContentType);
                         writer.uint32(/* id 7, wireType 2 =*/58).bytes(message.data);
-                        if (message.metadata != null && message.hasOwnProperty("metadata"))
+                        if (message.metadata != null && Object.hasOwnProperty.call(message, "metadata"))
                             writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.metadata);
-                        if (message.created != null && message.hasOwnProperty("created"))
+                        if (message.created != null && Object.hasOwnProperty.call(message, "created"))
                             writer.uint32(/* id 9, wireType 0 =*/72).int64(message.created);
-                        if (message.createdEpoch != null && message.hasOwnProperty("createdEpoch"))
+                        if (message.createdEpoch != null && Object.hasOwnProperty.call(message, "createdEpoch"))
                             writer.uint32(/* id 10, wireType 0 =*/80).int64(message.createdEpoch);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified EventRecord message, length delimited. Does not implicitly {@link EventStore.Client.Messages.EventRecord.verify|verify} messages.
                      * @function encodeDelimited
@@ -567,7 +585,7 @@
                     EventRecord.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes an EventRecord message from the specified reader or buffer.
                      * @function decode
@@ -586,36 +604,46 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 2:
-                                message.eventNumber = reader.int64();
-                                break;
-                            case 3:
-                                message.eventId = reader.bytes();
-                                break;
-                            case 4:
-                                message.eventType = reader.string();
-                                break;
-                            case 5:
-                                message.dataContentType = reader.int32();
-                                break;
-                            case 6:
-                                message.metadataContentType = reader.int32();
-                                break;
-                            case 7:
-                                message.data = reader.bytes();
-                                break;
-                            case 8:
-                                message.metadata = reader.bytes();
-                                break;
-                            case 9:
-                                message.created = reader.int64();
-                                break;
-                            case 10:
-                                message.createdEpoch = reader.int64();
-                                break;
+                            case 1: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.eventNumber = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    message.eventId = reader.bytes();
+                                    break;
+                                }
+                            case 4: {
+                                    message.eventType = reader.string();
+                                    break;
+                                }
+                            case 5: {
+                                    message.dataContentType = reader.int32();
+                                    break;
+                                }
+                            case 6: {
+                                    message.metadataContentType = reader.int32();
+                                    break;
+                                }
+                            case 7: {
+                                    message.data = reader.bytes();
+                                    break;
+                                }
+                            case 8: {
+                                    message.metadata = reader.bytes();
+                                    break;
+                                }
+                            case 9: {
+                                    message.created = reader.int64();
+                                    break;
+                                }
+                            case 10: {
+                                    message.createdEpoch = reader.int64();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -637,7 +665,7 @@
                             throw $util.ProtocolError("missing required 'data'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes an EventRecord message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -653,7 +681,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies an EventRecord message.
                      * @function verify
@@ -690,7 +718,7 @@
                                 return "createdEpoch: integer|Long expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates an EventRecord message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -717,7 +745,7 @@
                         if (object.eventId != null)
                             if (typeof object.eventId === "string")
                                 $util.base64.decode(object.eventId, message.eventId = $util.newBuffer($util.base64.length(object.eventId)), 0);
-                            else if (object.eventId.length)
+                            else if (object.eventId.length >= 0)
                                 message.eventId = object.eventId;
                         if (object.eventType != null)
                             message.eventType = String(object.eventType);
@@ -728,12 +756,12 @@
                         if (object.data != null)
                             if (typeof object.data === "string")
                                 $util.base64.decode(object.data, message.data = $util.newBuffer($util.base64.length(object.data)), 0);
-                            else if (object.data.length)
+                            else if (object.data.length >= 0)
                                 message.data = object.data;
                         if (object.metadata != null)
                             if (typeof object.metadata === "string")
                                 $util.base64.decode(object.metadata, message.metadata = $util.newBuffer($util.base64.length(object.metadata)), 0);
-                            else if (object.metadata.length)
+                            else if (object.metadata.length >= 0)
                                 message.metadata = object.metadata;
                         if (object.created != null)
                             if ($util.Long)
@@ -755,7 +783,7 @@
                                 message.createdEpoch = new $util.LongBits(object.createdEpoch.low >>> 0, object.createdEpoch.high >>> 0).toNumber();
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from an EventRecord message. Also converts values to other types if specified.
                      * @function toObject
@@ -842,7 +870,7 @@
                                 object.createdEpoch = options.longs === String ? $util.Long.prototype.toString.call(message.createdEpoch) : options.longs === Number ? new $util.LongBits(message.createdEpoch.low >>> 0, message.createdEpoch.high >>> 0).toNumber() : message.createdEpoch;
                         return object;
                     };
-    
+
                     /**
                      * Converts this EventRecord to JSON.
                      * @function toJSON
@@ -853,12 +881,27 @@
                     EventRecord.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for EventRecord
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.EventRecord
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    EventRecord.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.EventRecord";
+                    };
+
                     return EventRecord;
                 })();
-    
+
                 Messages.ResolvedIndexedEvent = (function() {
-    
+
                     /**
                      * Properties of a ResolvedIndexedEvent.
                      * @memberof EventStore.Client.Messages
@@ -866,7 +909,7 @@
                      * @property {EventStore.Client.Messages.IEventRecord|null} [event] ResolvedIndexedEvent event
                      * @property {EventStore.Client.Messages.IEventRecord|null} [link] ResolvedIndexedEvent link
                      */
-    
+
                     /**
                      * Constructs a new ResolvedIndexedEvent.
                      * @memberof EventStore.Client.Messages
@@ -881,7 +924,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * ResolvedIndexedEvent event.
                      * @member {EventStore.Client.Messages.IEventRecord|null|undefined} event
@@ -889,7 +932,7 @@
                      * @instance
                      */
                     ResolvedIndexedEvent.prototype.event = null;
-    
+
                     /**
                      * ResolvedIndexedEvent link.
                      * @member {EventStore.Client.Messages.IEventRecord|null|undefined} link
@@ -897,7 +940,7 @@
                      * @instance
                      */
                     ResolvedIndexedEvent.prototype.link = null;
-    
+
                     /**
                      * Creates a new ResolvedIndexedEvent instance using the specified properties.
                      * @function create
@@ -909,7 +952,7 @@
                     ResolvedIndexedEvent.create = function create(properties) {
                         return new ResolvedIndexedEvent(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ResolvedIndexedEvent message. Does not implicitly {@link EventStore.Client.Messages.ResolvedIndexedEvent.verify|verify} messages.
                      * @function encode
@@ -922,13 +965,13 @@
                     ResolvedIndexedEvent.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.event != null && message.hasOwnProperty("event"))
+                        if (message.event != null && Object.hasOwnProperty.call(message, "event"))
                             $root.EventStore.Client.Messages.EventRecord.encode(message.event, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                        if (message.link != null && message.hasOwnProperty("link"))
+                        if (message.link != null && Object.hasOwnProperty.call(message, "link"))
                             $root.EventStore.Client.Messages.EventRecord.encode(message.link, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ResolvedIndexedEvent message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ResolvedIndexedEvent.verify|verify} messages.
                      * @function encodeDelimited
@@ -941,7 +984,7 @@
                     ResolvedIndexedEvent.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ResolvedIndexedEvent message from the specified reader or buffer.
                      * @function decode
@@ -960,12 +1003,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.event = $root.EventStore.Client.Messages.EventRecord.decode(reader, reader.uint32());
-                                break;
-                            case 2:
-                                message.link = $root.EventStore.Client.Messages.EventRecord.decode(reader, reader.uint32());
-                                break;
+                            case 1: {
+                                    message.event = $root.EventStore.Client.Messages.EventRecord.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 2: {
+                                    message.link = $root.EventStore.Client.Messages.EventRecord.decode(reader, reader.uint32());
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -973,7 +1018,7 @@
                         }
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ResolvedIndexedEvent message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -989,7 +1034,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ResolvedIndexedEvent message.
                      * @function verify
@@ -1013,7 +1058,7 @@
                         }
                         return null;
                     };
-    
+
                     /**
                      * Creates a ResolvedIndexedEvent message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -1038,7 +1083,7 @@
                         }
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a ResolvedIndexedEvent message. Also converts values to other types if specified.
                      * @function toObject
@@ -1062,7 +1107,7 @@
                             object.link = $root.EventStore.Client.Messages.EventRecord.toObject(message.link, options);
                         return object;
                     };
-    
+
                     /**
                      * Converts this ResolvedIndexedEvent to JSON.
                      * @function toJSON
@@ -1073,22 +1118,37 @@
                     ResolvedIndexedEvent.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ResolvedIndexedEvent
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ResolvedIndexedEvent
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ResolvedIndexedEvent.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ResolvedIndexedEvent";
+                    };
+
                     return ResolvedIndexedEvent;
                 })();
-    
+
                 Messages.ResolvedEvent = (function() {
-    
+
                     /**
                      * Properties of a ResolvedEvent.
                      * @memberof EventStore.Client.Messages
                      * @interface IResolvedEvent
                      * @property {EventStore.Client.Messages.IEventRecord|null} [event] ResolvedEvent event
                      * @property {EventStore.Client.Messages.IEventRecord|null} [link] ResolvedEvent link
-                     * @property {number|Long} commitPosition ResolvedEvent commitPosition
-                     * @property {number|Long} preparePosition ResolvedEvent preparePosition
+                     * @property {Long} commitPosition ResolvedEvent commitPosition
+                     * @property {Long} preparePosition ResolvedEvent preparePosition
                      */
-    
+
                     /**
                      * Constructs a new ResolvedEvent.
                      * @memberof EventStore.Client.Messages
@@ -1103,7 +1163,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * ResolvedEvent event.
                      * @member {EventStore.Client.Messages.IEventRecord|null|undefined} event
@@ -1111,7 +1171,7 @@
                      * @instance
                      */
                     ResolvedEvent.prototype.event = null;
-    
+
                     /**
                      * ResolvedEvent link.
                      * @member {EventStore.Client.Messages.IEventRecord|null|undefined} link
@@ -1119,23 +1179,23 @@
                      * @instance
                      */
                     ResolvedEvent.prototype.link = null;
-    
+
                     /**
                      * ResolvedEvent commitPosition.
-                     * @member {number|Long} commitPosition
+                     * @member {Long} commitPosition
                      * @memberof EventStore.Client.Messages.ResolvedEvent
                      * @instance
                      */
                     ResolvedEvent.prototype.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ResolvedEvent preparePosition.
-                     * @member {number|Long} preparePosition
+                     * @member {Long} preparePosition
                      * @memberof EventStore.Client.Messages.ResolvedEvent
                      * @instance
                      */
                     ResolvedEvent.prototype.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * Creates a new ResolvedEvent instance using the specified properties.
                      * @function create
@@ -1147,7 +1207,7 @@
                     ResolvedEvent.create = function create(properties) {
                         return new ResolvedEvent(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ResolvedEvent message. Does not implicitly {@link EventStore.Client.Messages.ResolvedEvent.verify|verify} messages.
                      * @function encode
@@ -1160,15 +1220,15 @@
                     ResolvedEvent.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.event != null && message.hasOwnProperty("event"))
+                        if (message.event != null && Object.hasOwnProperty.call(message, "event"))
                             $root.EventStore.Client.Messages.EventRecord.encode(message.event, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                        if (message.link != null && message.hasOwnProperty("link"))
+                        if (message.link != null && Object.hasOwnProperty.call(message, "link"))
                             $root.EventStore.Client.Messages.EventRecord.encode(message.link, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                         writer.uint32(/* id 3, wireType 0 =*/24).int64(message.commitPosition);
                         writer.uint32(/* id 4, wireType 0 =*/32).int64(message.preparePosition);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ResolvedEvent message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ResolvedEvent.verify|verify} messages.
                      * @function encodeDelimited
@@ -1181,7 +1241,7 @@
                     ResolvedEvent.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ResolvedEvent message from the specified reader or buffer.
                      * @function decode
@@ -1200,18 +1260,22 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.event = $root.EventStore.Client.Messages.EventRecord.decode(reader, reader.uint32());
-                                break;
-                            case 2:
-                                message.link = $root.EventStore.Client.Messages.EventRecord.decode(reader, reader.uint32());
-                                break;
-                            case 3:
-                                message.commitPosition = reader.int64();
-                                break;
-                            case 4:
-                                message.preparePosition = reader.int64();
-                                break;
+                            case 1: {
+                                    message.event = $root.EventStore.Client.Messages.EventRecord.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 2: {
+                                    message.link = $root.EventStore.Client.Messages.EventRecord.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 3: {
+                                    message.commitPosition = reader.int64();
+                                    break;
+                                }
+                            case 4: {
+                                    message.preparePosition = reader.int64();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1223,7 +1287,7 @@
                             throw $util.ProtocolError("missing required 'preparePosition'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ResolvedEvent message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -1239,7 +1303,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ResolvedEvent message.
                      * @function verify
@@ -1267,7 +1331,7 @@
                             return "preparePosition: integer|Long expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ResolvedEvent message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -1310,7 +1374,7 @@
                                 message.preparePosition = new $util.LongBits(object.preparePosition.low >>> 0, object.preparePosition.high >>> 0).toNumber();
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a ResolvedEvent message. Also converts values to other types if specified.
                      * @function toObject
@@ -1354,7 +1418,7 @@
                                 object.preparePosition = options.longs === String ? $util.Long.prototype.toString.call(message.preparePosition) : options.longs === Number ? new $util.LongBits(message.preparePosition.low >>> 0, message.preparePosition.high >>> 0).toNumber() : message.preparePosition;
                         return object;
                     };
-    
+
                     /**
                      * Converts this ResolvedEvent to JSON.
                      * @function toJSON
@@ -1365,22 +1429,37 @@
                     ResolvedEvent.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ResolvedEvent
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ResolvedEvent
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ResolvedEvent.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ResolvedEvent";
+                    };
+
                     return ResolvedEvent;
                 })();
-    
+
                 Messages.WriteEvents = (function() {
-    
+
                     /**
                      * Properties of a WriteEvents.
                      * @memberof EventStore.Client.Messages
                      * @interface IWriteEvents
                      * @property {string} eventStreamId WriteEvents eventStreamId
-                     * @property {number|Long} expectedVersion WriteEvents expectedVersion
+                     * @property {Long} expectedVersion WriteEvents expectedVersion
                      * @property {Array.<EventStore.Client.Messages.INewEvent>|null} [events] WriteEvents events
-                     * @property {boolean} requireMaster WriteEvents requireMaster
+                     * @property {boolean} requireLeader WriteEvents requireLeader
                      */
-    
+
                     /**
                      * Constructs a new WriteEvents.
                      * @memberof EventStore.Client.Messages
@@ -1396,7 +1475,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * WriteEvents eventStreamId.
                      * @member {string} eventStreamId
@@ -1404,15 +1483,15 @@
                      * @instance
                      */
                     WriteEvents.prototype.eventStreamId = "";
-    
+
                     /**
                      * WriteEvents expectedVersion.
-                     * @member {number|Long} expectedVersion
+                     * @member {Long} expectedVersion
                      * @memberof EventStore.Client.Messages.WriteEvents
                      * @instance
                      */
                     WriteEvents.prototype.expectedVersion = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * WriteEvents events.
                      * @member {Array.<EventStore.Client.Messages.INewEvent>} events
@@ -1420,15 +1499,15 @@
                      * @instance
                      */
                     WriteEvents.prototype.events = $util.emptyArray;
-    
+
                     /**
-                     * WriteEvents requireMaster.
-                     * @member {boolean} requireMaster
+                     * WriteEvents requireLeader.
+                     * @member {boolean} requireLeader
                      * @memberof EventStore.Client.Messages.WriteEvents
                      * @instance
                      */
-                    WriteEvents.prototype.requireMaster = false;
-    
+                    WriteEvents.prototype.requireLeader = false;
+
                     /**
                      * Creates a new WriteEvents instance using the specified properties.
                      * @function create
@@ -1440,7 +1519,7 @@
                     WriteEvents.create = function create(properties) {
                         return new WriteEvents(properties);
                     };
-    
+
                     /**
                      * Encodes the specified WriteEvents message. Does not implicitly {@link EventStore.Client.Messages.WriteEvents.verify|verify} messages.
                      * @function encode
@@ -1458,10 +1537,10 @@
                         if (message.events != null && message.events.length)
                             for (var i = 0; i < message.events.length; ++i)
                                 $root.EventStore.Client.Messages.NewEvent.encode(message.events[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                        writer.uint32(/* id 4, wireType 0 =*/32).bool(message.requireMaster);
+                        writer.uint32(/* id 4, wireType 0 =*/32).bool(message.requireLeader);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified WriteEvents message, length delimited. Does not implicitly {@link EventStore.Client.Messages.WriteEvents.verify|verify} messages.
                      * @function encodeDelimited
@@ -1474,7 +1553,7 @@
                     WriteEvents.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a WriteEvents message from the specified reader or buffer.
                      * @function decode
@@ -1493,20 +1572,24 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 2:
-                                message.expectedVersion = reader.int64();
-                                break;
-                            case 3:
-                                if (!(message.events && message.events.length))
-                                    message.events = [];
-                                message.events.push($root.EventStore.Client.Messages.NewEvent.decode(reader, reader.uint32()));
-                                break;
-                            case 4:
-                                message.requireMaster = reader.bool();
-                                break;
+                            case 1: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.expectedVersion = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    if (!(message.events && message.events.length))
+                                        message.events = [];
+                                    message.events.push($root.EventStore.Client.Messages.NewEvent.decode(reader, reader.uint32()));
+                                    break;
+                                }
+                            case 4: {
+                                    message.requireLeader = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1516,11 +1599,11 @@
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("expectedVersion"))
                             throw $util.ProtocolError("missing required 'expectedVersion'", { instance: message });
-                        if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                        if (!message.hasOwnProperty("requireLeader"))
+                            throw $util.ProtocolError("missing required 'requireLeader'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a WriteEvents message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -1536,7 +1619,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a WriteEvents message.
                      * @function verify
@@ -1561,11 +1644,11 @@
                                     return "events." + error;
                             }
                         }
-                        if (typeof message.requireMaster !== "boolean")
-                            return "requireMaster: boolean expected";
+                        if (typeof message.requireLeader !== "boolean")
+                            return "requireLeader: boolean expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a WriteEvents message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -1599,11 +1682,11 @@
                                 message.events[i] = $root.EventStore.Client.Messages.NewEvent.fromObject(object.events[i]);
                             }
                         }
-                        if (object.requireMaster != null)
-                            message.requireMaster = Boolean(object.requireMaster);
+                        if (object.requireLeader != null)
+                            message.requireLeader = Boolean(object.requireLeader);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a WriteEvents message. Also converts values to other types if specified.
                      * @function toObject
@@ -1626,7 +1709,7 @@
                                 object.expectedVersion = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                             } else
                                 object.expectedVersion = options.longs === String ? "0" : 0;
-                            object.requireMaster = false;
+                            object.requireLeader = false;
                         }
                         if (message.eventStreamId != null && message.hasOwnProperty("eventStreamId"))
                             object.eventStreamId = message.eventStreamId;
@@ -1640,11 +1723,11 @@
                             for (var j = 0; j < message.events.length; ++j)
                                 object.events[j] = $root.EventStore.Client.Messages.NewEvent.toObject(message.events[j], options);
                         }
-                        if (message.requireMaster != null && message.hasOwnProperty("requireMaster"))
-                            object.requireMaster = message.requireMaster;
+                        if (message.requireLeader != null && message.hasOwnProperty("requireLeader"))
+                            object.requireLeader = message.requireLeader;
                         return object;
                     };
-    
+
                     /**
                      * Converts this WriteEvents to JSON.
                      * @function toJSON
@@ -1655,25 +1738,40 @@
                     WriteEvents.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for WriteEvents
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.WriteEvents
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WriteEvents.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.WriteEvents";
+                    };
+
                     return WriteEvents;
                 })();
-    
+
                 Messages.WriteEventsCompleted = (function() {
-    
+
                     /**
                      * Properties of a WriteEventsCompleted.
                      * @memberof EventStore.Client.Messages
                      * @interface IWriteEventsCompleted
                      * @property {EventStore.Client.Messages.OperationResult} result WriteEventsCompleted result
                      * @property {string|null} [message] WriteEventsCompleted message
-                     * @property {number|Long} firstEventNumber WriteEventsCompleted firstEventNumber
-                     * @property {number|Long} lastEventNumber WriteEventsCompleted lastEventNumber
-                     * @property {number|Long|null} [preparePosition] WriteEventsCompleted preparePosition
-                     * @property {number|Long|null} [commitPosition] WriteEventsCompleted commitPosition
-                     * @property {number|Long|null} [currentVersion] WriteEventsCompleted currentVersion
+                     * @property {Long} firstEventNumber WriteEventsCompleted firstEventNumber
+                     * @property {Long} lastEventNumber WriteEventsCompleted lastEventNumber
+                     * @property {Long|null} [preparePosition] WriteEventsCompleted preparePosition
+                     * @property {Long|null} [commitPosition] WriteEventsCompleted commitPosition
+                     * @property {Long|null} [currentVersion] WriteEventsCompleted currentVersion
                      */
-    
+
                     /**
                      * Constructs a new WriteEventsCompleted.
                      * @memberof EventStore.Client.Messages
@@ -1688,7 +1786,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * WriteEventsCompleted result.
                      * @member {EventStore.Client.Messages.OperationResult} result
@@ -1696,7 +1794,7 @@
                      * @instance
                      */
                     WriteEventsCompleted.prototype.result = 0;
-    
+
                     /**
                      * WriteEventsCompleted message.
                      * @member {string} message
@@ -1704,47 +1802,47 @@
                      * @instance
                      */
                     WriteEventsCompleted.prototype.message = "";
-    
+
                     /**
                      * WriteEventsCompleted firstEventNumber.
-                     * @member {number|Long} firstEventNumber
+                     * @member {Long} firstEventNumber
                      * @memberof EventStore.Client.Messages.WriteEventsCompleted
                      * @instance
                      */
                     WriteEventsCompleted.prototype.firstEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * WriteEventsCompleted lastEventNumber.
-                     * @member {number|Long} lastEventNumber
+                     * @member {Long} lastEventNumber
                      * @memberof EventStore.Client.Messages.WriteEventsCompleted
                      * @instance
                      */
                     WriteEventsCompleted.prototype.lastEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * WriteEventsCompleted preparePosition.
-                     * @member {number|Long} preparePosition
+                     * @member {Long} preparePosition
                      * @memberof EventStore.Client.Messages.WriteEventsCompleted
                      * @instance
                      */
                     WriteEventsCompleted.prototype.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * WriteEventsCompleted commitPosition.
-                     * @member {number|Long} commitPosition
+                     * @member {Long} commitPosition
                      * @memberof EventStore.Client.Messages.WriteEventsCompleted
                      * @instance
                      */
                     WriteEventsCompleted.prototype.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * WriteEventsCompleted currentVersion.
-                     * @member {number|Long} currentVersion
+                     * @member {Long} currentVersion
                      * @memberof EventStore.Client.Messages.WriteEventsCompleted
                      * @instance
                      */
                     WriteEventsCompleted.prototype.currentVersion = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * Creates a new WriteEventsCompleted instance using the specified properties.
                      * @function create
@@ -1756,7 +1854,7 @@
                     WriteEventsCompleted.create = function create(properties) {
                         return new WriteEventsCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified WriteEventsCompleted message. Does not implicitly {@link EventStore.Client.Messages.WriteEventsCompleted.verify|verify} messages.
                      * @function encode
@@ -1770,19 +1868,19 @@
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.result);
-                        if (message.message != null && message.hasOwnProperty("message"))
+                        if (message.message != null && Object.hasOwnProperty.call(message, "message"))
                             writer.uint32(/* id 2, wireType 2 =*/18).string(message.message);
                         writer.uint32(/* id 3, wireType 0 =*/24).int64(message.firstEventNumber);
                         writer.uint32(/* id 4, wireType 0 =*/32).int64(message.lastEventNumber);
-                        if (message.preparePosition != null && message.hasOwnProperty("preparePosition"))
+                        if (message.preparePosition != null && Object.hasOwnProperty.call(message, "preparePosition"))
                             writer.uint32(/* id 5, wireType 0 =*/40).int64(message.preparePosition);
-                        if (message.commitPosition != null && message.hasOwnProperty("commitPosition"))
+                        if (message.commitPosition != null && Object.hasOwnProperty.call(message, "commitPosition"))
                             writer.uint32(/* id 6, wireType 0 =*/48).int64(message.commitPosition);
-                        if (message.currentVersion != null && message.hasOwnProperty("currentVersion"))
+                        if (message.currentVersion != null && Object.hasOwnProperty.call(message, "currentVersion"))
                             writer.uint32(/* id 7, wireType 0 =*/56).int64(message.currentVersion);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified WriteEventsCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.WriteEventsCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -1795,7 +1893,7 @@
                     WriteEventsCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a WriteEventsCompleted message from the specified reader or buffer.
                      * @function decode
@@ -1814,27 +1912,34 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.result = reader.int32();
-                                break;
-                            case 2:
-                                message.message = reader.string();
-                                break;
-                            case 3:
-                                message.firstEventNumber = reader.int64();
-                                break;
-                            case 4:
-                                message.lastEventNumber = reader.int64();
-                                break;
-                            case 5:
-                                message.preparePosition = reader.int64();
-                                break;
-                            case 6:
-                                message.commitPosition = reader.int64();
-                                break;
-                            case 7:
-                                message.currentVersion = reader.int64();
-                                break;
+                            case 1: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.message = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.firstEventNumber = reader.int64();
+                                    break;
+                                }
+                            case 4: {
+                                    message.lastEventNumber = reader.int64();
+                                    break;
+                                }
+                            case 5: {
+                                    message.preparePosition = reader.int64();
+                                    break;
+                                }
+                            case 6: {
+                                    message.commitPosition = reader.int64();
+                                    break;
+                                }
+                            case 7: {
+                                    message.currentVersion = reader.int64();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -1848,7 +1953,7 @@
                             throw $util.ProtocolError("missing required 'lastEventNumber'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a WriteEventsCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -1864,7 +1969,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a WriteEventsCompleted message.
                      * @function verify
@@ -1907,7 +2012,7 @@
                                 return "currentVersion: integer|Long expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a WriteEventsCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -1921,6 +2026,12 @@
                             return object;
                         var message = new $root.EventStore.Client.Messages.WriteEventsCompleted();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -2003,7 +2114,7 @@
                                 message.currentVersion = new $util.LongBits(object.currentVersion.low >>> 0, object.currentVersion.high >>> 0).toNumber();
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a WriteEventsCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -2047,7 +2158,7 @@
                                 object.currentVersion = options.longs === String ? "0" : 0;
                         }
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
                         if (message.message != null && message.hasOwnProperty("message"))
                             object.message = message.message;
                         if (message.firstEventNumber != null && message.hasOwnProperty("firstEventNumber"))
@@ -2077,7 +2188,7 @@
                                 object.currentVersion = options.longs === String ? $util.Long.prototype.toString.call(message.currentVersion) : options.longs === Number ? new $util.LongBits(message.currentVersion.low >>> 0, message.currentVersion.high >>> 0).toNumber() : message.currentVersion;
                         return object;
                     };
-    
+
                     /**
                      * Converts this WriteEventsCompleted to JSON.
                      * @function toJSON
@@ -2088,22 +2199,37 @@
                     WriteEventsCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for WriteEventsCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.WriteEventsCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WriteEventsCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.WriteEventsCompleted";
+                    };
+
                     return WriteEventsCompleted;
                 })();
-    
+
                 Messages.DeleteStream = (function() {
-    
+
                     /**
                      * Properties of a DeleteStream.
                      * @memberof EventStore.Client.Messages
                      * @interface IDeleteStream
                      * @property {string} eventStreamId DeleteStream eventStreamId
-                     * @property {number|Long} expectedVersion DeleteStream expectedVersion
-                     * @property {boolean} requireMaster DeleteStream requireMaster
+                     * @property {Long} expectedVersion DeleteStream expectedVersion
+                     * @property {boolean} requireLeader DeleteStream requireLeader
                      * @property {boolean|null} [hardDelete] DeleteStream hardDelete
                      */
-    
+
                     /**
                      * Constructs a new DeleteStream.
                      * @memberof EventStore.Client.Messages
@@ -2118,7 +2244,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * DeleteStream eventStreamId.
                      * @member {string} eventStreamId
@@ -2126,23 +2252,23 @@
                      * @instance
                      */
                     DeleteStream.prototype.eventStreamId = "";
-    
+
                     /**
                      * DeleteStream expectedVersion.
-                     * @member {number|Long} expectedVersion
+                     * @member {Long} expectedVersion
                      * @memberof EventStore.Client.Messages.DeleteStream
                      * @instance
                      */
                     DeleteStream.prototype.expectedVersion = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
-                     * DeleteStream requireMaster.
-                     * @member {boolean} requireMaster
+                     * DeleteStream requireLeader.
+                     * @member {boolean} requireLeader
                      * @memberof EventStore.Client.Messages.DeleteStream
                      * @instance
                      */
-                    DeleteStream.prototype.requireMaster = false;
-    
+                    DeleteStream.prototype.requireLeader = false;
+
                     /**
                      * DeleteStream hardDelete.
                      * @member {boolean} hardDelete
@@ -2150,7 +2276,7 @@
                      * @instance
                      */
                     DeleteStream.prototype.hardDelete = false;
-    
+
                     /**
                      * Creates a new DeleteStream instance using the specified properties.
                      * @function create
@@ -2162,7 +2288,7 @@
                     DeleteStream.create = function create(properties) {
                         return new DeleteStream(properties);
                     };
-    
+
                     /**
                      * Encodes the specified DeleteStream message. Does not implicitly {@link EventStore.Client.Messages.DeleteStream.verify|verify} messages.
                      * @function encode
@@ -2177,12 +2303,12 @@
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.eventStreamId);
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.expectedVersion);
-                        writer.uint32(/* id 3, wireType 0 =*/24).bool(message.requireMaster);
-                        if (message.hardDelete != null && message.hasOwnProperty("hardDelete"))
+                        writer.uint32(/* id 3, wireType 0 =*/24).bool(message.requireLeader);
+                        if (message.hardDelete != null && Object.hasOwnProperty.call(message, "hardDelete"))
                             writer.uint32(/* id 4, wireType 0 =*/32).bool(message.hardDelete);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified DeleteStream message, length delimited. Does not implicitly {@link EventStore.Client.Messages.DeleteStream.verify|verify} messages.
                      * @function encodeDelimited
@@ -2195,7 +2321,7 @@
                     DeleteStream.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a DeleteStream message from the specified reader or buffer.
                      * @function decode
@@ -2214,18 +2340,22 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 2:
-                                message.expectedVersion = reader.int64();
-                                break;
-                            case 3:
-                                message.requireMaster = reader.bool();
-                                break;
-                            case 4:
-                                message.hardDelete = reader.bool();
-                                break;
+                            case 1: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.expectedVersion = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    message.requireLeader = reader.bool();
+                                    break;
+                                }
+                            case 4: {
+                                    message.hardDelete = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -2235,11 +2365,11 @@
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("expectedVersion"))
                             throw $util.ProtocolError("missing required 'expectedVersion'", { instance: message });
-                        if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                        if (!message.hasOwnProperty("requireLeader"))
+                            throw $util.ProtocolError("missing required 'requireLeader'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a DeleteStream message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -2255,7 +2385,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a DeleteStream message.
                      * @function verify
@@ -2271,14 +2401,14 @@
                             return "eventStreamId: string expected";
                         if (!$util.isInteger(message.expectedVersion) && !(message.expectedVersion && $util.isInteger(message.expectedVersion.low) && $util.isInteger(message.expectedVersion.high)))
                             return "expectedVersion: integer|Long expected";
-                        if (typeof message.requireMaster !== "boolean")
-                            return "requireMaster: boolean expected";
+                        if (typeof message.requireLeader !== "boolean")
+                            return "requireLeader: boolean expected";
                         if (message.hardDelete != null && message.hasOwnProperty("hardDelete"))
                             if (typeof message.hardDelete !== "boolean")
                                 return "hardDelete: boolean expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a DeleteStream message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -2302,13 +2432,13 @@
                                 message.expectedVersion = object.expectedVersion;
                             else if (typeof object.expectedVersion === "object")
                                 message.expectedVersion = new $util.LongBits(object.expectedVersion.low >>> 0, object.expectedVersion.high >>> 0).toNumber();
-                        if (object.requireMaster != null)
-                            message.requireMaster = Boolean(object.requireMaster);
+                        if (object.requireLeader != null)
+                            message.requireLeader = Boolean(object.requireLeader);
                         if (object.hardDelete != null)
                             message.hardDelete = Boolean(object.hardDelete);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a DeleteStream message. Also converts values to other types if specified.
                      * @function toObject
@@ -2329,7 +2459,7 @@
                                 object.expectedVersion = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                             } else
                                 object.expectedVersion = options.longs === String ? "0" : 0;
-                            object.requireMaster = false;
+                            object.requireLeader = false;
                             object.hardDelete = false;
                         }
                         if (message.eventStreamId != null && message.hasOwnProperty("eventStreamId"))
@@ -2339,13 +2469,13 @@
                                 object.expectedVersion = options.longs === String ? String(message.expectedVersion) : message.expectedVersion;
                             else
                                 object.expectedVersion = options.longs === String ? $util.Long.prototype.toString.call(message.expectedVersion) : options.longs === Number ? new $util.LongBits(message.expectedVersion.low >>> 0, message.expectedVersion.high >>> 0).toNumber() : message.expectedVersion;
-                        if (message.requireMaster != null && message.hasOwnProperty("requireMaster"))
-                            object.requireMaster = message.requireMaster;
+                        if (message.requireLeader != null && message.hasOwnProperty("requireLeader"))
+                            object.requireLeader = message.requireLeader;
                         if (message.hardDelete != null && message.hasOwnProperty("hardDelete"))
                             object.hardDelete = message.hardDelete;
                         return object;
                     };
-    
+
                     /**
                      * Converts this DeleteStream to JSON.
                      * @function toJSON
@@ -2356,22 +2486,38 @@
                     DeleteStream.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for DeleteStream
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.DeleteStream
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    DeleteStream.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.DeleteStream";
+                    };
+
                     return DeleteStream;
                 })();
-    
+
                 Messages.DeleteStreamCompleted = (function() {
-    
+
                     /**
                      * Properties of a DeleteStreamCompleted.
                      * @memberof EventStore.Client.Messages
                      * @interface IDeleteStreamCompleted
                      * @property {EventStore.Client.Messages.OperationResult} result DeleteStreamCompleted result
                      * @property {string|null} [message] DeleteStreamCompleted message
-                     * @property {number|Long|null} [preparePosition] DeleteStreamCompleted preparePosition
-                     * @property {number|Long|null} [commitPosition] DeleteStreamCompleted commitPosition
+                     * @property {Long|null} [preparePosition] DeleteStreamCompleted preparePosition
+                     * @property {Long|null} [commitPosition] DeleteStreamCompleted commitPosition
+                     * @property {Long|null} [currentVersion] DeleteStreamCompleted currentVersion
                      */
-    
+
                     /**
                      * Constructs a new DeleteStreamCompleted.
                      * @memberof EventStore.Client.Messages
@@ -2386,7 +2532,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * DeleteStreamCompleted result.
                      * @member {EventStore.Client.Messages.OperationResult} result
@@ -2394,7 +2540,7 @@
                      * @instance
                      */
                     DeleteStreamCompleted.prototype.result = 0;
-    
+
                     /**
                      * DeleteStreamCompleted message.
                      * @member {string} message
@@ -2402,23 +2548,31 @@
                      * @instance
                      */
                     DeleteStreamCompleted.prototype.message = "";
-    
+
                     /**
                      * DeleteStreamCompleted preparePosition.
-                     * @member {number|Long} preparePosition
+                     * @member {Long} preparePosition
                      * @memberof EventStore.Client.Messages.DeleteStreamCompleted
                      * @instance
                      */
                     DeleteStreamCompleted.prototype.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * DeleteStreamCompleted commitPosition.
-                     * @member {number|Long} commitPosition
+                     * @member {Long} commitPosition
                      * @memberof EventStore.Client.Messages.DeleteStreamCompleted
                      * @instance
                      */
                     DeleteStreamCompleted.prototype.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
+                    /**
+                     * DeleteStreamCompleted currentVersion.
+                     * @member {Long} currentVersion
+                     * @memberof EventStore.Client.Messages.DeleteStreamCompleted
+                     * @instance
+                     */
+                    DeleteStreamCompleted.prototype.currentVersion = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
                     /**
                      * Creates a new DeleteStreamCompleted instance using the specified properties.
                      * @function create
@@ -2430,7 +2584,7 @@
                     DeleteStreamCompleted.create = function create(properties) {
                         return new DeleteStreamCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified DeleteStreamCompleted message. Does not implicitly {@link EventStore.Client.Messages.DeleteStreamCompleted.verify|verify} messages.
                      * @function encode
@@ -2444,15 +2598,17 @@
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.result);
-                        if (message.message != null && message.hasOwnProperty("message"))
+                        if (message.message != null && Object.hasOwnProperty.call(message, "message"))
                             writer.uint32(/* id 2, wireType 2 =*/18).string(message.message);
-                        if (message.preparePosition != null && message.hasOwnProperty("preparePosition"))
+                        if (message.preparePosition != null && Object.hasOwnProperty.call(message, "preparePosition"))
                             writer.uint32(/* id 3, wireType 0 =*/24).int64(message.preparePosition);
-                        if (message.commitPosition != null && message.hasOwnProperty("commitPosition"))
+                        if (message.commitPosition != null && Object.hasOwnProperty.call(message, "commitPosition"))
                             writer.uint32(/* id 4, wireType 0 =*/32).int64(message.commitPosition);
+                        if (message.currentVersion != null && Object.hasOwnProperty.call(message, "currentVersion"))
+                            writer.uint32(/* id 5, wireType 0 =*/40).int64(message.currentVersion);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified DeleteStreamCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.DeleteStreamCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -2465,7 +2621,7 @@
                     DeleteStreamCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a DeleteStreamCompleted message from the specified reader or buffer.
                      * @function decode
@@ -2484,18 +2640,26 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.result = reader.int32();
-                                break;
-                            case 2:
-                                message.message = reader.string();
-                                break;
-                            case 3:
-                                message.preparePosition = reader.int64();
-                                break;
-                            case 4:
-                                message.commitPosition = reader.int64();
-                                break;
+                            case 1: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.message = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.preparePosition = reader.int64();
+                                    break;
+                                }
+                            case 4: {
+                                    message.commitPosition = reader.int64();
+                                    break;
+                                }
+                            case 5: {
+                                    message.currentVersion = reader.int64();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -2505,7 +2669,7 @@
                             throw $util.ProtocolError("missing required 'result'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a DeleteStreamCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -2521,7 +2685,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a DeleteStreamCompleted message.
                      * @function verify
@@ -2555,9 +2719,12 @@
                         if (message.commitPosition != null && message.hasOwnProperty("commitPosition"))
                             if (!$util.isInteger(message.commitPosition) && !(message.commitPosition && $util.isInteger(message.commitPosition.low) && $util.isInteger(message.commitPosition.high)))
                                 return "commitPosition: integer|Long expected";
+                        if (message.currentVersion != null && message.hasOwnProperty("currentVersion"))
+                            if (!$util.isInteger(message.currentVersion) && !(message.currentVersion && $util.isInteger(message.currentVersion.low) && $util.isInteger(message.currentVersion.high)))
+                                return "currentVersion: integer|Long expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a DeleteStreamCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -2571,6 +2738,12 @@
                             return object;
                         var message = new $root.EventStore.Client.Messages.DeleteStreamCompleted();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -2624,9 +2797,18 @@
                                 message.commitPosition = object.commitPosition;
                             else if (typeof object.commitPosition === "object")
                                 message.commitPosition = new $util.LongBits(object.commitPosition.low >>> 0, object.commitPosition.high >>> 0).toNumber();
+                        if (object.currentVersion != null)
+                            if ($util.Long)
+                                (message.currentVersion = $util.Long.fromValue(object.currentVersion)).unsigned = false;
+                            else if (typeof object.currentVersion === "string")
+                                message.currentVersion = parseInt(object.currentVersion, 10);
+                            else if (typeof object.currentVersion === "number")
+                                message.currentVersion = object.currentVersion;
+                            else if (typeof object.currentVersion === "object")
+                                message.currentVersion = new $util.LongBits(object.currentVersion.low >>> 0, object.currentVersion.high >>> 0).toNumber();
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a DeleteStreamCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -2653,9 +2835,14 @@
                                 object.commitPosition = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                             } else
                                 object.commitPosition = options.longs === String ? "0" : 0;
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.currentVersion = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.currentVersion = options.longs === String ? "0" : 0;
                         }
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
                         if (message.message != null && message.hasOwnProperty("message"))
                             object.message = message.message;
                         if (message.preparePosition != null && message.hasOwnProperty("preparePosition"))
@@ -2668,9 +2855,14 @@
                                 object.commitPosition = options.longs === String ? String(message.commitPosition) : message.commitPosition;
                             else
                                 object.commitPosition = options.longs === String ? $util.Long.prototype.toString.call(message.commitPosition) : options.longs === Number ? new $util.LongBits(message.commitPosition.low >>> 0, message.commitPosition.high >>> 0).toNumber() : message.commitPosition;
+                        if (message.currentVersion != null && message.hasOwnProperty("currentVersion"))
+                            if (typeof message.currentVersion === "number")
+                                object.currentVersion = options.longs === String ? String(message.currentVersion) : message.currentVersion;
+                            else
+                                object.currentVersion = options.longs === String ? $util.Long.prototype.toString.call(message.currentVersion) : options.longs === Number ? new $util.LongBits(message.currentVersion.low >>> 0, message.currentVersion.high >>> 0).toNumber() : message.currentVersion;
                         return object;
                     };
-    
+
                     /**
                      * Converts this DeleteStreamCompleted to JSON.
                      * @function toJSON
@@ -2681,21 +2873,36 @@
                     DeleteStreamCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for DeleteStreamCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.DeleteStreamCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    DeleteStreamCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.DeleteStreamCompleted";
+                    };
+
                     return DeleteStreamCompleted;
                 })();
-    
+
                 Messages.TransactionStart = (function() {
-    
+
                     /**
                      * Properties of a TransactionStart.
                      * @memberof EventStore.Client.Messages
                      * @interface ITransactionStart
                      * @property {string} eventStreamId TransactionStart eventStreamId
-                     * @property {number|Long} expectedVersion TransactionStart expectedVersion
-                     * @property {boolean} requireMaster TransactionStart requireMaster
+                     * @property {Long} expectedVersion TransactionStart expectedVersion
+                     * @property {boolean} requireLeader TransactionStart requireLeader
                      */
-    
+
                     /**
                      * Constructs a new TransactionStart.
                      * @memberof EventStore.Client.Messages
@@ -2710,7 +2917,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * TransactionStart eventStreamId.
                      * @member {string} eventStreamId
@@ -2718,23 +2925,23 @@
                      * @instance
                      */
                     TransactionStart.prototype.eventStreamId = "";
-    
+
                     /**
                      * TransactionStart expectedVersion.
-                     * @member {number|Long} expectedVersion
+                     * @member {Long} expectedVersion
                      * @memberof EventStore.Client.Messages.TransactionStart
                      * @instance
                      */
                     TransactionStart.prototype.expectedVersion = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
-                     * TransactionStart requireMaster.
-                     * @member {boolean} requireMaster
+                     * TransactionStart requireLeader.
+                     * @member {boolean} requireLeader
                      * @memberof EventStore.Client.Messages.TransactionStart
                      * @instance
                      */
-                    TransactionStart.prototype.requireMaster = false;
-    
+                    TransactionStart.prototype.requireLeader = false;
+
                     /**
                      * Creates a new TransactionStart instance using the specified properties.
                      * @function create
@@ -2746,7 +2953,7 @@
                     TransactionStart.create = function create(properties) {
                         return new TransactionStart(properties);
                     };
-    
+
                     /**
                      * Encodes the specified TransactionStart message. Does not implicitly {@link EventStore.Client.Messages.TransactionStart.verify|verify} messages.
                      * @function encode
@@ -2761,10 +2968,10 @@
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.eventStreamId);
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.expectedVersion);
-                        writer.uint32(/* id 3, wireType 0 =*/24).bool(message.requireMaster);
+                        writer.uint32(/* id 3, wireType 0 =*/24).bool(message.requireLeader);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified TransactionStart message, length delimited. Does not implicitly {@link EventStore.Client.Messages.TransactionStart.verify|verify} messages.
                      * @function encodeDelimited
@@ -2777,7 +2984,7 @@
                     TransactionStart.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a TransactionStart message from the specified reader or buffer.
                      * @function decode
@@ -2796,15 +3003,18 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 2:
-                                message.expectedVersion = reader.int64();
-                                break;
-                            case 3:
-                                message.requireMaster = reader.bool();
-                                break;
+                            case 1: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.expectedVersion = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    message.requireLeader = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -2814,11 +3024,11 @@
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         if (!message.hasOwnProperty("expectedVersion"))
                             throw $util.ProtocolError("missing required 'expectedVersion'", { instance: message });
-                        if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                        if (!message.hasOwnProperty("requireLeader"))
+                            throw $util.ProtocolError("missing required 'requireLeader'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a TransactionStart message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -2834,7 +3044,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a TransactionStart message.
                      * @function verify
@@ -2850,11 +3060,11 @@
                             return "eventStreamId: string expected";
                         if (!$util.isInteger(message.expectedVersion) && !(message.expectedVersion && $util.isInteger(message.expectedVersion.low) && $util.isInteger(message.expectedVersion.high)))
                             return "expectedVersion: integer|Long expected";
-                        if (typeof message.requireMaster !== "boolean")
-                            return "requireMaster: boolean expected";
+                        if (typeof message.requireLeader !== "boolean")
+                            return "requireLeader: boolean expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a TransactionStart message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -2878,11 +3088,11 @@
                                 message.expectedVersion = object.expectedVersion;
                             else if (typeof object.expectedVersion === "object")
                                 message.expectedVersion = new $util.LongBits(object.expectedVersion.low >>> 0, object.expectedVersion.high >>> 0).toNumber();
-                        if (object.requireMaster != null)
-                            message.requireMaster = Boolean(object.requireMaster);
+                        if (object.requireLeader != null)
+                            message.requireLeader = Boolean(object.requireLeader);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a TransactionStart message. Also converts values to other types if specified.
                      * @function toObject
@@ -2903,7 +3113,7 @@
                                 object.expectedVersion = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                             } else
                                 object.expectedVersion = options.longs === String ? "0" : 0;
-                            object.requireMaster = false;
+                            object.requireLeader = false;
                         }
                         if (message.eventStreamId != null && message.hasOwnProperty("eventStreamId"))
                             object.eventStreamId = message.eventStreamId;
@@ -2912,11 +3122,11 @@
                                 object.expectedVersion = options.longs === String ? String(message.expectedVersion) : message.expectedVersion;
                             else
                                 object.expectedVersion = options.longs === String ? $util.Long.prototype.toString.call(message.expectedVersion) : options.longs === Number ? new $util.LongBits(message.expectedVersion.low >>> 0, message.expectedVersion.high >>> 0).toNumber() : message.expectedVersion;
-                        if (message.requireMaster != null && message.hasOwnProperty("requireMaster"))
-                            object.requireMaster = message.requireMaster;
+                        if (message.requireLeader != null && message.hasOwnProperty("requireLeader"))
+                            object.requireLeader = message.requireLeader;
                         return object;
                     };
-    
+
                     /**
                      * Converts this TransactionStart to JSON.
                      * @function toJSON
@@ -2927,21 +3137,36 @@
                     TransactionStart.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for TransactionStart
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.TransactionStart
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    TransactionStart.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.TransactionStart";
+                    };
+
                     return TransactionStart;
                 })();
-    
+
                 Messages.TransactionStartCompleted = (function() {
-    
+
                     /**
                      * Properties of a TransactionStartCompleted.
                      * @memberof EventStore.Client.Messages
                      * @interface ITransactionStartCompleted
-                     * @property {number|Long} transactionId TransactionStartCompleted transactionId
+                     * @property {Long} transactionId TransactionStartCompleted transactionId
                      * @property {EventStore.Client.Messages.OperationResult} result TransactionStartCompleted result
                      * @property {string|null} [message] TransactionStartCompleted message
                      */
-    
+
                     /**
                      * Constructs a new TransactionStartCompleted.
                      * @memberof EventStore.Client.Messages
@@ -2956,15 +3181,15 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * TransactionStartCompleted transactionId.
-                     * @member {number|Long} transactionId
+                     * @member {Long} transactionId
                      * @memberof EventStore.Client.Messages.TransactionStartCompleted
                      * @instance
                      */
                     TransactionStartCompleted.prototype.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * TransactionStartCompleted result.
                      * @member {EventStore.Client.Messages.OperationResult} result
@@ -2972,7 +3197,7 @@
                      * @instance
                      */
                     TransactionStartCompleted.prototype.result = 0;
-    
+
                     /**
                      * TransactionStartCompleted message.
                      * @member {string} message
@@ -2980,7 +3205,7 @@
                      * @instance
                      */
                     TransactionStartCompleted.prototype.message = "";
-    
+
                     /**
                      * Creates a new TransactionStartCompleted instance using the specified properties.
                      * @function create
@@ -2992,7 +3217,7 @@
                     TransactionStartCompleted.create = function create(properties) {
                         return new TransactionStartCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified TransactionStartCompleted message. Does not implicitly {@link EventStore.Client.Messages.TransactionStartCompleted.verify|verify} messages.
                      * @function encode
@@ -3007,11 +3232,11 @@
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.transactionId);
                         writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
-                        if (message.message != null && message.hasOwnProperty("message"))
+                        if (message.message != null && Object.hasOwnProperty.call(message, "message"))
                             writer.uint32(/* id 3, wireType 2 =*/26).string(message.message);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified TransactionStartCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.TransactionStartCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -3024,7 +3249,7 @@
                     TransactionStartCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a TransactionStartCompleted message from the specified reader or buffer.
                      * @function decode
@@ -3043,15 +3268,18 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.transactionId = reader.int64();
-                                break;
-                            case 2:
-                                message.result = reader.int32();
-                                break;
-                            case 3:
-                                message.message = reader.string();
-                                break;
+                            case 1: {
+                                    message.transactionId = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 3: {
+                                    message.message = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -3063,7 +3291,7 @@
                             throw $util.ProtocolError("missing required 'result'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a TransactionStartCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -3079,7 +3307,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a TransactionStartCompleted message.
                      * @function verify
@@ -3111,7 +3339,7 @@
                                 return "message: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a TransactionStartCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -3134,6 +3362,12 @@
                             else if (typeof object.transactionId === "object")
                                 message.transactionId = new $util.LongBits(object.transactionId.low >>> 0, object.transactionId.high >>> 0).toNumber();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -3171,7 +3405,7 @@
                             message.message = String(object.message);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a TransactionStartCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -3200,12 +3434,12 @@
                             else
                                 object.transactionId = options.longs === String ? $util.Long.prototype.toString.call(message.transactionId) : options.longs === Number ? new $util.LongBits(message.transactionId.low >>> 0, message.transactionId.high >>> 0).toNumber() : message.transactionId;
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
                         if (message.message != null && message.hasOwnProperty("message"))
                             object.message = message.message;
                         return object;
                     };
-    
+
                     /**
                      * Converts this TransactionStartCompleted to JSON.
                      * @function toJSON
@@ -3216,21 +3450,36 @@
                     TransactionStartCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for TransactionStartCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.TransactionStartCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    TransactionStartCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.TransactionStartCompleted";
+                    };
+
                     return TransactionStartCompleted;
                 })();
-    
+
                 Messages.TransactionWrite = (function() {
-    
+
                     /**
                      * Properties of a TransactionWrite.
                      * @memberof EventStore.Client.Messages
                      * @interface ITransactionWrite
-                     * @property {number|Long} transactionId TransactionWrite transactionId
+                     * @property {Long} transactionId TransactionWrite transactionId
                      * @property {Array.<EventStore.Client.Messages.INewEvent>|null} [events] TransactionWrite events
-                     * @property {boolean} requireMaster TransactionWrite requireMaster
+                     * @property {boolean} requireLeader TransactionWrite requireLeader
                      */
-    
+
                     /**
                      * Constructs a new TransactionWrite.
                      * @memberof EventStore.Client.Messages
@@ -3246,15 +3495,15 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * TransactionWrite transactionId.
-                     * @member {number|Long} transactionId
+                     * @member {Long} transactionId
                      * @memberof EventStore.Client.Messages.TransactionWrite
                      * @instance
                      */
                     TransactionWrite.prototype.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * TransactionWrite events.
                      * @member {Array.<EventStore.Client.Messages.INewEvent>} events
@@ -3262,15 +3511,15 @@
                      * @instance
                      */
                     TransactionWrite.prototype.events = $util.emptyArray;
-    
+
                     /**
-                     * TransactionWrite requireMaster.
-                     * @member {boolean} requireMaster
+                     * TransactionWrite requireLeader.
+                     * @member {boolean} requireLeader
                      * @memberof EventStore.Client.Messages.TransactionWrite
                      * @instance
                      */
-                    TransactionWrite.prototype.requireMaster = false;
-    
+                    TransactionWrite.prototype.requireLeader = false;
+
                     /**
                      * Creates a new TransactionWrite instance using the specified properties.
                      * @function create
@@ -3282,7 +3531,7 @@
                     TransactionWrite.create = function create(properties) {
                         return new TransactionWrite(properties);
                     };
-    
+
                     /**
                      * Encodes the specified TransactionWrite message. Does not implicitly {@link EventStore.Client.Messages.TransactionWrite.verify|verify} messages.
                      * @function encode
@@ -3299,10 +3548,10 @@
                         if (message.events != null && message.events.length)
                             for (var i = 0; i < message.events.length; ++i)
                                 $root.EventStore.Client.Messages.NewEvent.encode(message.events[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                        writer.uint32(/* id 3, wireType 0 =*/24).bool(message.requireMaster);
+                        writer.uint32(/* id 3, wireType 0 =*/24).bool(message.requireLeader);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified TransactionWrite message, length delimited. Does not implicitly {@link EventStore.Client.Messages.TransactionWrite.verify|verify} messages.
                      * @function encodeDelimited
@@ -3315,7 +3564,7 @@
                     TransactionWrite.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a TransactionWrite message from the specified reader or buffer.
                      * @function decode
@@ -3334,17 +3583,20 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.transactionId = reader.int64();
-                                break;
-                            case 2:
-                                if (!(message.events && message.events.length))
-                                    message.events = [];
-                                message.events.push($root.EventStore.Client.Messages.NewEvent.decode(reader, reader.uint32()));
-                                break;
-                            case 3:
-                                message.requireMaster = reader.bool();
-                                break;
+                            case 1: {
+                                    message.transactionId = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    if (!(message.events && message.events.length))
+                                        message.events = [];
+                                    message.events.push($root.EventStore.Client.Messages.NewEvent.decode(reader, reader.uint32()));
+                                    break;
+                                }
+                            case 3: {
+                                    message.requireLeader = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -3352,11 +3604,11 @@
                         }
                         if (!message.hasOwnProperty("transactionId"))
                             throw $util.ProtocolError("missing required 'transactionId'", { instance: message });
-                        if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                        if (!message.hasOwnProperty("requireLeader"))
+                            throw $util.ProtocolError("missing required 'requireLeader'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a TransactionWrite message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -3372,7 +3624,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a TransactionWrite message.
                      * @function verify
@@ -3395,11 +3647,11 @@
                                     return "events." + error;
                             }
                         }
-                        if (typeof message.requireMaster !== "boolean")
-                            return "requireMaster: boolean expected";
+                        if (typeof message.requireLeader !== "boolean")
+                            return "requireLeader: boolean expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a TransactionWrite message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -3431,11 +3683,11 @@
                                 message.events[i] = $root.EventStore.Client.Messages.NewEvent.fromObject(object.events[i]);
                             }
                         }
-                        if (object.requireMaster != null)
-                            message.requireMaster = Boolean(object.requireMaster);
+                        if (object.requireLeader != null)
+                            message.requireLeader = Boolean(object.requireLeader);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a TransactionWrite message. Also converts values to other types if specified.
                      * @function toObject
@@ -3457,7 +3709,7 @@
                                 object.transactionId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                             } else
                                 object.transactionId = options.longs === String ? "0" : 0;
-                            object.requireMaster = false;
+                            object.requireLeader = false;
                         }
                         if (message.transactionId != null && message.hasOwnProperty("transactionId"))
                             if (typeof message.transactionId === "number")
@@ -3469,11 +3721,11 @@
                             for (var j = 0; j < message.events.length; ++j)
                                 object.events[j] = $root.EventStore.Client.Messages.NewEvent.toObject(message.events[j], options);
                         }
-                        if (message.requireMaster != null && message.hasOwnProperty("requireMaster"))
-                            object.requireMaster = message.requireMaster;
+                        if (message.requireLeader != null && message.hasOwnProperty("requireLeader"))
+                            object.requireLeader = message.requireLeader;
                         return object;
                     };
-    
+
                     /**
                      * Converts this TransactionWrite to JSON.
                      * @function toJSON
@@ -3484,21 +3736,36 @@
                     TransactionWrite.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for TransactionWrite
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.TransactionWrite
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    TransactionWrite.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.TransactionWrite";
+                    };
+
                     return TransactionWrite;
                 })();
-    
+
                 Messages.TransactionWriteCompleted = (function() {
-    
+
                     /**
                      * Properties of a TransactionWriteCompleted.
                      * @memberof EventStore.Client.Messages
                      * @interface ITransactionWriteCompleted
-                     * @property {number|Long} transactionId TransactionWriteCompleted transactionId
+                     * @property {Long} transactionId TransactionWriteCompleted transactionId
                      * @property {EventStore.Client.Messages.OperationResult} result TransactionWriteCompleted result
                      * @property {string|null} [message] TransactionWriteCompleted message
                      */
-    
+
                     /**
                      * Constructs a new TransactionWriteCompleted.
                      * @memberof EventStore.Client.Messages
@@ -3513,15 +3780,15 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * TransactionWriteCompleted transactionId.
-                     * @member {number|Long} transactionId
+                     * @member {Long} transactionId
                      * @memberof EventStore.Client.Messages.TransactionWriteCompleted
                      * @instance
                      */
                     TransactionWriteCompleted.prototype.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * TransactionWriteCompleted result.
                      * @member {EventStore.Client.Messages.OperationResult} result
@@ -3529,7 +3796,7 @@
                      * @instance
                      */
                     TransactionWriteCompleted.prototype.result = 0;
-    
+
                     /**
                      * TransactionWriteCompleted message.
                      * @member {string} message
@@ -3537,7 +3804,7 @@
                      * @instance
                      */
                     TransactionWriteCompleted.prototype.message = "";
-    
+
                     /**
                      * Creates a new TransactionWriteCompleted instance using the specified properties.
                      * @function create
@@ -3549,7 +3816,7 @@
                     TransactionWriteCompleted.create = function create(properties) {
                         return new TransactionWriteCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified TransactionWriteCompleted message. Does not implicitly {@link EventStore.Client.Messages.TransactionWriteCompleted.verify|verify} messages.
                      * @function encode
@@ -3564,11 +3831,11 @@
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.transactionId);
                         writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
-                        if (message.message != null && message.hasOwnProperty("message"))
+                        if (message.message != null && Object.hasOwnProperty.call(message, "message"))
                             writer.uint32(/* id 3, wireType 2 =*/26).string(message.message);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified TransactionWriteCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.TransactionWriteCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -3581,7 +3848,7 @@
                     TransactionWriteCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a TransactionWriteCompleted message from the specified reader or buffer.
                      * @function decode
@@ -3600,15 +3867,18 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.transactionId = reader.int64();
-                                break;
-                            case 2:
-                                message.result = reader.int32();
-                                break;
-                            case 3:
-                                message.message = reader.string();
-                                break;
+                            case 1: {
+                                    message.transactionId = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 3: {
+                                    message.message = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -3620,7 +3890,7 @@
                             throw $util.ProtocolError("missing required 'result'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a TransactionWriteCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -3636,7 +3906,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a TransactionWriteCompleted message.
                      * @function verify
@@ -3668,7 +3938,7 @@
                                 return "message: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a TransactionWriteCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -3691,6 +3961,12 @@
                             else if (typeof object.transactionId === "object")
                                 message.transactionId = new $util.LongBits(object.transactionId.low >>> 0, object.transactionId.high >>> 0).toNumber();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -3728,7 +4004,7 @@
                             message.message = String(object.message);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a TransactionWriteCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -3757,12 +4033,12 @@
                             else
                                 object.transactionId = options.longs === String ? $util.Long.prototype.toString.call(message.transactionId) : options.longs === Number ? new $util.LongBits(message.transactionId.low >>> 0, message.transactionId.high >>> 0).toNumber() : message.transactionId;
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
                         if (message.message != null && message.hasOwnProperty("message"))
                             object.message = message.message;
                         return object;
                     };
-    
+
                     /**
                      * Converts this TransactionWriteCompleted to JSON.
                      * @function toJSON
@@ -3773,20 +4049,35 @@
                     TransactionWriteCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for TransactionWriteCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.TransactionWriteCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    TransactionWriteCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.TransactionWriteCompleted";
+                    };
+
                     return TransactionWriteCompleted;
                 })();
-    
+
                 Messages.TransactionCommit = (function() {
-    
+
                     /**
                      * Properties of a TransactionCommit.
                      * @memberof EventStore.Client.Messages
                      * @interface ITransactionCommit
-                     * @property {number|Long} transactionId TransactionCommit transactionId
-                     * @property {boolean} requireMaster TransactionCommit requireMaster
+                     * @property {Long} transactionId TransactionCommit transactionId
+                     * @property {boolean} requireLeader TransactionCommit requireLeader
                      */
-    
+
                     /**
                      * Constructs a new TransactionCommit.
                      * @memberof EventStore.Client.Messages
@@ -3801,23 +4092,23 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * TransactionCommit transactionId.
-                     * @member {number|Long} transactionId
+                     * @member {Long} transactionId
                      * @memberof EventStore.Client.Messages.TransactionCommit
                      * @instance
                      */
                     TransactionCommit.prototype.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
-                     * TransactionCommit requireMaster.
-                     * @member {boolean} requireMaster
+                     * TransactionCommit requireLeader.
+                     * @member {boolean} requireLeader
                      * @memberof EventStore.Client.Messages.TransactionCommit
                      * @instance
                      */
-                    TransactionCommit.prototype.requireMaster = false;
-    
+                    TransactionCommit.prototype.requireLeader = false;
+
                     /**
                      * Creates a new TransactionCommit instance using the specified properties.
                      * @function create
@@ -3829,7 +4120,7 @@
                     TransactionCommit.create = function create(properties) {
                         return new TransactionCommit(properties);
                     };
-    
+
                     /**
                      * Encodes the specified TransactionCommit message. Does not implicitly {@link EventStore.Client.Messages.TransactionCommit.verify|verify} messages.
                      * @function encode
@@ -3843,10 +4134,10 @@
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.transactionId);
-                        writer.uint32(/* id 2, wireType 0 =*/16).bool(message.requireMaster);
+                        writer.uint32(/* id 2, wireType 0 =*/16).bool(message.requireLeader);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified TransactionCommit message, length delimited. Does not implicitly {@link EventStore.Client.Messages.TransactionCommit.verify|verify} messages.
                      * @function encodeDelimited
@@ -3859,7 +4150,7 @@
                     TransactionCommit.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a TransactionCommit message from the specified reader or buffer.
                      * @function decode
@@ -3878,12 +4169,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.transactionId = reader.int64();
-                                break;
-                            case 2:
-                                message.requireMaster = reader.bool();
-                                break;
+                            case 1: {
+                                    message.transactionId = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.requireLeader = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -3891,11 +4184,11 @@
                         }
                         if (!message.hasOwnProperty("transactionId"))
                             throw $util.ProtocolError("missing required 'transactionId'", { instance: message });
-                        if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                        if (!message.hasOwnProperty("requireLeader"))
+                            throw $util.ProtocolError("missing required 'requireLeader'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a TransactionCommit message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -3911,7 +4204,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a TransactionCommit message.
                      * @function verify
@@ -3925,11 +4218,11 @@
                             return "object expected";
                         if (!$util.isInteger(message.transactionId) && !(message.transactionId && $util.isInteger(message.transactionId.low) && $util.isInteger(message.transactionId.high)))
                             return "transactionId: integer|Long expected";
-                        if (typeof message.requireMaster !== "boolean")
-                            return "requireMaster: boolean expected";
+                        if (typeof message.requireLeader !== "boolean")
+                            return "requireLeader: boolean expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a TransactionCommit message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -3951,11 +4244,11 @@
                                 message.transactionId = object.transactionId;
                             else if (typeof object.transactionId === "object")
                                 message.transactionId = new $util.LongBits(object.transactionId.low >>> 0, object.transactionId.high >>> 0).toNumber();
-                        if (object.requireMaster != null)
-                            message.requireMaster = Boolean(object.requireMaster);
+                        if (object.requireLeader != null)
+                            message.requireLeader = Boolean(object.requireLeader);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a TransactionCommit message. Also converts values to other types if specified.
                      * @function toObject
@@ -3975,18 +4268,18 @@
                                 object.transactionId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                             } else
                                 object.transactionId = options.longs === String ? "0" : 0;
-                            object.requireMaster = false;
+                            object.requireLeader = false;
                         }
                         if (message.transactionId != null && message.hasOwnProperty("transactionId"))
                             if (typeof message.transactionId === "number")
                                 object.transactionId = options.longs === String ? String(message.transactionId) : message.transactionId;
                             else
                                 object.transactionId = options.longs === String ? $util.Long.prototype.toString.call(message.transactionId) : options.longs === Number ? new $util.LongBits(message.transactionId.low >>> 0, message.transactionId.high >>> 0).toNumber() : message.transactionId;
-                        if (message.requireMaster != null && message.hasOwnProperty("requireMaster"))
-                            object.requireMaster = message.requireMaster;
+                        if (message.requireLeader != null && message.hasOwnProperty("requireLeader"))
+                            object.requireLeader = message.requireLeader;
                         return object;
                     };
-    
+
                     /**
                      * Converts this TransactionCommit to JSON.
                      * @function toJSON
@@ -3997,25 +4290,40 @@
                     TransactionCommit.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for TransactionCommit
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.TransactionCommit
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    TransactionCommit.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.TransactionCommit";
+                    };
+
                     return TransactionCommit;
                 })();
-    
+
                 Messages.TransactionCommitCompleted = (function() {
-    
+
                     /**
                      * Properties of a TransactionCommitCompleted.
                      * @memberof EventStore.Client.Messages
                      * @interface ITransactionCommitCompleted
-                     * @property {number|Long} transactionId TransactionCommitCompleted transactionId
+                     * @property {Long} transactionId TransactionCommitCompleted transactionId
                      * @property {EventStore.Client.Messages.OperationResult} result TransactionCommitCompleted result
                      * @property {string|null} [message] TransactionCommitCompleted message
-                     * @property {number|Long} firstEventNumber TransactionCommitCompleted firstEventNumber
-                     * @property {number|Long} lastEventNumber TransactionCommitCompleted lastEventNumber
-                     * @property {number|Long|null} [preparePosition] TransactionCommitCompleted preparePosition
-                     * @property {number|Long|null} [commitPosition] TransactionCommitCompleted commitPosition
+                     * @property {Long} firstEventNumber TransactionCommitCompleted firstEventNumber
+                     * @property {Long} lastEventNumber TransactionCommitCompleted lastEventNumber
+                     * @property {Long|null} [preparePosition] TransactionCommitCompleted preparePosition
+                     * @property {Long|null} [commitPosition] TransactionCommitCompleted commitPosition
                      */
-    
+
                     /**
                      * Constructs a new TransactionCommitCompleted.
                      * @memberof EventStore.Client.Messages
@@ -4030,15 +4338,15 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * TransactionCommitCompleted transactionId.
-                     * @member {number|Long} transactionId
+                     * @member {Long} transactionId
                      * @memberof EventStore.Client.Messages.TransactionCommitCompleted
                      * @instance
                      */
                     TransactionCommitCompleted.prototype.transactionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * TransactionCommitCompleted result.
                      * @member {EventStore.Client.Messages.OperationResult} result
@@ -4046,7 +4354,7 @@
                      * @instance
                      */
                     TransactionCommitCompleted.prototype.result = 0;
-    
+
                     /**
                      * TransactionCommitCompleted message.
                      * @member {string} message
@@ -4054,39 +4362,39 @@
                      * @instance
                      */
                     TransactionCommitCompleted.prototype.message = "";
-    
+
                     /**
                      * TransactionCommitCompleted firstEventNumber.
-                     * @member {number|Long} firstEventNumber
+                     * @member {Long} firstEventNumber
                      * @memberof EventStore.Client.Messages.TransactionCommitCompleted
                      * @instance
                      */
                     TransactionCommitCompleted.prototype.firstEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * TransactionCommitCompleted lastEventNumber.
-                     * @member {number|Long} lastEventNumber
+                     * @member {Long} lastEventNumber
                      * @memberof EventStore.Client.Messages.TransactionCommitCompleted
                      * @instance
                      */
                     TransactionCommitCompleted.prototype.lastEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * TransactionCommitCompleted preparePosition.
-                     * @member {number|Long} preparePosition
+                     * @member {Long} preparePosition
                      * @memberof EventStore.Client.Messages.TransactionCommitCompleted
                      * @instance
                      */
                     TransactionCommitCompleted.prototype.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * TransactionCommitCompleted commitPosition.
-                     * @member {number|Long} commitPosition
+                     * @member {Long} commitPosition
                      * @memberof EventStore.Client.Messages.TransactionCommitCompleted
                      * @instance
                      */
                     TransactionCommitCompleted.prototype.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * Creates a new TransactionCommitCompleted instance using the specified properties.
                      * @function create
@@ -4098,7 +4406,7 @@
                     TransactionCommitCompleted.create = function create(properties) {
                         return new TransactionCommitCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified TransactionCommitCompleted message. Does not implicitly {@link EventStore.Client.Messages.TransactionCommitCompleted.verify|verify} messages.
                      * @function encode
@@ -4113,17 +4421,17 @@
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.transactionId);
                         writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
-                        if (message.message != null && message.hasOwnProperty("message"))
+                        if (message.message != null && Object.hasOwnProperty.call(message, "message"))
                             writer.uint32(/* id 3, wireType 2 =*/26).string(message.message);
                         writer.uint32(/* id 4, wireType 0 =*/32).int64(message.firstEventNumber);
                         writer.uint32(/* id 5, wireType 0 =*/40).int64(message.lastEventNumber);
-                        if (message.preparePosition != null && message.hasOwnProperty("preparePosition"))
+                        if (message.preparePosition != null && Object.hasOwnProperty.call(message, "preparePosition"))
                             writer.uint32(/* id 6, wireType 0 =*/48).int64(message.preparePosition);
-                        if (message.commitPosition != null && message.hasOwnProperty("commitPosition"))
+                        if (message.commitPosition != null && Object.hasOwnProperty.call(message, "commitPosition"))
                             writer.uint32(/* id 7, wireType 0 =*/56).int64(message.commitPosition);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified TransactionCommitCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.TransactionCommitCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -4136,7 +4444,7 @@
                     TransactionCommitCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a TransactionCommitCompleted message from the specified reader or buffer.
                      * @function decode
@@ -4155,27 +4463,34 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.transactionId = reader.int64();
-                                break;
-                            case 2:
-                                message.result = reader.int32();
-                                break;
-                            case 3:
-                                message.message = reader.string();
-                                break;
-                            case 4:
-                                message.firstEventNumber = reader.int64();
-                                break;
-                            case 5:
-                                message.lastEventNumber = reader.int64();
-                                break;
-                            case 6:
-                                message.preparePosition = reader.int64();
-                                break;
-                            case 7:
-                                message.commitPosition = reader.int64();
-                                break;
+                            case 1: {
+                                    message.transactionId = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 3: {
+                                    message.message = reader.string();
+                                    break;
+                                }
+                            case 4: {
+                                    message.firstEventNumber = reader.int64();
+                                    break;
+                                }
+                            case 5: {
+                                    message.lastEventNumber = reader.int64();
+                                    break;
+                                }
+                            case 6: {
+                                    message.preparePosition = reader.int64();
+                                    break;
+                                }
+                            case 7: {
+                                    message.commitPosition = reader.int64();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -4191,7 +4506,7 @@
                             throw $util.ProtocolError("missing required 'lastEventNumber'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a TransactionCommitCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -4207,7 +4522,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a TransactionCommitCompleted message.
                      * @function verify
@@ -4249,7 +4564,7 @@
                                 return "commitPosition: integer|Long expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a TransactionCommitCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -4272,6 +4587,12 @@
                             else if (typeof object.transactionId === "object")
                                 message.transactionId = new $util.LongBits(object.transactionId.low >>> 0, object.transactionId.high >>> 0).toNumber();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -4345,7 +4666,7 @@
                                 message.commitPosition = new $util.LongBits(object.commitPosition.low >>> 0, object.commitPosition.high >>> 0).toNumber();
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a TransactionCommitCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -4394,7 +4715,7 @@
                             else
                                 object.transactionId = options.longs === String ? $util.Long.prototype.toString.call(message.transactionId) : options.longs === Number ? new $util.LongBits(message.transactionId.low >>> 0, message.transactionId.high >>> 0).toNumber() : message.transactionId;
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.OperationResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.OperationResult[message.result] : message.result;
                         if (message.message != null && message.hasOwnProperty("message"))
                             object.message = message.message;
                         if (message.firstEventNumber != null && message.hasOwnProperty("firstEventNumber"))
@@ -4419,7 +4740,7 @@
                                 object.commitPosition = options.longs === String ? $util.Long.prototype.toString.call(message.commitPosition) : options.longs === Number ? new $util.LongBits(message.commitPosition.low >>> 0, message.commitPosition.high >>> 0).toNumber() : message.commitPosition;
                         return object;
                     };
-    
+
                     /**
                      * Converts this TransactionCommitCompleted to JSON.
                      * @function toJSON
@@ -4430,22 +4751,37 @@
                     TransactionCommitCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for TransactionCommitCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.TransactionCommitCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    TransactionCommitCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.TransactionCommitCompleted";
+                    };
+
                     return TransactionCommitCompleted;
                 })();
-    
+
                 Messages.ReadEvent = (function() {
-    
+
                     /**
                      * Properties of a ReadEvent.
                      * @memberof EventStore.Client.Messages
                      * @interface IReadEvent
                      * @property {string} eventStreamId ReadEvent eventStreamId
-                     * @property {number|Long} eventNumber ReadEvent eventNumber
+                     * @property {Long} eventNumber ReadEvent eventNumber
                      * @property {boolean} resolveLinkTos ReadEvent resolveLinkTos
-                     * @property {boolean} requireMaster ReadEvent requireMaster
+                     * @property {boolean} requireLeader ReadEvent requireLeader
                      */
-    
+
                     /**
                      * Constructs a new ReadEvent.
                      * @memberof EventStore.Client.Messages
@@ -4460,7 +4796,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * ReadEvent eventStreamId.
                      * @member {string} eventStreamId
@@ -4468,15 +4804,15 @@
                      * @instance
                      */
                     ReadEvent.prototype.eventStreamId = "";
-    
+
                     /**
                      * ReadEvent eventNumber.
-                     * @member {number|Long} eventNumber
+                     * @member {Long} eventNumber
                      * @memberof EventStore.Client.Messages.ReadEvent
                      * @instance
                      */
                     ReadEvent.prototype.eventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadEvent resolveLinkTos.
                      * @member {boolean} resolveLinkTos
@@ -4484,15 +4820,15 @@
                      * @instance
                      */
                     ReadEvent.prototype.resolveLinkTos = false;
-    
+
                     /**
-                     * ReadEvent requireMaster.
-                     * @member {boolean} requireMaster
+                     * ReadEvent requireLeader.
+                     * @member {boolean} requireLeader
                      * @memberof EventStore.Client.Messages.ReadEvent
                      * @instance
                      */
-                    ReadEvent.prototype.requireMaster = false;
-    
+                    ReadEvent.prototype.requireLeader = false;
+
                     /**
                      * Creates a new ReadEvent instance using the specified properties.
                      * @function create
@@ -4504,7 +4840,7 @@
                     ReadEvent.create = function create(properties) {
                         return new ReadEvent(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ReadEvent message. Does not implicitly {@link EventStore.Client.Messages.ReadEvent.verify|verify} messages.
                      * @function encode
@@ -4520,10 +4856,10 @@
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.eventStreamId);
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.eventNumber);
                         writer.uint32(/* id 3, wireType 0 =*/24).bool(message.resolveLinkTos);
-                        writer.uint32(/* id 4, wireType 0 =*/32).bool(message.requireMaster);
+                        writer.uint32(/* id 4, wireType 0 =*/32).bool(message.requireLeader);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ReadEvent message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ReadEvent.verify|verify} messages.
                      * @function encodeDelimited
@@ -4536,7 +4872,7 @@
                     ReadEvent.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ReadEvent message from the specified reader or buffer.
                      * @function decode
@@ -4555,18 +4891,22 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 2:
-                                message.eventNumber = reader.int64();
-                                break;
-                            case 3:
-                                message.resolveLinkTos = reader.bool();
-                                break;
-                            case 4:
-                                message.requireMaster = reader.bool();
-                                break;
+                            case 1: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.eventNumber = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    message.resolveLinkTos = reader.bool();
+                                    break;
+                                }
+                            case 4: {
+                                    message.requireLeader = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -4578,11 +4918,11 @@
                             throw $util.ProtocolError("missing required 'eventNumber'", { instance: message });
                         if (!message.hasOwnProperty("resolveLinkTos"))
                             throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
-                        if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                        if (!message.hasOwnProperty("requireLeader"))
+                            throw $util.ProtocolError("missing required 'requireLeader'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ReadEvent message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -4598,7 +4938,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ReadEvent message.
                      * @function verify
@@ -4616,11 +4956,11 @@
                             return "eventNumber: integer|Long expected";
                         if (typeof message.resolveLinkTos !== "boolean")
                             return "resolveLinkTos: boolean expected";
-                        if (typeof message.requireMaster !== "boolean")
-                            return "requireMaster: boolean expected";
+                        if (typeof message.requireLeader !== "boolean")
+                            return "requireLeader: boolean expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ReadEvent message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -4646,11 +4986,11 @@
                                 message.eventNumber = new $util.LongBits(object.eventNumber.low >>> 0, object.eventNumber.high >>> 0).toNumber();
                         if (object.resolveLinkTos != null)
                             message.resolveLinkTos = Boolean(object.resolveLinkTos);
-                        if (object.requireMaster != null)
-                            message.requireMaster = Boolean(object.requireMaster);
+                        if (object.requireLeader != null)
+                            message.requireLeader = Boolean(object.requireLeader);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a ReadEvent message. Also converts values to other types if specified.
                      * @function toObject
@@ -4672,7 +5012,7 @@
                             } else
                                 object.eventNumber = options.longs === String ? "0" : 0;
                             object.resolveLinkTos = false;
-                            object.requireMaster = false;
+                            object.requireLeader = false;
                         }
                         if (message.eventStreamId != null && message.hasOwnProperty("eventStreamId"))
                             object.eventStreamId = message.eventStreamId;
@@ -4683,11 +5023,11 @@
                                 object.eventNumber = options.longs === String ? $util.Long.prototype.toString.call(message.eventNumber) : options.longs === Number ? new $util.LongBits(message.eventNumber.low >>> 0, message.eventNumber.high >>> 0).toNumber() : message.eventNumber;
                         if (message.resolveLinkTos != null && message.hasOwnProperty("resolveLinkTos"))
                             object.resolveLinkTos = message.resolveLinkTos;
-                        if (message.requireMaster != null && message.hasOwnProperty("requireMaster"))
-                            object.requireMaster = message.requireMaster;
+                        if (message.requireLeader != null && message.hasOwnProperty("requireLeader"))
+                            object.requireLeader = message.requireLeader;
                         return object;
                     };
-    
+
                     /**
                      * Converts this ReadEvent to JSON.
                      * @function toJSON
@@ -4698,12 +5038,27 @@
                     ReadEvent.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ReadEvent
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ReadEvent
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ReadEvent.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ReadEvent";
+                    };
+
                     return ReadEvent;
                 })();
-    
+
                 Messages.ReadEventCompleted = (function() {
-    
+
                     /**
                      * Properties of a ReadEventCompleted.
                      * @memberof EventStore.Client.Messages
@@ -4712,7 +5067,7 @@
                      * @property {EventStore.Client.Messages.IResolvedIndexedEvent} event ReadEventCompleted event
                      * @property {string|null} [error] ReadEventCompleted error
                      */
-    
+
                     /**
                      * Constructs a new ReadEventCompleted.
                      * @memberof EventStore.Client.Messages
@@ -4727,7 +5082,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * ReadEventCompleted result.
                      * @member {EventStore.Client.Messages.ReadEventCompleted.ReadEventResult} result
@@ -4735,7 +5090,7 @@
                      * @instance
                      */
                     ReadEventCompleted.prototype.result = 0;
-    
+
                     /**
                      * ReadEventCompleted event.
                      * @member {EventStore.Client.Messages.IResolvedIndexedEvent} event
@@ -4743,7 +5098,7 @@
                      * @instance
                      */
                     ReadEventCompleted.prototype.event = null;
-    
+
                     /**
                      * ReadEventCompleted error.
                      * @member {string} error
@@ -4751,7 +5106,7 @@
                      * @instance
                      */
                     ReadEventCompleted.prototype.error = "";
-    
+
                     /**
                      * Creates a new ReadEventCompleted instance using the specified properties.
                      * @function create
@@ -4763,7 +5118,7 @@
                     ReadEventCompleted.create = function create(properties) {
                         return new ReadEventCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ReadEventCompleted message. Does not implicitly {@link EventStore.Client.Messages.ReadEventCompleted.verify|verify} messages.
                      * @function encode
@@ -4778,11 +5133,11 @@
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.result);
                         $root.EventStore.Client.Messages.ResolvedIndexedEvent.encode(message.event, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                        if (message.error != null && message.hasOwnProperty("error"))
+                        if (message.error != null && Object.hasOwnProperty.call(message, "error"))
                             writer.uint32(/* id 3, wireType 2 =*/26).string(message.error);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ReadEventCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ReadEventCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -4795,7 +5150,7 @@
                     ReadEventCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ReadEventCompleted message from the specified reader or buffer.
                      * @function decode
@@ -4814,15 +5169,18 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.result = reader.int32();
-                                break;
-                            case 2:
-                                message.event = $root.EventStore.Client.Messages.ResolvedIndexedEvent.decode(reader, reader.uint32());
-                                break;
-                            case 3:
-                                message.error = reader.string();
-                                break;
+                            case 1: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.event = $root.EventStore.Client.Messages.ResolvedIndexedEvent.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 3: {
+                                    message.error = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -4834,7 +5192,7 @@
                             throw $util.ProtocolError("missing required 'event'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ReadEventCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -4850,7 +5208,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ReadEventCompleted message.
                      * @function verify
@@ -4883,7 +5241,7 @@
                                 return "error: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ReadEventCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -4897,6 +5255,12 @@
                             return object;
                         var message = new $root.EventStore.Client.Messages.ReadEventCompleted();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -4931,7 +5295,7 @@
                             message.error = String(object.error);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a ReadEventCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -4951,14 +5315,14 @@
                             object.error = "";
                         }
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.ReadEventCompleted.ReadEventResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.ReadEventCompleted.ReadEventResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.ReadEventCompleted.ReadEventResult[message.result] : message.result;
                         if (message.event != null && message.hasOwnProperty("event"))
                             object.event = $root.EventStore.Client.Messages.ResolvedIndexedEvent.toObject(message.event, options);
                         if (message.error != null && message.hasOwnProperty("error"))
                             object.error = message.error;
                         return object;
                     };
-    
+
                     /**
                      * Converts this ReadEventCompleted to JSON.
                      * @function toJSON
@@ -4969,11 +5333,26 @@
                     ReadEventCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ReadEventCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ReadEventCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ReadEventCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ReadEventCompleted";
+                    };
+
                     /**
                      * ReadEventResult enum.
                      * @name EventStore.Client.Messages.ReadEventCompleted.ReadEventResult
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} Success=0 Success value
                      * @property {number} NotFound=1 NotFound value
                      * @property {number} NoStream=2 NoStream value
@@ -4991,23 +5370,23 @@
                         values[valuesById[5] = "AccessDenied"] = 5;
                         return values;
                     })();
-    
+
                     return ReadEventCompleted;
                 })();
-    
+
                 Messages.ReadStreamEvents = (function() {
-    
+
                     /**
                      * Properties of a ReadStreamEvents.
                      * @memberof EventStore.Client.Messages
                      * @interface IReadStreamEvents
                      * @property {string} eventStreamId ReadStreamEvents eventStreamId
-                     * @property {number|Long} fromEventNumber ReadStreamEvents fromEventNumber
+                     * @property {Long} fromEventNumber ReadStreamEvents fromEventNumber
                      * @property {number} maxCount ReadStreamEvents maxCount
                      * @property {boolean} resolveLinkTos ReadStreamEvents resolveLinkTos
-                     * @property {boolean} requireMaster ReadStreamEvents requireMaster
+                     * @property {boolean} requireLeader ReadStreamEvents requireLeader
                      */
-    
+
                     /**
                      * Constructs a new ReadStreamEvents.
                      * @memberof EventStore.Client.Messages
@@ -5022,7 +5401,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * ReadStreamEvents eventStreamId.
                      * @member {string} eventStreamId
@@ -5030,15 +5409,15 @@
                      * @instance
                      */
                     ReadStreamEvents.prototype.eventStreamId = "";
-    
+
                     /**
                      * ReadStreamEvents fromEventNumber.
-                     * @member {number|Long} fromEventNumber
+                     * @member {Long} fromEventNumber
                      * @memberof EventStore.Client.Messages.ReadStreamEvents
                      * @instance
                      */
                     ReadStreamEvents.prototype.fromEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadStreamEvents maxCount.
                      * @member {number} maxCount
@@ -5046,7 +5425,7 @@
                      * @instance
                      */
                     ReadStreamEvents.prototype.maxCount = 0;
-    
+
                     /**
                      * ReadStreamEvents resolveLinkTos.
                      * @member {boolean} resolveLinkTos
@@ -5054,15 +5433,15 @@
                      * @instance
                      */
                     ReadStreamEvents.prototype.resolveLinkTos = false;
-    
+
                     /**
-                     * ReadStreamEvents requireMaster.
-                     * @member {boolean} requireMaster
+                     * ReadStreamEvents requireLeader.
+                     * @member {boolean} requireLeader
                      * @memberof EventStore.Client.Messages.ReadStreamEvents
                      * @instance
                      */
-                    ReadStreamEvents.prototype.requireMaster = false;
-    
+                    ReadStreamEvents.prototype.requireLeader = false;
+
                     /**
                      * Creates a new ReadStreamEvents instance using the specified properties.
                      * @function create
@@ -5074,7 +5453,7 @@
                     ReadStreamEvents.create = function create(properties) {
                         return new ReadStreamEvents(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ReadStreamEvents message. Does not implicitly {@link EventStore.Client.Messages.ReadStreamEvents.verify|verify} messages.
                      * @function encode
@@ -5091,10 +5470,10 @@
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.fromEventNumber);
                         writer.uint32(/* id 3, wireType 0 =*/24).int32(message.maxCount);
                         writer.uint32(/* id 4, wireType 0 =*/32).bool(message.resolveLinkTos);
-                        writer.uint32(/* id 5, wireType 0 =*/40).bool(message.requireMaster);
+                        writer.uint32(/* id 5, wireType 0 =*/40).bool(message.requireLeader);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ReadStreamEvents message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ReadStreamEvents.verify|verify} messages.
                      * @function encodeDelimited
@@ -5107,7 +5486,7 @@
                     ReadStreamEvents.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ReadStreamEvents message from the specified reader or buffer.
                      * @function decode
@@ -5126,21 +5505,26 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 2:
-                                message.fromEventNumber = reader.int64();
-                                break;
-                            case 3:
-                                message.maxCount = reader.int32();
-                                break;
-                            case 4:
-                                message.resolveLinkTos = reader.bool();
-                                break;
-                            case 5:
-                                message.requireMaster = reader.bool();
-                                break;
+                            case 1: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.fromEventNumber = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    message.maxCount = reader.int32();
+                                    break;
+                                }
+                            case 4: {
+                                    message.resolveLinkTos = reader.bool();
+                                    break;
+                                }
+                            case 5: {
+                                    message.requireLeader = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -5154,11 +5538,11 @@
                             throw $util.ProtocolError("missing required 'maxCount'", { instance: message });
                         if (!message.hasOwnProperty("resolveLinkTos"))
                             throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
-                        if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                        if (!message.hasOwnProperty("requireLeader"))
+                            throw $util.ProtocolError("missing required 'requireLeader'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ReadStreamEvents message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -5174,7 +5558,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ReadStreamEvents message.
                      * @function verify
@@ -5194,11 +5578,11 @@
                             return "maxCount: integer expected";
                         if (typeof message.resolveLinkTos !== "boolean")
                             return "resolveLinkTos: boolean expected";
-                        if (typeof message.requireMaster !== "boolean")
-                            return "requireMaster: boolean expected";
+                        if (typeof message.requireLeader !== "boolean")
+                            return "requireLeader: boolean expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ReadStreamEvents message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -5226,11 +5610,11 @@
                             message.maxCount = object.maxCount | 0;
                         if (object.resolveLinkTos != null)
                             message.resolveLinkTos = Boolean(object.resolveLinkTos);
-                        if (object.requireMaster != null)
-                            message.requireMaster = Boolean(object.requireMaster);
+                        if (object.requireLeader != null)
+                            message.requireLeader = Boolean(object.requireLeader);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a ReadStreamEvents message. Also converts values to other types if specified.
                      * @function toObject
@@ -5253,7 +5637,7 @@
                                 object.fromEventNumber = options.longs === String ? "0" : 0;
                             object.maxCount = 0;
                             object.resolveLinkTos = false;
-                            object.requireMaster = false;
+                            object.requireLeader = false;
                         }
                         if (message.eventStreamId != null && message.hasOwnProperty("eventStreamId"))
                             object.eventStreamId = message.eventStreamId;
@@ -5266,11 +5650,11 @@
                             object.maxCount = message.maxCount;
                         if (message.resolveLinkTos != null && message.hasOwnProperty("resolveLinkTos"))
                             object.resolveLinkTos = message.resolveLinkTos;
-                        if (message.requireMaster != null && message.hasOwnProperty("requireMaster"))
-                            object.requireMaster = message.requireMaster;
+                        if (message.requireLeader != null && message.hasOwnProperty("requireLeader"))
+                            object.requireLeader = message.requireLeader;
                         return object;
                     };
-    
+
                     /**
                      * Converts this ReadStreamEvents to JSON.
                      * @function toJSON
@@ -5281,25 +5665,40 @@
                     ReadStreamEvents.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ReadStreamEvents
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ReadStreamEvents
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ReadStreamEvents.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ReadStreamEvents";
+                    };
+
                     return ReadStreamEvents;
                 })();
-    
+
                 Messages.ReadStreamEventsCompleted = (function() {
-    
+
                     /**
                      * Properties of a ReadStreamEventsCompleted.
                      * @memberof EventStore.Client.Messages
                      * @interface IReadStreamEventsCompleted
                      * @property {Array.<EventStore.Client.Messages.IResolvedIndexedEvent>|null} [events] ReadStreamEventsCompleted events
                      * @property {EventStore.Client.Messages.ReadStreamEventsCompleted.ReadStreamResult} result ReadStreamEventsCompleted result
-                     * @property {number|Long} nextEventNumber ReadStreamEventsCompleted nextEventNumber
-                     * @property {number|Long} lastEventNumber ReadStreamEventsCompleted lastEventNumber
+                     * @property {Long} nextEventNumber ReadStreamEventsCompleted nextEventNumber
+                     * @property {Long} lastEventNumber ReadStreamEventsCompleted lastEventNumber
                      * @property {boolean} isEndOfStream ReadStreamEventsCompleted isEndOfStream
-                     * @property {number|Long} lastCommitPosition ReadStreamEventsCompleted lastCommitPosition
+                     * @property {Long} lastCommitPosition ReadStreamEventsCompleted lastCommitPosition
                      * @property {string|null} [error] ReadStreamEventsCompleted error
                      */
-    
+
                     /**
                      * Constructs a new ReadStreamEventsCompleted.
                      * @memberof EventStore.Client.Messages
@@ -5315,7 +5714,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * ReadStreamEventsCompleted events.
                      * @member {Array.<EventStore.Client.Messages.IResolvedIndexedEvent>} events
@@ -5323,7 +5722,7 @@
                      * @instance
                      */
                     ReadStreamEventsCompleted.prototype.events = $util.emptyArray;
-    
+
                     /**
                      * ReadStreamEventsCompleted result.
                      * @member {EventStore.Client.Messages.ReadStreamEventsCompleted.ReadStreamResult} result
@@ -5331,23 +5730,23 @@
                      * @instance
                      */
                     ReadStreamEventsCompleted.prototype.result = 0;
-    
+
                     /**
                      * ReadStreamEventsCompleted nextEventNumber.
-                     * @member {number|Long} nextEventNumber
+                     * @member {Long} nextEventNumber
                      * @memberof EventStore.Client.Messages.ReadStreamEventsCompleted
                      * @instance
                      */
                     ReadStreamEventsCompleted.prototype.nextEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadStreamEventsCompleted lastEventNumber.
-                     * @member {number|Long} lastEventNumber
+                     * @member {Long} lastEventNumber
                      * @memberof EventStore.Client.Messages.ReadStreamEventsCompleted
                      * @instance
                      */
                     ReadStreamEventsCompleted.prototype.lastEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadStreamEventsCompleted isEndOfStream.
                      * @member {boolean} isEndOfStream
@@ -5355,15 +5754,15 @@
                      * @instance
                      */
                     ReadStreamEventsCompleted.prototype.isEndOfStream = false;
-    
+
                     /**
                      * ReadStreamEventsCompleted lastCommitPosition.
-                     * @member {number|Long} lastCommitPosition
+                     * @member {Long} lastCommitPosition
                      * @memberof EventStore.Client.Messages.ReadStreamEventsCompleted
                      * @instance
                      */
                     ReadStreamEventsCompleted.prototype.lastCommitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadStreamEventsCompleted error.
                      * @member {string} error
@@ -5371,7 +5770,7 @@
                      * @instance
                      */
                     ReadStreamEventsCompleted.prototype.error = "";
-    
+
                     /**
                      * Creates a new ReadStreamEventsCompleted instance using the specified properties.
                      * @function create
@@ -5383,7 +5782,7 @@
                     ReadStreamEventsCompleted.create = function create(properties) {
                         return new ReadStreamEventsCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ReadStreamEventsCompleted message. Does not implicitly {@link EventStore.Client.Messages.ReadStreamEventsCompleted.verify|verify} messages.
                      * @function encode
@@ -5404,11 +5803,11 @@
                         writer.uint32(/* id 4, wireType 0 =*/32).int64(message.lastEventNumber);
                         writer.uint32(/* id 5, wireType 0 =*/40).bool(message.isEndOfStream);
                         writer.uint32(/* id 6, wireType 0 =*/48).int64(message.lastCommitPosition);
-                        if (message.error != null && message.hasOwnProperty("error"))
+                        if (message.error != null && Object.hasOwnProperty.call(message, "error"))
                             writer.uint32(/* id 7, wireType 2 =*/58).string(message.error);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ReadStreamEventsCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ReadStreamEventsCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -5421,7 +5820,7 @@
                     ReadStreamEventsCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ReadStreamEventsCompleted message from the specified reader or buffer.
                      * @function decode
@@ -5440,29 +5839,36 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                if (!(message.events && message.events.length))
-                                    message.events = [];
-                                message.events.push($root.EventStore.Client.Messages.ResolvedIndexedEvent.decode(reader, reader.uint32()));
-                                break;
-                            case 2:
-                                message.result = reader.int32();
-                                break;
-                            case 3:
-                                message.nextEventNumber = reader.int64();
-                                break;
-                            case 4:
-                                message.lastEventNumber = reader.int64();
-                                break;
-                            case 5:
-                                message.isEndOfStream = reader.bool();
-                                break;
-                            case 6:
-                                message.lastCommitPosition = reader.int64();
-                                break;
-                            case 7:
-                                message.error = reader.string();
-                                break;
+                            case 1: {
+                                    if (!(message.events && message.events.length))
+                                        message.events = [];
+                                    message.events.push($root.EventStore.Client.Messages.ResolvedIndexedEvent.decode(reader, reader.uint32()));
+                                    break;
+                                }
+                            case 2: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 3: {
+                                    message.nextEventNumber = reader.int64();
+                                    break;
+                                }
+                            case 4: {
+                                    message.lastEventNumber = reader.int64();
+                                    break;
+                                }
+                            case 5: {
+                                    message.isEndOfStream = reader.bool();
+                                    break;
+                                }
+                            case 6: {
+                                    message.lastCommitPosition = reader.int64();
+                                    break;
+                                }
+                            case 7: {
+                                    message.error = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -5480,7 +5886,7 @@
                             throw $util.ProtocolError("missing required 'lastCommitPosition'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ReadStreamEventsCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -5496,7 +5902,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ReadStreamEventsCompleted message.
                      * @function verify
@@ -5541,7 +5947,7 @@
                                 return "error: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ReadStreamEventsCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -5565,6 +5971,12 @@
                             }
                         }
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -5623,7 +6035,7 @@
                             message.error = String(object.error);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a ReadStreamEventsCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -5665,7 +6077,7 @@
                                 object.events[j] = $root.EventStore.Client.Messages.ResolvedIndexedEvent.toObject(message.events[j], options);
                         }
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.ReadStreamEventsCompleted.ReadStreamResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.ReadStreamEventsCompleted.ReadStreamResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.ReadStreamEventsCompleted.ReadStreamResult[message.result] : message.result;
                         if (message.nextEventNumber != null && message.hasOwnProperty("nextEventNumber"))
                             if (typeof message.nextEventNumber === "number")
                                 object.nextEventNumber = options.longs === String ? String(message.nextEventNumber) : message.nextEventNumber;
@@ -5687,7 +6099,7 @@
                             object.error = message.error;
                         return object;
                     };
-    
+
                     /**
                      * Converts this ReadStreamEventsCompleted to JSON.
                      * @function toJSON
@@ -5698,11 +6110,26 @@
                     ReadStreamEventsCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ReadStreamEventsCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ReadStreamEventsCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ReadStreamEventsCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ReadStreamEventsCompleted";
+                    };
+
                     /**
                      * ReadStreamResult enum.
                      * @name EventStore.Client.Messages.ReadStreamEventsCompleted.ReadStreamResult
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} Success=0 Success value
                      * @property {number} NoStream=1 NoStream value
                      * @property {number} StreamDeleted=2 StreamDeleted value
@@ -5720,23 +6147,23 @@
                         values[valuesById[5] = "AccessDenied"] = 5;
                         return values;
                     })();
-    
+
                     return ReadStreamEventsCompleted;
                 })();
-    
+
                 Messages.ReadAllEvents = (function() {
-    
+
                     /**
                      * Properties of a ReadAllEvents.
                      * @memberof EventStore.Client.Messages
                      * @interface IReadAllEvents
-                     * @property {number|Long} commitPosition ReadAllEvents commitPosition
-                     * @property {number|Long} preparePosition ReadAllEvents preparePosition
+                     * @property {Long} commitPosition ReadAllEvents commitPosition
+                     * @property {Long} preparePosition ReadAllEvents preparePosition
                      * @property {number} maxCount ReadAllEvents maxCount
                      * @property {boolean} resolveLinkTos ReadAllEvents resolveLinkTos
-                     * @property {boolean} requireMaster ReadAllEvents requireMaster
+                     * @property {boolean} requireLeader ReadAllEvents requireLeader
                      */
-    
+
                     /**
                      * Constructs a new ReadAllEvents.
                      * @memberof EventStore.Client.Messages
@@ -5751,23 +6178,23 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * ReadAllEvents commitPosition.
-                     * @member {number|Long} commitPosition
+                     * @member {Long} commitPosition
                      * @memberof EventStore.Client.Messages.ReadAllEvents
                      * @instance
                      */
                     ReadAllEvents.prototype.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadAllEvents preparePosition.
-                     * @member {number|Long} preparePosition
+                     * @member {Long} preparePosition
                      * @memberof EventStore.Client.Messages.ReadAllEvents
                      * @instance
                      */
                     ReadAllEvents.prototype.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadAllEvents maxCount.
                      * @member {number} maxCount
@@ -5775,7 +6202,7 @@
                      * @instance
                      */
                     ReadAllEvents.prototype.maxCount = 0;
-    
+
                     /**
                      * ReadAllEvents resolveLinkTos.
                      * @member {boolean} resolveLinkTos
@@ -5783,15 +6210,15 @@
                      * @instance
                      */
                     ReadAllEvents.prototype.resolveLinkTos = false;
-    
+
                     /**
-                     * ReadAllEvents requireMaster.
-                     * @member {boolean} requireMaster
+                     * ReadAllEvents requireLeader.
+                     * @member {boolean} requireLeader
                      * @memberof EventStore.Client.Messages.ReadAllEvents
                      * @instance
                      */
-                    ReadAllEvents.prototype.requireMaster = false;
-    
+                    ReadAllEvents.prototype.requireLeader = false;
+
                     /**
                      * Creates a new ReadAllEvents instance using the specified properties.
                      * @function create
@@ -5803,7 +6230,7 @@
                     ReadAllEvents.create = function create(properties) {
                         return new ReadAllEvents(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ReadAllEvents message. Does not implicitly {@link EventStore.Client.Messages.ReadAllEvents.verify|verify} messages.
                      * @function encode
@@ -5820,10 +6247,10 @@
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.preparePosition);
                         writer.uint32(/* id 3, wireType 0 =*/24).int32(message.maxCount);
                         writer.uint32(/* id 4, wireType 0 =*/32).bool(message.resolveLinkTos);
-                        writer.uint32(/* id 5, wireType 0 =*/40).bool(message.requireMaster);
+                        writer.uint32(/* id 5, wireType 0 =*/40).bool(message.requireLeader);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ReadAllEvents message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ReadAllEvents.verify|verify} messages.
                      * @function encodeDelimited
@@ -5836,7 +6263,7 @@
                     ReadAllEvents.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ReadAllEvents message from the specified reader or buffer.
                      * @function decode
@@ -5855,21 +6282,26 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.commitPosition = reader.int64();
-                                break;
-                            case 2:
-                                message.preparePosition = reader.int64();
-                                break;
-                            case 3:
-                                message.maxCount = reader.int32();
-                                break;
-                            case 4:
-                                message.resolveLinkTos = reader.bool();
-                                break;
-                            case 5:
-                                message.requireMaster = reader.bool();
-                                break;
+                            case 1: {
+                                    message.commitPosition = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.preparePosition = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    message.maxCount = reader.int32();
+                                    break;
+                                }
+                            case 4: {
+                                    message.resolveLinkTos = reader.bool();
+                                    break;
+                                }
+                            case 5: {
+                                    message.requireLeader = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -5883,11 +6315,11 @@
                             throw $util.ProtocolError("missing required 'maxCount'", { instance: message });
                         if (!message.hasOwnProperty("resolveLinkTos"))
                             throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
-                        if (!message.hasOwnProperty("requireMaster"))
-                            throw $util.ProtocolError("missing required 'requireMaster'", { instance: message });
+                        if (!message.hasOwnProperty("requireLeader"))
+                            throw $util.ProtocolError("missing required 'requireLeader'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ReadAllEvents message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -5903,7 +6335,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ReadAllEvents message.
                      * @function verify
@@ -5923,11 +6355,11 @@
                             return "maxCount: integer expected";
                         if (typeof message.resolveLinkTos !== "boolean")
                             return "resolveLinkTos: boolean expected";
-                        if (typeof message.requireMaster !== "boolean")
-                            return "requireMaster: boolean expected";
+                        if (typeof message.requireLeader !== "boolean")
+                            return "requireLeader: boolean expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ReadAllEvents message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -5962,11 +6394,11 @@
                             message.maxCount = object.maxCount | 0;
                         if (object.resolveLinkTos != null)
                             message.resolveLinkTos = Boolean(object.resolveLinkTos);
-                        if (object.requireMaster != null)
-                            message.requireMaster = Boolean(object.requireMaster);
+                        if (object.requireLeader != null)
+                            message.requireLeader = Boolean(object.requireLeader);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a ReadAllEvents message. Also converts values to other types if specified.
                      * @function toObject
@@ -5993,7 +6425,7 @@
                                 object.preparePosition = options.longs === String ? "0" : 0;
                             object.maxCount = 0;
                             object.resolveLinkTos = false;
-                            object.requireMaster = false;
+                            object.requireLeader = false;
                         }
                         if (message.commitPosition != null && message.hasOwnProperty("commitPosition"))
                             if (typeof message.commitPosition === "number")
@@ -6009,11 +6441,11 @@
                             object.maxCount = message.maxCount;
                         if (message.resolveLinkTos != null && message.hasOwnProperty("resolveLinkTos"))
                             object.resolveLinkTos = message.resolveLinkTos;
-                        if (message.requireMaster != null && message.hasOwnProperty("requireMaster"))
-                            object.requireMaster = message.requireMaster;
+                        if (message.requireLeader != null && message.hasOwnProperty("requireLeader"))
+                            object.requireLeader = message.requireLeader;
                         return object;
                     };
-    
+
                     /**
                      * Converts this ReadAllEvents to JSON.
                      * @function toJSON
@@ -6024,25 +6456,40 @@
                     ReadAllEvents.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ReadAllEvents
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ReadAllEvents
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ReadAllEvents.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ReadAllEvents";
+                    };
+
                     return ReadAllEvents;
                 })();
-    
+
                 Messages.ReadAllEventsCompleted = (function() {
-    
+
                     /**
                      * Properties of a ReadAllEventsCompleted.
                      * @memberof EventStore.Client.Messages
                      * @interface IReadAllEventsCompleted
-                     * @property {number|Long} commitPosition ReadAllEventsCompleted commitPosition
-                     * @property {number|Long} preparePosition ReadAllEventsCompleted preparePosition
+                     * @property {Long} commitPosition ReadAllEventsCompleted commitPosition
+                     * @property {Long} preparePosition ReadAllEventsCompleted preparePosition
                      * @property {Array.<EventStore.Client.Messages.IResolvedEvent>|null} [events] ReadAllEventsCompleted events
-                     * @property {number|Long} nextCommitPosition ReadAllEventsCompleted nextCommitPosition
-                     * @property {number|Long} nextPreparePosition ReadAllEventsCompleted nextPreparePosition
+                     * @property {Long} nextCommitPosition ReadAllEventsCompleted nextCommitPosition
+                     * @property {Long} nextPreparePosition ReadAllEventsCompleted nextPreparePosition
                      * @property {EventStore.Client.Messages.ReadAllEventsCompleted.ReadAllResult|null} [result] ReadAllEventsCompleted result
                      * @property {string|null} [error] ReadAllEventsCompleted error
                      */
-    
+
                     /**
                      * Constructs a new ReadAllEventsCompleted.
                      * @memberof EventStore.Client.Messages
@@ -6058,23 +6505,23 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * ReadAllEventsCompleted commitPosition.
-                     * @member {number|Long} commitPosition
+                     * @member {Long} commitPosition
                      * @memberof EventStore.Client.Messages.ReadAllEventsCompleted
                      * @instance
                      */
                     ReadAllEventsCompleted.prototype.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadAllEventsCompleted preparePosition.
-                     * @member {number|Long} preparePosition
+                     * @member {Long} preparePosition
                      * @memberof EventStore.Client.Messages.ReadAllEventsCompleted
                      * @instance
                      */
                     ReadAllEventsCompleted.prototype.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadAllEventsCompleted events.
                      * @member {Array.<EventStore.Client.Messages.IResolvedEvent>} events
@@ -6082,23 +6529,23 @@
                      * @instance
                      */
                     ReadAllEventsCompleted.prototype.events = $util.emptyArray;
-    
+
                     /**
                      * ReadAllEventsCompleted nextCommitPosition.
-                     * @member {number|Long} nextCommitPosition
+                     * @member {Long} nextCommitPosition
                      * @memberof EventStore.Client.Messages.ReadAllEventsCompleted
                      * @instance
                      */
                     ReadAllEventsCompleted.prototype.nextCommitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadAllEventsCompleted nextPreparePosition.
-                     * @member {number|Long} nextPreparePosition
+                     * @member {Long} nextPreparePosition
                      * @memberof EventStore.Client.Messages.ReadAllEventsCompleted
                      * @instance
                      */
                     ReadAllEventsCompleted.prototype.nextPreparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * ReadAllEventsCompleted result.
                      * @member {EventStore.Client.Messages.ReadAllEventsCompleted.ReadAllResult} result
@@ -6106,7 +6553,7 @@
                      * @instance
                      */
                     ReadAllEventsCompleted.prototype.result = 0;
-    
+
                     /**
                      * ReadAllEventsCompleted error.
                      * @member {string} error
@@ -6114,7 +6561,7 @@
                      * @instance
                      */
                     ReadAllEventsCompleted.prototype.error = "";
-    
+
                     /**
                      * Creates a new ReadAllEventsCompleted instance using the specified properties.
                      * @function create
@@ -6126,7 +6573,7 @@
                     ReadAllEventsCompleted.create = function create(properties) {
                         return new ReadAllEventsCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ReadAllEventsCompleted message. Does not implicitly {@link EventStore.Client.Messages.ReadAllEventsCompleted.verify|verify} messages.
                      * @function encode
@@ -6146,13 +6593,13 @@
                                 $root.EventStore.Client.Messages.ResolvedEvent.encode(message.events[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                         writer.uint32(/* id 4, wireType 0 =*/32).int64(message.nextCommitPosition);
                         writer.uint32(/* id 5, wireType 0 =*/40).int64(message.nextPreparePosition);
-                        if (message.result != null && message.hasOwnProperty("result"))
+                        if (message.result != null && Object.hasOwnProperty.call(message, "result"))
                             writer.uint32(/* id 6, wireType 0 =*/48).int32(message.result);
-                        if (message.error != null && message.hasOwnProperty("error"))
+                        if (message.error != null && Object.hasOwnProperty.call(message, "error"))
                             writer.uint32(/* id 7, wireType 2 =*/58).string(message.error);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ReadAllEventsCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ReadAllEventsCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -6165,7 +6612,7 @@
                     ReadAllEventsCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ReadAllEventsCompleted message from the specified reader or buffer.
                      * @function decode
@@ -6184,29 +6631,36 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.commitPosition = reader.int64();
-                                break;
-                            case 2:
-                                message.preparePosition = reader.int64();
-                                break;
-                            case 3:
-                                if (!(message.events && message.events.length))
-                                    message.events = [];
-                                message.events.push($root.EventStore.Client.Messages.ResolvedEvent.decode(reader, reader.uint32()));
-                                break;
-                            case 4:
-                                message.nextCommitPosition = reader.int64();
-                                break;
-                            case 5:
-                                message.nextPreparePosition = reader.int64();
-                                break;
-                            case 6:
-                                message.result = reader.int32();
-                                break;
-                            case 7:
-                                message.error = reader.string();
-                                break;
+                            case 1: {
+                                    message.commitPosition = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.preparePosition = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    if (!(message.events && message.events.length))
+                                        message.events = [];
+                                    message.events.push($root.EventStore.Client.Messages.ResolvedEvent.decode(reader, reader.uint32()));
+                                    break;
+                                }
+                            case 4: {
+                                    message.nextCommitPosition = reader.int64();
+                                    break;
+                                }
+                            case 5: {
+                                    message.nextPreparePosition = reader.int64();
+                                    break;
+                                }
+                            case 6: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 7: {
+                                    message.error = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -6222,7 +6676,7 @@
                             throw $util.ProtocolError("missing required 'nextPreparePosition'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ReadAllEventsCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -6238,7 +6692,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ReadAllEventsCompleted message.
                      * @function verify
@@ -6282,7 +6736,7 @@
                                 return "error: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ReadAllEventsCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -6342,6 +6796,12 @@
                             else if (typeof object.nextPreparePosition === "object")
                                 message.nextPreparePosition = new $util.LongBits(object.nextPreparePosition.low >>> 0, object.nextPreparePosition.high >>> 0).toNumber();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -6363,7 +6823,7 @@
                             message.error = String(object.error);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a ReadAllEventsCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -6429,12 +6889,12 @@
                             else
                                 object.nextPreparePosition = options.longs === String ? $util.Long.prototype.toString.call(message.nextPreparePosition) : options.longs === Number ? new $util.LongBits(message.nextPreparePosition.low >>> 0, message.nextPreparePosition.high >>> 0).toNumber() : message.nextPreparePosition;
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.ReadAllEventsCompleted.ReadAllResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.ReadAllEventsCompleted.ReadAllResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.ReadAllEventsCompleted.ReadAllResult[message.result] : message.result;
                         if (message.error != null && message.hasOwnProperty("error"))
                             object.error = message.error;
                         return object;
                     };
-    
+
                     /**
                      * Converts this ReadAllEventsCompleted to JSON.
                      * @function toJSON
@@ -6445,11 +6905,26 @@
                     ReadAllEventsCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ReadAllEventsCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ReadAllEventsCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ReadAllEventsCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ReadAllEventsCompleted";
+                    };
+
                     /**
                      * ReadAllResult enum.
                      * @name EventStore.Client.Messages.ReadAllEventsCompleted.ReadAllResult
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} Success=0 Success value
                      * @property {number} NotModified=1 NotModified value
                      * @property {number} Error=2 Error value
@@ -6463,12 +6938,1211 @@
                         values[valuesById[3] = "AccessDenied"] = 3;
                         return values;
                     })();
-    
+
                     return ReadAllEventsCompleted;
                 })();
-    
+
+                Messages.Filter = (function() {
+
+                    /**
+                     * Properties of a Filter.
+                     * @memberof EventStore.Client.Messages
+                     * @interface IFilter
+                     * @property {EventStore.Client.Messages.Filter.FilterContext} context Filter context
+                     * @property {EventStore.Client.Messages.Filter.FilterType} type Filter type
+                     * @property {Array.<string>|null} [data] Filter data
+                     */
+
+                    /**
+                     * Constructs a new Filter.
+                     * @memberof EventStore.Client.Messages
+                     * @classdesc Represents a Filter.
+                     * @implements IFilter
+                     * @constructor
+                     * @param {EventStore.Client.Messages.IFilter=} [properties] Properties to set
+                     */
+                    function Filter(properties) {
+                        this.data = [];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * Filter context.
+                     * @member {EventStore.Client.Messages.Filter.FilterContext} context
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @instance
+                     */
+                    Filter.prototype.context = 0;
+
+                    /**
+                     * Filter type.
+                     * @member {EventStore.Client.Messages.Filter.FilterType} type
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @instance
+                     */
+                    Filter.prototype.type = 0;
+
+                    /**
+                     * Filter data.
+                     * @member {Array.<string>} data
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @instance
+                     */
+                    Filter.prototype.data = $util.emptyArray;
+
+                    /**
+                     * Creates a new Filter instance using the specified properties.
+                     * @function create
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilter=} [properties] Properties to set
+                     * @returns {EventStore.Client.Messages.Filter} Filter instance
+                     */
+                    Filter.create = function create(properties) {
+                        return new Filter(properties);
+                    };
+
+                    /**
+                     * Encodes the specified Filter message. Does not implicitly {@link EventStore.Client.Messages.Filter.verify|verify} messages.
+                     * @function encode
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilter} message Filter message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Filter.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        writer.uint32(/* id 1, wireType 0 =*/8).int32(message.context);
+                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.type);
+                        if (message.data != null && message.data.length)
+                            for (var i = 0; i < message.data.length; ++i)
+                                writer.uint32(/* id 3, wireType 2 =*/26).string(message.data[i]);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified Filter message, length delimited. Does not implicitly {@link EventStore.Client.Messages.Filter.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilter} message Filter message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Filter.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes a Filter message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {EventStore.Client.Messages.Filter} Filter
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Filter.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.Filter();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.context = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.type = reader.int32();
+                                    break;
+                                }
+                            case 3: {
+                                    if (!(message.data && message.data.length))
+                                        message.data = [];
+                                    message.data.push(reader.string());
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        if (!message.hasOwnProperty("context"))
+                            throw $util.ProtocolError("missing required 'context'", { instance: message });
+                        if (!message.hasOwnProperty("type"))
+                            throw $util.ProtocolError("missing required 'type'", { instance: message });
+                        return message;
+                    };
+
+                    /**
+                     * Decodes a Filter message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {EventStore.Client.Messages.Filter} Filter
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Filter.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies a Filter message.
+                     * @function verify
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    Filter.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        switch (message.context) {
+                        default:
+                            return "context: enum value expected";
+                        case 0:
+                        case 1:
+                            break;
+                        }
+                        switch (message.type) {
+                        default:
+                            return "type: enum value expected";
+                        case 0:
+                        case 1:
+                            break;
+                        }
+                        if (message.data != null && message.hasOwnProperty("data")) {
+                            if (!Array.isArray(message.data))
+                                return "data: array expected";
+                            for (var i = 0; i < message.data.length; ++i)
+                                if (!$util.isString(message.data[i]))
+                                    return "data: string[] expected";
+                        }
+                        return null;
+                    };
+
+                    /**
+                     * Creates a Filter message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {EventStore.Client.Messages.Filter} Filter
+                     */
+                    Filter.fromObject = function fromObject(object) {
+                        if (object instanceof $root.EventStore.Client.Messages.Filter)
+                            return object;
+                        var message = new $root.EventStore.Client.Messages.Filter();
+                        switch (object.context) {
+                        default:
+                            if (typeof object.context === "number") {
+                                message.context = object.context;
+                                break;
+                            }
+                            break;
+                        case "StreamId":
+                        case 0:
+                            message.context = 0;
+                            break;
+                        case "EventType":
+                        case 1:
+                            message.context = 1;
+                            break;
+                        }
+                        switch (object.type) {
+                        default:
+                            if (typeof object.type === "number") {
+                                message.type = object.type;
+                                break;
+                            }
+                            break;
+                        case "Regex":
+                        case 0:
+                            message.type = 0;
+                            break;
+                        case "Prefix":
+                        case 1:
+                            message.type = 1;
+                            break;
+                        }
+                        if (object.data) {
+                            if (!Array.isArray(object.data))
+                                throw TypeError(".EventStore.Client.Messages.Filter.data: array expected");
+                            message.data = [];
+                            for (var i = 0; i < object.data.length; ++i)
+                                message.data[i] = String(object.data[i]);
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from a Filter message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @static
+                     * @param {EventStore.Client.Messages.Filter} message Filter
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    Filter.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.arrays || options.defaults)
+                            object.data = [];
+                        if (options.defaults) {
+                            object.context = options.enums === String ? "StreamId" : 0;
+                            object.type = options.enums === String ? "Regex" : 0;
+                        }
+                        if (message.context != null && message.hasOwnProperty("context"))
+                            object.context = options.enums === String ? $root.EventStore.Client.Messages.Filter.FilterContext[message.context] === undefined ? message.context : $root.EventStore.Client.Messages.Filter.FilterContext[message.context] : message.context;
+                        if (message.type != null && message.hasOwnProperty("type"))
+                            object.type = options.enums === String ? $root.EventStore.Client.Messages.Filter.FilterType[message.type] === undefined ? message.type : $root.EventStore.Client.Messages.Filter.FilterType[message.type] : message.type;
+                        if (message.data && message.data.length) {
+                            object.data = [];
+                            for (var j = 0; j < message.data.length; ++j)
+                                object.data[j] = message.data[j];
+                        }
+                        return object;
+                    };
+
+                    /**
+                     * Converts this Filter to JSON.
+                     * @function toJSON
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    Filter.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for Filter
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.Filter
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    Filter.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.Filter";
+                    };
+
+                    /**
+                     * FilterContext enum.
+                     * @name EventStore.Client.Messages.Filter.FilterContext
+                     * @enum {number}
+                     * @property {number} StreamId=0 StreamId value
+                     * @property {number} EventType=1 EventType value
+                     */
+                    Filter.FilterContext = (function() {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[0] = "StreamId"] = 0;
+                        values[valuesById[1] = "EventType"] = 1;
+                        return values;
+                    })();
+
+                    /**
+                     * FilterType enum.
+                     * @name EventStore.Client.Messages.Filter.FilterType
+                     * @enum {number}
+                     * @property {number} Regex=0 Regex value
+                     * @property {number} Prefix=1 Prefix value
+                     */
+                    Filter.FilterType = (function() {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[0] = "Regex"] = 0;
+                        values[valuesById[1] = "Prefix"] = 1;
+                        return values;
+                    })();
+
+                    return Filter;
+                })();
+
+                Messages.FilteredReadAllEvents = (function() {
+
+                    /**
+                     * Properties of a FilteredReadAllEvents.
+                     * @memberof EventStore.Client.Messages
+                     * @interface IFilteredReadAllEvents
+                     * @property {Long} commitPosition FilteredReadAllEvents commitPosition
+                     * @property {Long} preparePosition FilteredReadAllEvents preparePosition
+                     * @property {number} maxCount FilteredReadAllEvents maxCount
+                     * @property {number|null} [maxSearchWindow] FilteredReadAllEvents maxSearchWindow
+                     * @property {boolean} resolveLinkTos FilteredReadAllEvents resolveLinkTos
+                     * @property {boolean} requireLeader FilteredReadAllEvents requireLeader
+                     * @property {EventStore.Client.Messages.IFilter} filter FilteredReadAllEvents filter
+                     */
+
+                    /**
+                     * Constructs a new FilteredReadAllEvents.
+                     * @memberof EventStore.Client.Messages
+                     * @classdesc Represents a FilteredReadAllEvents.
+                     * @implements IFilteredReadAllEvents
+                     * @constructor
+                     * @param {EventStore.Client.Messages.IFilteredReadAllEvents=} [properties] Properties to set
+                     */
+                    function FilteredReadAllEvents(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * FilteredReadAllEvents commitPosition.
+                     * @member {Long} commitPosition
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @instance
+                     */
+                    FilteredReadAllEvents.prototype.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                    /**
+                     * FilteredReadAllEvents preparePosition.
+                     * @member {Long} preparePosition
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @instance
+                     */
+                    FilteredReadAllEvents.prototype.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                    /**
+                     * FilteredReadAllEvents maxCount.
+                     * @member {number} maxCount
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @instance
+                     */
+                    FilteredReadAllEvents.prototype.maxCount = 0;
+
+                    /**
+                     * FilteredReadAllEvents maxSearchWindow.
+                     * @member {number} maxSearchWindow
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @instance
+                     */
+                    FilteredReadAllEvents.prototype.maxSearchWindow = 0;
+
+                    /**
+                     * FilteredReadAllEvents resolveLinkTos.
+                     * @member {boolean} resolveLinkTos
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @instance
+                     */
+                    FilteredReadAllEvents.prototype.resolveLinkTos = false;
+
+                    /**
+                     * FilteredReadAllEvents requireLeader.
+                     * @member {boolean} requireLeader
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @instance
+                     */
+                    FilteredReadAllEvents.prototype.requireLeader = false;
+
+                    /**
+                     * FilteredReadAllEvents filter.
+                     * @member {EventStore.Client.Messages.IFilter} filter
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @instance
+                     */
+                    FilteredReadAllEvents.prototype.filter = null;
+
+                    /**
+                     * Creates a new FilteredReadAllEvents instance using the specified properties.
+                     * @function create
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilteredReadAllEvents=} [properties] Properties to set
+                     * @returns {EventStore.Client.Messages.FilteredReadAllEvents} FilteredReadAllEvents instance
+                     */
+                    FilteredReadAllEvents.create = function create(properties) {
+                        return new FilteredReadAllEvents(properties);
+                    };
+
+                    /**
+                     * Encodes the specified FilteredReadAllEvents message. Does not implicitly {@link EventStore.Client.Messages.FilteredReadAllEvents.verify|verify} messages.
+                     * @function encode
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilteredReadAllEvents} message FilteredReadAllEvents message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    FilteredReadAllEvents.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.commitPosition);
+                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.preparePosition);
+                        writer.uint32(/* id 3, wireType 0 =*/24).int32(message.maxCount);
+                        if (message.maxSearchWindow != null && Object.hasOwnProperty.call(message, "maxSearchWindow"))
+                            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.maxSearchWindow);
+                        writer.uint32(/* id 5, wireType 0 =*/40).bool(message.resolveLinkTos);
+                        writer.uint32(/* id 6, wireType 0 =*/48).bool(message.requireLeader);
+                        $root.EventStore.Client.Messages.Filter.encode(message.filter, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified FilteredReadAllEvents message, length delimited. Does not implicitly {@link EventStore.Client.Messages.FilteredReadAllEvents.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilteredReadAllEvents} message FilteredReadAllEvents message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    FilteredReadAllEvents.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes a FilteredReadAllEvents message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {EventStore.Client.Messages.FilteredReadAllEvents} FilteredReadAllEvents
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    FilteredReadAllEvents.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.FilteredReadAllEvents();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.commitPosition = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.preparePosition = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    message.maxCount = reader.int32();
+                                    break;
+                                }
+                            case 4: {
+                                    message.maxSearchWindow = reader.int32();
+                                    break;
+                                }
+                            case 5: {
+                                    message.resolveLinkTos = reader.bool();
+                                    break;
+                                }
+                            case 6: {
+                                    message.requireLeader = reader.bool();
+                                    break;
+                                }
+                            case 7: {
+                                    message.filter = $root.EventStore.Client.Messages.Filter.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        if (!message.hasOwnProperty("commitPosition"))
+                            throw $util.ProtocolError("missing required 'commitPosition'", { instance: message });
+                        if (!message.hasOwnProperty("preparePosition"))
+                            throw $util.ProtocolError("missing required 'preparePosition'", { instance: message });
+                        if (!message.hasOwnProperty("maxCount"))
+                            throw $util.ProtocolError("missing required 'maxCount'", { instance: message });
+                        if (!message.hasOwnProperty("resolveLinkTos"))
+                            throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
+                        if (!message.hasOwnProperty("requireLeader"))
+                            throw $util.ProtocolError("missing required 'requireLeader'", { instance: message });
+                        if (!message.hasOwnProperty("filter"))
+                            throw $util.ProtocolError("missing required 'filter'", { instance: message });
+                        return message;
+                    };
+
+                    /**
+                     * Decodes a FilteredReadAllEvents message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {EventStore.Client.Messages.FilteredReadAllEvents} FilteredReadAllEvents
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    FilteredReadAllEvents.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies a FilteredReadAllEvents message.
+                     * @function verify
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    FilteredReadAllEvents.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (!$util.isInteger(message.commitPosition) && !(message.commitPosition && $util.isInteger(message.commitPosition.low) && $util.isInteger(message.commitPosition.high)))
+                            return "commitPosition: integer|Long expected";
+                        if (!$util.isInteger(message.preparePosition) && !(message.preparePosition && $util.isInteger(message.preparePosition.low) && $util.isInteger(message.preparePosition.high)))
+                            return "preparePosition: integer|Long expected";
+                        if (!$util.isInteger(message.maxCount))
+                            return "maxCount: integer expected";
+                        if (message.maxSearchWindow != null && message.hasOwnProperty("maxSearchWindow"))
+                            if (!$util.isInteger(message.maxSearchWindow))
+                                return "maxSearchWindow: integer expected";
+                        if (typeof message.resolveLinkTos !== "boolean")
+                            return "resolveLinkTos: boolean expected";
+                        if (typeof message.requireLeader !== "boolean")
+                            return "requireLeader: boolean expected";
+                        {
+                            var error = $root.EventStore.Client.Messages.Filter.verify(message.filter);
+                            if (error)
+                                return "filter." + error;
+                        }
+                        return null;
+                    };
+
+                    /**
+                     * Creates a FilteredReadAllEvents message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {EventStore.Client.Messages.FilteredReadAllEvents} FilteredReadAllEvents
+                     */
+                    FilteredReadAllEvents.fromObject = function fromObject(object) {
+                        if (object instanceof $root.EventStore.Client.Messages.FilteredReadAllEvents)
+                            return object;
+                        var message = new $root.EventStore.Client.Messages.FilteredReadAllEvents();
+                        if (object.commitPosition != null)
+                            if ($util.Long)
+                                (message.commitPosition = $util.Long.fromValue(object.commitPosition)).unsigned = false;
+                            else if (typeof object.commitPosition === "string")
+                                message.commitPosition = parseInt(object.commitPosition, 10);
+                            else if (typeof object.commitPosition === "number")
+                                message.commitPosition = object.commitPosition;
+                            else if (typeof object.commitPosition === "object")
+                                message.commitPosition = new $util.LongBits(object.commitPosition.low >>> 0, object.commitPosition.high >>> 0).toNumber();
+                        if (object.preparePosition != null)
+                            if ($util.Long)
+                                (message.preparePosition = $util.Long.fromValue(object.preparePosition)).unsigned = false;
+                            else if (typeof object.preparePosition === "string")
+                                message.preparePosition = parseInt(object.preparePosition, 10);
+                            else if (typeof object.preparePosition === "number")
+                                message.preparePosition = object.preparePosition;
+                            else if (typeof object.preparePosition === "object")
+                                message.preparePosition = new $util.LongBits(object.preparePosition.low >>> 0, object.preparePosition.high >>> 0).toNumber();
+                        if (object.maxCount != null)
+                            message.maxCount = object.maxCount | 0;
+                        if (object.maxSearchWindow != null)
+                            message.maxSearchWindow = object.maxSearchWindow | 0;
+                        if (object.resolveLinkTos != null)
+                            message.resolveLinkTos = Boolean(object.resolveLinkTos);
+                        if (object.requireLeader != null)
+                            message.requireLeader = Boolean(object.requireLeader);
+                        if (object.filter != null) {
+                            if (typeof object.filter !== "object")
+                                throw TypeError(".EventStore.Client.Messages.FilteredReadAllEvents.filter: object expected");
+                            message.filter = $root.EventStore.Client.Messages.Filter.fromObject(object.filter);
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from a FilteredReadAllEvents message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @static
+                     * @param {EventStore.Client.Messages.FilteredReadAllEvents} message FilteredReadAllEvents
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    FilteredReadAllEvents.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.commitPosition = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.commitPosition = options.longs === String ? "0" : 0;
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.preparePosition = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.preparePosition = options.longs === String ? "0" : 0;
+                            object.maxCount = 0;
+                            object.maxSearchWindow = 0;
+                            object.resolveLinkTos = false;
+                            object.requireLeader = false;
+                            object.filter = null;
+                        }
+                        if (message.commitPosition != null && message.hasOwnProperty("commitPosition"))
+                            if (typeof message.commitPosition === "number")
+                                object.commitPosition = options.longs === String ? String(message.commitPosition) : message.commitPosition;
+                            else
+                                object.commitPosition = options.longs === String ? $util.Long.prototype.toString.call(message.commitPosition) : options.longs === Number ? new $util.LongBits(message.commitPosition.low >>> 0, message.commitPosition.high >>> 0).toNumber() : message.commitPosition;
+                        if (message.preparePosition != null && message.hasOwnProperty("preparePosition"))
+                            if (typeof message.preparePosition === "number")
+                                object.preparePosition = options.longs === String ? String(message.preparePosition) : message.preparePosition;
+                            else
+                                object.preparePosition = options.longs === String ? $util.Long.prototype.toString.call(message.preparePosition) : options.longs === Number ? new $util.LongBits(message.preparePosition.low >>> 0, message.preparePosition.high >>> 0).toNumber() : message.preparePosition;
+                        if (message.maxCount != null && message.hasOwnProperty("maxCount"))
+                            object.maxCount = message.maxCount;
+                        if (message.maxSearchWindow != null && message.hasOwnProperty("maxSearchWindow"))
+                            object.maxSearchWindow = message.maxSearchWindow;
+                        if (message.resolveLinkTos != null && message.hasOwnProperty("resolveLinkTos"))
+                            object.resolveLinkTos = message.resolveLinkTos;
+                        if (message.requireLeader != null && message.hasOwnProperty("requireLeader"))
+                            object.requireLeader = message.requireLeader;
+                        if (message.filter != null && message.hasOwnProperty("filter"))
+                            object.filter = $root.EventStore.Client.Messages.Filter.toObject(message.filter, options);
+                        return object;
+                    };
+
+                    /**
+                     * Converts this FilteredReadAllEvents to JSON.
+                     * @function toJSON
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    FilteredReadAllEvents.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for FilteredReadAllEvents
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEvents
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    FilteredReadAllEvents.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.FilteredReadAllEvents";
+                    };
+
+                    return FilteredReadAllEvents;
+                })();
+
+                Messages.FilteredReadAllEventsCompleted = (function() {
+
+                    /**
+                     * Properties of a FilteredReadAllEventsCompleted.
+                     * @memberof EventStore.Client.Messages
+                     * @interface IFilteredReadAllEventsCompleted
+                     * @property {Long} commitPosition FilteredReadAllEventsCompleted commitPosition
+                     * @property {Long} preparePosition FilteredReadAllEventsCompleted preparePosition
+                     * @property {Array.<EventStore.Client.Messages.IResolvedEvent>|null} [events] FilteredReadAllEventsCompleted events
+                     * @property {Long} nextCommitPosition FilteredReadAllEventsCompleted nextCommitPosition
+                     * @property {Long} nextPreparePosition FilteredReadAllEventsCompleted nextPreparePosition
+                     * @property {boolean} isEndOfStream FilteredReadAllEventsCompleted isEndOfStream
+                     * @property {EventStore.Client.Messages.FilteredReadAllEventsCompleted.FilteredReadAllResult|null} [result] FilteredReadAllEventsCompleted result
+                     * @property {string|null} [error] FilteredReadAllEventsCompleted error
+                     */
+
+                    /**
+                     * Constructs a new FilteredReadAllEventsCompleted.
+                     * @memberof EventStore.Client.Messages
+                     * @classdesc Represents a FilteredReadAllEventsCompleted.
+                     * @implements IFilteredReadAllEventsCompleted
+                     * @constructor
+                     * @param {EventStore.Client.Messages.IFilteredReadAllEventsCompleted=} [properties] Properties to set
+                     */
+                    function FilteredReadAllEventsCompleted(properties) {
+                        this.events = [];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * FilteredReadAllEventsCompleted commitPosition.
+                     * @member {Long} commitPosition
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @instance
+                     */
+                    FilteredReadAllEventsCompleted.prototype.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                    /**
+                     * FilteredReadAllEventsCompleted preparePosition.
+                     * @member {Long} preparePosition
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @instance
+                     */
+                    FilteredReadAllEventsCompleted.prototype.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                    /**
+                     * FilteredReadAllEventsCompleted events.
+                     * @member {Array.<EventStore.Client.Messages.IResolvedEvent>} events
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @instance
+                     */
+                    FilteredReadAllEventsCompleted.prototype.events = $util.emptyArray;
+
+                    /**
+                     * FilteredReadAllEventsCompleted nextCommitPosition.
+                     * @member {Long} nextCommitPosition
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @instance
+                     */
+                    FilteredReadAllEventsCompleted.prototype.nextCommitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                    /**
+                     * FilteredReadAllEventsCompleted nextPreparePosition.
+                     * @member {Long} nextPreparePosition
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @instance
+                     */
+                    FilteredReadAllEventsCompleted.prototype.nextPreparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                    /**
+                     * FilteredReadAllEventsCompleted isEndOfStream.
+                     * @member {boolean} isEndOfStream
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @instance
+                     */
+                    FilteredReadAllEventsCompleted.prototype.isEndOfStream = false;
+
+                    /**
+                     * FilteredReadAllEventsCompleted result.
+                     * @member {EventStore.Client.Messages.FilteredReadAllEventsCompleted.FilteredReadAllResult} result
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @instance
+                     */
+                    FilteredReadAllEventsCompleted.prototype.result = 0;
+
+                    /**
+                     * FilteredReadAllEventsCompleted error.
+                     * @member {string} error
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @instance
+                     */
+                    FilteredReadAllEventsCompleted.prototype.error = "";
+
+                    /**
+                     * Creates a new FilteredReadAllEventsCompleted instance using the specified properties.
+                     * @function create
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilteredReadAllEventsCompleted=} [properties] Properties to set
+                     * @returns {EventStore.Client.Messages.FilteredReadAllEventsCompleted} FilteredReadAllEventsCompleted instance
+                     */
+                    FilteredReadAllEventsCompleted.create = function create(properties) {
+                        return new FilteredReadAllEventsCompleted(properties);
+                    };
+
+                    /**
+                     * Encodes the specified FilteredReadAllEventsCompleted message. Does not implicitly {@link EventStore.Client.Messages.FilteredReadAllEventsCompleted.verify|verify} messages.
+                     * @function encode
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilteredReadAllEventsCompleted} message FilteredReadAllEventsCompleted message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    FilteredReadAllEventsCompleted.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.commitPosition);
+                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.preparePosition);
+                        if (message.events != null && message.events.length)
+                            for (var i = 0; i < message.events.length; ++i)
+                                $root.EventStore.Client.Messages.ResolvedEvent.encode(message.events[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                        writer.uint32(/* id 4, wireType 0 =*/32).int64(message.nextCommitPosition);
+                        writer.uint32(/* id 5, wireType 0 =*/40).int64(message.nextPreparePosition);
+                        writer.uint32(/* id 6, wireType 0 =*/48).bool(message.isEndOfStream);
+                        if (message.result != null && Object.hasOwnProperty.call(message, "result"))
+                            writer.uint32(/* id 7, wireType 0 =*/56).int32(message.result);
+                        if (message.error != null && Object.hasOwnProperty.call(message, "error"))
+                            writer.uint32(/* id 8, wireType 2 =*/66).string(message.error);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified FilteredReadAllEventsCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.FilteredReadAllEventsCompleted.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilteredReadAllEventsCompleted} message FilteredReadAllEventsCompleted message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    FilteredReadAllEventsCompleted.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes a FilteredReadAllEventsCompleted message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {EventStore.Client.Messages.FilteredReadAllEventsCompleted} FilteredReadAllEventsCompleted
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    FilteredReadAllEventsCompleted.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.FilteredReadAllEventsCompleted();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.commitPosition = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.preparePosition = reader.int64();
+                                    break;
+                                }
+                            case 3: {
+                                    if (!(message.events && message.events.length))
+                                        message.events = [];
+                                    message.events.push($root.EventStore.Client.Messages.ResolvedEvent.decode(reader, reader.uint32()));
+                                    break;
+                                }
+                            case 4: {
+                                    message.nextCommitPosition = reader.int64();
+                                    break;
+                                }
+                            case 5: {
+                                    message.nextPreparePosition = reader.int64();
+                                    break;
+                                }
+                            case 6: {
+                                    message.isEndOfStream = reader.bool();
+                                    break;
+                                }
+                            case 7: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 8: {
+                                    message.error = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        if (!message.hasOwnProperty("commitPosition"))
+                            throw $util.ProtocolError("missing required 'commitPosition'", { instance: message });
+                        if (!message.hasOwnProperty("preparePosition"))
+                            throw $util.ProtocolError("missing required 'preparePosition'", { instance: message });
+                        if (!message.hasOwnProperty("nextCommitPosition"))
+                            throw $util.ProtocolError("missing required 'nextCommitPosition'", { instance: message });
+                        if (!message.hasOwnProperty("nextPreparePosition"))
+                            throw $util.ProtocolError("missing required 'nextPreparePosition'", { instance: message });
+                        if (!message.hasOwnProperty("isEndOfStream"))
+                            throw $util.ProtocolError("missing required 'isEndOfStream'", { instance: message });
+                        return message;
+                    };
+
+                    /**
+                     * Decodes a FilteredReadAllEventsCompleted message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {EventStore.Client.Messages.FilteredReadAllEventsCompleted} FilteredReadAllEventsCompleted
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    FilteredReadAllEventsCompleted.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies a FilteredReadAllEventsCompleted message.
+                     * @function verify
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    FilteredReadAllEventsCompleted.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (!$util.isInteger(message.commitPosition) && !(message.commitPosition && $util.isInteger(message.commitPosition.low) && $util.isInteger(message.commitPosition.high)))
+                            return "commitPosition: integer|Long expected";
+                        if (!$util.isInteger(message.preparePosition) && !(message.preparePosition && $util.isInteger(message.preparePosition.low) && $util.isInteger(message.preparePosition.high)))
+                            return "preparePosition: integer|Long expected";
+                        if (message.events != null && message.hasOwnProperty("events")) {
+                            if (!Array.isArray(message.events))
+                                return "events: array expected";
+                            for (var i = 0; i < message.events.length; ++i) {
+                                var error = $root.EventStore.Client.Messages.ResolvedEvent.verify(message.events[i]);
+                                if (error)
+                                    return "events." + error;
+                            }
+                        }
+                        if (!$util.isInteger(message.nextCommitPosition) && !(message.nextCommitPosition && $util.isInteger(message.nextCommitPosition.low) && $util.isInteger(message.nextCommitPosition.high)))
+                            return "nextCommitPosition: integer|Long expected";
+                        if (!$util.isInteger(message.nextPreparePosition) && !(message.nextPreparePosition && $util.isInteger(message.nextPreparePosition.low) && $util.isInteger(message.nextPreparePosition.high)))
+                            return "nextPreparePosition: integer|Long expected";
+                        if (typeof message.isEndOfStream !== "boolean")
+                            return "isEndOfStream: boolean expected";
+                        if (message.result != null && message.hasOwnProperty("result"))
+                            switch (message.result) {
+                            default:
+                                return "result: enum value expected";
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                                break;
+                            }
+                        if (message.error != null && message.hasOwnProperty("error"))
+                            if (!$util.isString(message.error))
+                                return "error: string expected";
+                        return null;
+                    };
+
+                    /**
+                     * Creates a FilteredReadAllEventsCompleted message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {EventStore.Client.Messages.FilteredReadAllEventsCompleted} FilteredReadAllEventsCompleted
+                     */
+                    FilteredReadAllEventsCompleted.fromObject = function fromObject(object) {
+                        if (object instanceof $root.EventStore.Client.Messages.FilteredReadAllEventsCompleted)
+                            return object;
+                        var message = new $root.EventStore.Client.Messages.FilteredReadAllEventsCompleted();
+                        if (object.commitPosition != null)
+                            if ($util.Long)
+                                (message.commitPosition = $util.Long.fromValue(object.commitPosition)).unsigned = false;
+                            else if (typeof object.commitPosition === "string")
+                                message.commitPosition = parseInt(object.commitPosition, 10);
+                            else if (typeof object.commitPosition === "number")
+                                message.commitPosition = object.commitPosition;
+                            else if (typeof object.commitPosition === "object")
+                                message.commitPosition = new $util.LongBits(object.commitPosition.low >>> 0, object.commitPosition.high >>> 0).toNumber();
+                        if (object.preparePosition != null)
+                            if ($util.Long)
+                                (message.preparePosition = $util.Long.fromValue(object.preparePosition)).unsigned = false;
+                            else if (typeof object.preparePosition === "string")
+                                message.preparePosition = parseInt(object.preparePosition, 10);
+                            else if (typeof object.preparePosition === "number")
+                                message.preparePosition = object.preparePosition;
+                            else if (typeof object.preparePosition === "object")
+                                message.preparePosition = new $util.LongBits(object.preparePosition.low >>> 0, object.preparePosition.high >>> 0).toNumber();
+                        if (object.events) {
+                            if (!Array.isArray(object.events))
+                                throw TypeError(".EventStore.Client.Messages.FilteredReadAllEventsCompleted.events: array expected");
+                            message.events = [];
+                            for (var i = 0; i < object.events.length; ++i) {
+                                if (typeof object.events[i] !== "object")
+                                    throw TypeError(".EventStore.Client.Messages.FilteredReadAllEventsCompleted.events: object expected");
+                                message.events[i] = $root.EventStore.Client.Messages.ResolvedEvent.fromObject(object.events[i]);
+                            }
+                        }
+                        if (object.nextCommitPosition != null)
+                            if ($util.Long)
+                                (message.nextCommitPosition = $util.Long.fromValue(object.nextCommitPosition)).unsigned = false;
+                            else if (typeof object.nextCommitPosition === "string")
+                                message.nextCommitPosition = parseInt(object.nextCommitPosition, 10);
+                            else if (typeof object.nextCommitPosition === "number")
+                                message.nextCommitPosition = object.nextCommitPosition;
+                            else if (typeof object.nextCommitPosition === "object")
+                                message.nextCommitPosition = new $util.LongBits(object.nextCommitPosition.low >>> 0, object.nextCommitPosition.high >>> 0).toNumber();
+                        if (object.nextPreparePosition != null)
+                            if ($util.Long)
+                                (message.nextPreparePosition = $util.Long.fromValue(object.nextPreparePosition)).unsigned = false;
+                            else if (typeof object.nextPreparePosition === "string")
+                                message.nextPreparePosition = parseInt(object.nextPreparePosition, 10);
+                            else if (typeof object.nextPreparePosition === "number")
+                                message.nextPreparePosition = object.nextPreparePosition;
+                            else if (typeof object.nextPreparePosition === "object")
+                                message.nextPreparePosition = new $util.LongBits(object.nextPreparePosition.low >>> 0, object.nextPreparePosition.high >>> 0).toNumber();
+                        if (object.isEndOfStream != null)
+                            message.isEndOfStream = Boolean(object.isEndOfStream);
+                        switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
+                        case "Success":
+                        case 0:
+                            message.result = 0;
+                            break;
+                        case "NotModified":
+                        case 1:
+                            message.result = 1;
+                            break;
+                        case "Error":
+                        case 2:
+                            message.result = 2;
+                            break;
+                        case "AccessDenied":
+                        case 3:
+                            message.result = 3;
+                            break;
+                        }
+                        if (object.error != null)
+                            message.error = String(object.error);
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from a FilteredReadAllEventsCompleted message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @static
+                     * @param {EventStore.Client.Messages.FilteredReadAllEventsCompleted} message FilteredReadAllEventsCompleted
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    FilteredReadAllEventsCompleted.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.arrays || options.defaults)
+                            object.events = [];
+                        if (options.defaults) {
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.commitPosition = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.commitPosition = options.longs === String ? "0" : 0;
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.preparePosition = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.preparePosition = options.longs === String ? "0" : 0;
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.nextCommitPosition = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.nextCommitPosition = options.longs === String ? "0" : 0;
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.nextPreparePosition = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.nextPreparePosition = options.longs === String ? "0" : 0;
+                            object.isEndOfStream = false;
+                            object.result = options.enums === String ? "Success" : 0;
+                            object.error = "";
+                        }
+                        if (message.commitPosition != null && message.hasOwnProperty("commitPosition"))
+                            if (typeof message.commitPosition === "number")
+                                object.commitPosition = options.longs === String ? String(message.commitPosition) : message.commitPosition;
+                            else
+                                object.commitPosition = options.longs === String ? $util.Long.prototype.toString.call(message.commitPosition) : options.longs === Number ? new $util.LongBits(message.commitPosition.low >>> 0, message.commitPosition.high >>> 0).toNumber() : message.commitPosition;
+                        if (message.preparePosition != null && message.hasOwnProperty("preparePosition"))
+                            if (typeof message.preparePosition === "number")
+                                object.preparePosition = options.longs === String ? String(message.preparePosition) : message.preparePosition;
+                            else
+                                object.preparePosition = options.longs === String ? $util.Long.prototype.toString.call(message.preparePosition) : options.longs === Number ? new $util.LongBits(message.preparePosition.low >>> 0, message.preparePosition.high >>> 0).toNumber() : message.preparePosition;
+                        if (message.events && message.events.length) {
+                            object.events = [];
+                            for (var j = 0; j < message.events.length; ++j)
+                                object.events[j] = $root.EventStore.Client.Messages.ResolvedEvent.toObject(message.events[j], options);
+                        }
+                        if (message.nextCommitPosition != null && message.hasOwnProperty("nextCommitPosition"))
+                            if (typeof message.nextCommitPosition === "number")
+                                object.nextCommitPosition = options.longs === String ? String(message.nextCommitPosition) : message.nextCommitPosition;
+                            else
+                                object.nextCommitPosition = options.longs === String ? $util.Long.prototype.toString.call(message.nextCommitPosition) : options.longs === Number ? new $util.LongBits(message.nextCommitPosition.low >>> 0, message.nextCommitPosition.high >>> 0).toNumber() : message.nextCommitPosition;
+                        if (message.nextPreparePosition != null && message.hasOwnProperty("nextPreparePosition"))
+                            if (typeof message.nextPreparePosition === "number")
+                                object.nextPreparePosition = options.longs === String ? String(message.nextPreparePosition) : message.nextPreparePosition;
+                            else
+                                object.nextPreparePosition = options.longs === String ? $util.Long.prototype.toString.call(message.nextPreparePosition) : options.longs === Number ? new $util.LongBits(message.nextPreparePosition.low >>> 0, message.nextPreparePosition.high >>> 0).toNumber() : message.nextPreparePosition;
+                        if (message.isEndOfStream != null && message.hasOwnProperty("isEndOfStream"))
+                            object.isEndOfStream = message.isEndOfStream;
+                        if (message.result != null && message.hasOwnProperty("result"))
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.FilteredReadAllEventsCompleted.FilteredReadAllResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.FilteredReadAllEventsCompleted.FilteredReadAllResult[message.result] : message.result;
+                        if (message.error != null && message.hasOwnProperty("error"))
+                            object.error = message.error;
+                        return object;
+                    };
+
+                    /**
+                     * Converts this FilteredReadAllEventsCompleted to JSON.
+                     * @function toJSON
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    FilteredReadAllEventsCompleted.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for FilteredReadAllEventsCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.FilteredReadAllEventsCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    FilteredReadAllEventsCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.FilteredReadAllEventsCompleted";
+                    };
+
+                    /**
+                     * FilteredReadAllResult enum.
+                     * @name EventStore.Client.Messages.FilteredReadAllEventsCompleted.FilteredReadAllResult
+                     * @enum {number}
+                     * @property {number} Success=0 Success value
+                     * @property {number} NotModified=1 NotModified value
+                     * @property {number} Error=2 Error value
+                     * @property {number} AccessDenied=3 AccessDenied value
+                     */
+                    FilteredReadAllEventsCompleted.FilteredReadAllResult = (function() {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[0] = "Success"] = 0;
+                        values[valuesById[1] = "NotModified"] = 1;
+                        values[valuesById[2] = "Error"] = 2;
+                        values[valuesById[3] = "AccessDenied"] = 3;
+                        return values;
+                    })();
+
+                    return FilteredReadAllEventsCompleted;
+                })();
+
                 Messages.CreatePersistentSubscription = (function() {
-    
+
                     /**
                      * Properties of a CreatePersistentSubscription.
                      * @memberof EventStore.Client.Messages
@@ -6476,7 +8150,7 @@
                      * @property {string} subscriptionGroupName CreatePersistentSubscription subscriptionGroupName
                      * @property {string} eventStreamId CreatePersistentSubscription eventStreamId
                      * @property {boolean} resolveLinkTos CreatePersistentSubscription resolveLinkTos
-                     * @property {number|Long} startFrom CreatePersistentSubscription startFrom
+                     * @property {Long} startFrom CreatePersistentSubscription startFrom
                      * @property {number} messageTimeoutMilliseconds CreatePersistentSubscription messageTimeoutMilliseconds
                      * @property {boolean} recordStatistics CreatePersistentSubscription recordStatistics
                      * @property {number} liveBufferSize CreatePersistentSubscription liveBufferSize
@@ -6490,7 +8164,7 @@
                      * @property {number} subscriberMaxCount CreatePersistentSubscription subscriberMaxCount
                      * @property {string|null} [namedConsumerStrategy] CreatePersistentSubscription namedConsumerStrategy
                      */
-    
+
                     /**
                      * Constructs a new CreatePersistentSubscription.
                      * @memberof EventStore.Client.Messages
@@ -6505,7 +8179,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * CreatePersistentSubscription subscriptionGroupName.
                      * @member {string} subscriptionGroupName
@@ -6513,7 +8187,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.subscriptionGroupName = "";
-    
+
                     /**
                      * CreatePersistentSubscription eventStreamId.
                      * @member {string} eventStreamId
@@ -6521,7 +8195,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.eventStreamId = "";
-    
+
                     /**
                      * CreatePersistentSubscription resolveLinkTos.
                      * @member {boolean} resolveLinkTos
@@ -6529,15 +8203,15 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.resolveLinkTos = false;
-    
+
                     /**
                      * CreatePersistentSubscription startFrom.
-                     * @member {number|Long} startFrom
+                     * @member {Long} startFrom
                      * @memberof EventStore.Client.Messages.CreatePersistentSubscription
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.startFrom = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * CreatePersistentSubscription messageTimeoutMilliseconds.
                      * @member {number} messageTimeoutMilliseconds
@@ -6545,7 +8219,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.messageTimeoutMilliseconds = 0;
-    
+
                     /**
                      * CreatePersistentSubscription recordStatistics.
                      * @member {boolean} recordStatistics
@@ -6553,7 +8227,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.recordStatistics = false;
-    
+
                     /**
                      * CreatePersistentSubscription liveBufferSize.
                      * @member {number} liveBufferSize
@@ -6561,7 +8235,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.liveBufferSize = 0;
-    
+
                     /**
                      * CreatePersistentSubscription readBatchSize.
                      * @member {number} readBatchSize
@@ -6569,7 +8243,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.readBatchSize = 0;
-    
+
                     /**
                      * CreatePersistentSubscription bufferSize.
                      * @member {number} bufferSize
@@ -6577,7 +8251,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.bufferSize = 0;
-    
+
                     /**
                      * CreatePersistentSubscription maxRetryCount.
                      * @member {number} maxRetryCount
@@ -6585,7 +8259,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.maxRetryCount = 0;
-    
+
                     /**
                      * CreatePersistentSubscription preferRoundRobin.
                      * @member {boolean} preferRoundRobin
@@ -6593,7 +8267,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.preferRoundRobin = false;
-    
+
                     /**
                      * CreatePersistentSubscription checkpointAfterTime.
                      * @member {number} checkpointAfterTime
@@ -6601,7 +8275,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.checkpointAfterTime = 0;
-    
+
                     /**
                      * CreatePersistentSubscription checkpointMaxCount.
                      * @member {number} checkpointMaxCount
@@ -6609,7 +8283,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.checkpointMaxCount = 0;
-    
+
                     /**
                      * CreatePersistentSubscription checkpointMinCount.
                      * @member {number} checkpointMinCount
@@ -6617,7 +8291,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.checkpointMinCount = 0;
-    
+
                     /**
                      * CreatePersistentSubscription subscriberMaxCount.
                      * @member {number} subscriberMaxCount
@@ -6625,7 +8299,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.subscriberMaxCount = 0;
-    
+
                     /**
                      * CreatePersistentSubscription namedConsumerStrategy.
                      * @member {string} namedConsumerStrategy
@@ -6633,7 +8307,7 @@
                      * @instance
                      */
                     CreatePersistentSubscription.prototype.namedConsumerStrategy = "";
-    
+
                     /**
                      * Creates a new CreatePersistentSubscription instance using the specified properties.
                      * @function create
@@ -6645,7 +8319,7 @@
                     CreatePersistentSubscription.create = function create(properties) {
                         return new CreatePersistentSubscription(properties);
                     };
-    
+
                     /**
                      * Encodes the specified CreatePersistentSubscription message. Does not implicitly {@link EventStore.Client.Messages.CreatePersistentSubscription.verify|verify} messages.
                      * @function encode
@@ -6673,11 +8347,11 @@
                         writer.uint32(/* id 13, wireType 0 =*/104).int32(message.checkpointMaxCount);
                         writer.uint32(/* id 14, wireType 0 =*/112).int32(message.checkpointMinCount);
                         writer.uint32(/* id 15, wireType 0 =*/120).int32(message.subscriberMaxCount);
-                        if (message.namedConsumerStrategy != null && message.hasOwnProperty("namedConsumerStrategy"))
+                        if (message.namedConsumerStrategy != null && Object.hasOwnProperty.call(message, "namedConsumerStrategy"))
                             writer.uint32(/* id 16, wireType 2 =*/130).string(message.namedConsumerStrategy);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified CreatePersistentSubscription message, length delimited. Does not implicitly {@link EventStore.Client.Messages.CreatePersistentSubscription.verify|verify} messages.
                      * @function encodeDelimited
@@ -6690,7 +8364,7 @@
                     CreatePersistentSubscription.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a CreatePersistentSubscription message from the specified reader or buffer.
                      * @function decode
@@ -6709,54 +8383,70 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.subscriptionGroupName = reader.string();
-                                break;
-                            case 2:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 3:
-                                message.resolveLinkTos = reader.bool();
-                                break;
-                            case 4:
-                                message.startFrom = reader.int64();
-                                break;
-                            case 5:
-                                message.messageTimeoutMilliseconds = reader.int32();
-                                break;
-                            case 6:
-                                message.recordStatistics = reader.bool();
-                                break;
-                            case 7:
-                                message.liveBufferSize = reader.int32();
-                                break;
-                            case 8:
-                                message.readBatchSize = reader.int32();
-                                break;
-                            case 9:
-                                message.bufferSize = reader.int32();
-                                break;
-                            case 10:
-                                message.maxRetryCount = reader.int32();
-                                break;
-                            case 11:
-                                message.preferRoundRobin = reader.bool();
-                                break;
-                            case 12:
-                                message.checkpointAfterTime = reader.int32();
-                                break;
-                            case 13:
-                                message.checkpointMaxCount = reader.int32();
-                                break;
-                            case 14:
-                                message.checkpointMinCount = reader.int32();
-                                break;
-                            case 15:
-                                message.subscriberMaxCount = reader.int32();
-                                break;
-                            case 16:
-                                message.namedConsumerStrategy = reader.string();
-                                break;
+                            case 1: {
+                                    message.subscriptionGroupName = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.resolveLinkTos = reader.bool();
+                                    break;
+                                }
+                            case 4: {
+                                    message.startFrom = reader.int64();
+                                    break;
+                                }
+                            case 5: {
+                                    message.messageTimeoutMilliseconds = reader.int32();
+                                    break;
+                                }
+                            case 6: {
+                                    message.recordStatistics = reader.bool();
+                                    break;
+                                }
+                            case 7: {
+                                    message.liveBufferSize = reader.int32();
+                                    break;
+                                }
+                            case 8: {
+                                    message.readBatchSize = reader.int32();
+                                    break;
+                                }
+                            case 9: {
+                                    message.bufferSize = reader.int32();
+                                    break;
+                                }
+                            case 10: {
+                                    message.maxRetryCount = reader.int32();
+                                    break;
+                                }
+                            case 11: {
+                                    message.preferRoundRobin = reader.bool();
+                                    break;
+                                }
+                            case 12: {
+                                    message.checkpointAfterTime = reader.int32();
+                                    break;
+                                }
+                            case 13: {
+                                    message.checkpointMaxCount = reader.int32();
+                                    break;
+                                }
+                            case 14: {
+                                    message.checkpointMinCount = reader.int32();
+                                    break;
+                                }
+                            case 15: {
+                                    message.subscriberMaxCount = reader.int32();
+                                    break;
+                                }
+                            case 16: {
+                                    message.namedConsumerStrategy = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -6794,7 +8484,7 @@
                             throw $util.ProtocolError("missing required 'subscriberMaxCount'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a CreatePersistentSubscription message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -6810,7 +8500,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a CreatePersistentSubscription message.
                      * @function verify
@@ -6857,7 +8547,7 @@
                                 return "namedConsumerStrategy: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a CreatePersistentSubscription message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -6911,7 +8601,7 @@
                             message.namedConsumerStrategy = String(object.namedConsumerStrategy);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a CreatePersistentSubscription message. Also converts values to other types if specified.
                      * @function toObject
@@ -6984,7 +8674,7 @@
                             object.namedConsumerStrategy = message.namedConsumerStrategy;
                         return object;
                     };
-    
+
                     /**
                      * Converts this CreatePersistentSubscription to JSON.
                      * @function toJSON
@@ -6995,12 +8685,27 @@
                     CreatePersistentSubscription.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for CreatePersistentSubscription
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.CreatePersistentSubscription
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    CreatePersistentSubscription.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.CreatePersistentSubscription";
+                    };
+
                     return CreatePersistentSubscription;
                 })();
-    
+
                 Messages.DeletePersistentSubscription = (function() {
-    
+
                     /**
                      * Properties of a DeletePersistentSubscription.
                      * @memberof EventStore.Client.Messages
@@ -7008,7 +8713,7 @@
                      * @property {string} subscriptionGroupName DeletePersistentSubscription subscriptionGroupName
                      * @property {string} eventStreamId DeletePersistentSubscription eventStreamId
                      */
-    
+
                     /**
                      * Constructs a new DeletePersistentSubscription.
                      * @memberof EventStore.Client.Messages
@@ -7023,7 +8728,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * DeletePersistentSubscription subscriptionGroupName.
                      * @member {string} subscriptionGroupName
@@ -7031,7 +8736,7 @@
                      * @instance
                      */
                     DeletePersistentSubscription.prototype.subscriptionGroupName = "";
-    
+
                     /**
                      * DeletePersistentSubscription eventStreamId.
                      * @member {string} eventStreamId
@@ -7039,7 +8744,7 @@
                      * @instance
                      */
                     DeletePersistentSubscription.prototype.eventStreamId = "";
-    
+
                     /**
                      * Creates a new DeletePersistentSubscription instance using the specified properties.
                      * @function create
@@ -7051,7 +8756,7 @@
                     DeletePersistentSubscription.create = function create(properties) {
                         return new DeletePersistentSubscription(properties);
                     };
-    
+
                     /**
                      * Encodes the specified DeletePersistentSubscription message. Does not implicitly {@link EventStore.Client.Messages.DeletePersistentSubscription.verify|verify} messages.
                      * @function encode
@@ -7068,7 +8773,7 @@
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.eventStreamId);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified DeletePersistentSubscription message, length delimited. Does not implicitly {@link EventStore.Client.Messages.DeletePersistentSubscription.verify|verify} messages.
                      * @function encodeDelimited
@@ -7081,7 +8786,7 @@
                     DeletePersistentSubscription.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a DeletePersistentSubscription message from the specified reader or buffer.
                      * @function decode
@@ -7100,12 +8805,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.subscriptionGroupName = reader.string();
-                                break;
-                            case 2:
-                                message.eventStreamId = reader.string();
-                                break;
+                            case 1: {
+                                    message.subscriptionGroupName = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -7117,7 +8824,7 @@
                             throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a DeletePersistentSubscription message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -7133,7 +8840,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a DeletePersistentSubscription message.
                      * @function verify
@@ -7151,7 +8858,7 @@
                             return "eventStreamId: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a DeletePersistentSubscription message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -7170,7 +8877,7 @@
                             message.eventStreamId = String(object.eventStreamId);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a DeletePersistentSubscription message. Also converts values to other types if specified.
                      * @function toObject
@@ -7194,7 +8901,7 @@
                             object.eventStreamId = message.eventStreamId;
                         return object;
                     };
-    
+
                     /**
                      * Converts this DeletePersistentSubscription to JSON.
                      * @function toJSON
@@ -7205,12 +8912,27 @@
                     DeletePersistentSubscription.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for DeletePersistentSubscription
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.DeletePersistentSubscription
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    DeletePersistentSubscription.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.DeletePersistentSubscription";
+                    };
+
                     return DeletePersistentSubscription;
                 })();
-    
+
                 Messages.UpdatePersistentSubscription = (function() {
-    
+
                     /**
                      * Properties of an UpdatePersistentSubscription.
                      * @memberof EventStore.Client.Messages
@@ -7218,7 +8940,7 @@
                      * @property {string} subscriptionGroupName UpdatePersistentSubscription subscriptionGroupName
                      * @property {string} eventStreamId UpdatePersistentSubscription eventStreamId
                      * @property {boolean} resolveLinkTos UpdatePersistentSubscription resolveLinkTos
-                     * @property {number|Long} startFrom UpdatePersistentSubscription startFrom
+                     * @property {Long} startFrom UpdatePersistentSubscription startFrom
                      * @property {number} messageTimeoutMilliseconds UpdatePersistentSubscription messageTimeoutMilliseconds
                      * @property {boolean} recordStatistics UpdatePersistentSubscription recordStatistics
                      * @property {number} liveBufferSize UpdatePersistentSubscription liveBufferSize
@@ -7232,7 +8954,7 @@
                      * @property {number} subscriberMaxCount UpdatePersistentSubscription subscriberMaxCount
                      * @property {string|null} [namedConsumerStrategy] UpdatePersistentSubscription namedConsumerStrategy
                      */
-    
+
                     /**
                      * Constructs a new UpdatePersistentSubscription.
                      * @memberof EventStore.Client.Messages
@@ -7247,7 +8969,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * UpdatePersistentSubscription subscriptionGroupName.
                      * @member {string} subscriptionGroupName
@@ -7255,7 +8977,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.subscriptionGroupName = "";
-    
+
                     /**
                      * UpdatePersistentSubscription eventStreamId.
                      * @member {string} eventStreamId
@@ -7263,7 +8985,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.eventStreamId = "";
-    
+
                     /**
                      * UpdatePersistentSubscription resolveLinkTos.
                      * @member {boolean} resolveLinkTos
@@ -7271,15 +8993,15 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.resolveLinkTos = false;
-    
+
                     /**
                      * UpdatePersistentSubscription startFrom.
-                     * @member {number|Long} startFrom
+                     * @member {Long} startFrom
                      * @memberof EventStore.Client.Messages.UpdatePersistentSubscription
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.startFrom = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * UpdatePersistentSubscription messageTimeoutMilliseconds.
                      * @member {number} messageTimeoutMilliseconds
@@ -7287,7 +9009,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.messageTimeoutMilliseconds = 0;
-    
+
                     /**
                      * UpdatePersistentSubscription recordStatistics.
                      * @member {boolean} recordStatistics
@@ -7295,7 +9017,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.recordStatistics = false;
-    
+
                     /**
                      * UpdatePersistentSubscription liveBufferSize.
                      * @member {number} liveBufferSize
@@ -7303,7 +9025,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.liveBufferSize = 0;
-    
+
                     /**
                      * UpdatePersistentSubscription readBatchSize.
                      * @member {number} readBatchSize
@@ -7311,7 +9033,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.readBatchSize = 0;
-    
+
                     /**
                      * UpdatePersistentSubscription bufferSize.
                      * @member {number} bufferSize
@@ -7319,7 +9041,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.bufferSize = 0;
-    
+
                     /**
                      * UpdatePersistentSubscription maxRetryCount.
                      * @member {number} maxRetryCount
@@ -7327,7 +9049,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.maxRetryCount = 0;
-    
+
                     /**
                      * UpdatePersistentSubscription preferRoundRobin.
                      * @member {boolean} preferRoundRobin
@@ -7335,7 +9057,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.preferRoundRobin = false;
-    
+
                     /**
                      * UpdatePersistentSubscription checkpointAfterTime.
                      * @member {number} checkpointAfterTime
@@ -7343,7 +9065,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.checkpointAfterTime = 0;
-    
+
                     /**
                      * UpdatePersistentSubscription checkpointMaxCount.
                      * @member {number} checkpointMaxCount
@@ -7351,7 +9073,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.checkpointMaxCount = 0;
-    
+
                     /**
                      * UpdatePersistentSubscription checkpointMinCount.
                      * @member {number} checkpointMinCount
@@ -7359,7 +9081,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.checkpointMinCount = 0;
-    
+
                     /**
                      * UpdatePersistentSubscription subscriberMaxCount.
                      * @member {number} subscriberMaxCount
@@ -7367,7 +9089,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.subscriberMaxCount = 0;
-    
+
                     /**
                      * UpdatePersistentSubscription namedConsumerStrategy.
                      * @member {string} namedConsumerStrategy
@@ -7375,7 +9097,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscription.prototype.namedConsumerStrategy = "";
-    
+
                     /**
                      * Creates a new UpdatePersistentSubscription instance using the specified properties.
                      * @function create
@@ -7387,7 +9109,7 @@
                     UpdatePersistentSubscription.create = function create(properties) {
                         return new UpdatePersistentSubscription(properties);
                     };
-    
+
                     /**
                      * Encodes the specified UpdatePersistentSubscription message. Does not implicitly {@link EventStore.Client.Messages.UpdatePersistentSubscription.verify|verify} messages.
                      * @function encode
@@ -7415,11 +9137,11 @@
                         writer.uint32(/* id 13, wireType 0 =*/104).int32(message.checkpointMaxCount);
                         writer.uint32(/* id 14, wireType 0 =*/112).int32(message.checkpointMinCount);
                         writer.uint32(/* id 15, wireType 0 =*/120).int32(message.subscriberMaxCount);
-                        if (message.namedConsumerStrategy != null && message.hasOwnProperty("namedConsumerStrategy"))
+                        if (message.namedConsumerStrategy != null && Object.hasOwnProperty.call(message, "namedConsumerStrategy"))
                             writer.uint32(/* id 16, wireType 2 =*/130).string(message.namedConsumerStrategy);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified UpdatePersistentSubscription message, length delimited. Does not implicitly {@link EventStore.Client.Messages.UpdatePersistentSubscription.verify|verify} messages.
                      * @function encodeDelimited
@@ -7432,7 +9154,7 @@
                     UpdatePersistentSubscription.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes an UpdatePersistentSubscription message from the specified reader or buffer.
                      * @function decode
@@ -7451,54 +9173,70 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.subscriptionGroupName = reader.string();
-                                break;
-                            case 2:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 3:
-                                message.resolveLinkTos = reader.bool();
-                                break;
-                            case 4:
-                                message.startFrom = reader.int64();
-                                break;
-                            case 5:
-                                message.messageTimeoutMilliseconds = reader.int32();
-                                break;
-                            case 6:
-                                message.recordStatistics = reader.bool();
-                                break;
-                            case 7:
-                                message.liveBufferSize = reader.int32();
-                                break;
-                            case 8:
-                                message.readBatchSize = reader.int32();
-                                break;
-                            case 9:
-                                message.bufferSize = reader.int32();
-                                break;
-                            case 10:
-                                message.maxRetryCount = reader.int32();
-                                break;
-                            case 11:
-                                message.preferRoundRobin = reader.bool();
-                                break;
-                            case 12:
-                                message.checkpointAfterTime = reader.int32();
-                                break;
-                            case 13:
-                                message.checkpointMaxCount = reader.int32();
-                                break;
-                            case 14:
-                                message.checkpointMinCount = reader.int32();
-                                break;
-                            case 15:
-                                message.subscriberMaxCount = reader.int32();
-                                break;
-                            case 16:
-                                message.namedConsumerStrategy = reader.string();
-                                break;
+                            case 1: {
+                                    message.subscriptionGroupName = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.resolveLinkTos = reader.bool();
+                                    break;
+                                }
+                            case 4: {
+                                    message.startFrom = reader.int64();
+                                    break;
+                                }
+                            case 5: {
+                                    message.messageTimeoutMilliseconds = reader.int32();
+                                    break;
+                                }
+                            case 6: {
+                                    message.recordStatistics = reader.bool();
+                                    break;
+                                }
+                            case 7: {
+                                    message.liveBufferSize = reader.int32();
+                                    break;
+                                }
+                            case 8: {
+                                    message.readBatchSize = reader.int32();
+                                    break;
+                                }
+                            case 9: {
+                                    message.bufferSize = reader.int32();
+                                    break;
+                                }
+                            case 10: {
+                                    message.maxRetryCount = reader.int32();
+                                    break;
+                                }
+                            case 11: {
+                                    message.preferRoundRobin = reader.bool();
+                                    break;
+                                }
+                            case 12: {
+                                    message.checkpointAfterTime = reader.int32();
+                                    break;
+                                }
+                            case 13: {
+                                    message.checkpointMaxCount = reader.int32();
+                                    break;
+                                }
+                            case 14: {
+                                    message.checkpointMinCount = reader.int32();
+                                    break;
+                                }
+                            case 15: {
+                                    message.subscriberMaxCount = reader.int32();
+                                    break;
+                                }
+                            case 16: {
+                                    message.namedConsumerStrategy = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -7536,7 +9274,7 @@
                             throw $util.ProtocolError("missing required 'subscriberMaxCount'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes an UpdatePersistentSubscription message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -7552,7 +9290,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies an UpdatePersistentSubscription message.
                      * @function verify
@@ -7599,7 +9337,7 @@
                                 return "namedConsumerStrategy: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates an UpdatePersistentSubscription message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -7653,7 +9391,7 @@
                             message.namedConsumerStrategy = String(object.namedConsumerStrategy);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from an UpdatePersistentSubscription message. Also converts values to other types if specified.
                      * @function toObject
@@ -7726,7 +9464,7 @@
                             object.namedConsumerStrategy = message.namedConsumerStrategy;
                         return object;
                     };
-    
+
                     /**
                      * Converts this UpdatePersistentSubscription to JSON.
                      * @function toJSON
@@ -7737,12 +9475,27 @@
                     UpdatePersistentSubscription.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for UpdatePersistentSubscription
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.UpdatePersistentSubscription
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    UpdatePersistentSubscription.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.UpdatePersistentSubscription";
+                    };
+
                     return UpdatePersistentSubscription;
                 })();
-    
+
                 Messages.UpdatePersistentSubscriptionCompleted = (function() {
-    
+
                     /**
                      * Properties of an UpdatePersistentSubscriptionCompleted.
                      * @memberof EventStore.Client.Messages
@@ -7750,7 +9503,7 @@
                      * @property {EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted.UpdatePersistentSubscriptionResult} result UpdatePersistentSubscriptionCompleted result
                      * @property {string|null} [reason] UpdatePersistentSubscriptionCompleted reason
                      */
-    
+
                     /**
                      * Constructs a new UpdatePersistentSubscriptionCompleted.
                      * @memberof EventStore.Client.Messages
@@ -7765,7 +9518,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * UpdatePersistentSubscriptionCompleted result.
                      * @member {EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted.UpdatePersistentSubscriptionResult} result
@@ -7773,7 +9526,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscriptionCompleted.prototype.result = 0;
-    
+
                     /**
                      * UpdatePersistentSubscriptionCompleted reason.
                      * @member {string} reason
@@ -7781,7 +9534,7 @@
                      * @instance
                      */
                     UpdatePersistentSubscriptionCompleted.prototype.reason = "";
-    
+
                     /**
                      * Creates a new UpdatePersistentSubscriptionCompleted instance using the specified properties.
                      * @function create
@@ -7793,7 +9546,7 @@
                     UpdatePersistentSubscriptionCompleted.create = function create(properties) {
                         return new UpdatePersistentSubscriptionCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified UpdatePersistentSubscriptionCompleted message. Does not implicitly {@link EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted.verify|verify} messages.
                      * @function encode
@@ -7807,11 +9560,11 @@
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.result);
-                        if (message.reason != null && message.hasOwnProperty("reason"))
+                        if (message.reason != null && Object.hasOwnProperty.call(message, "reason"))
                             writer.uint32(/* id 2, wireType 2 =*/18).string(message.reason);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified UpdatePersistentSubscriptionCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -7824,7 +9577,7 @@
                     UpdatePersistentSubscriptionCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes an UpdatePersistentSubscriptionCompleted message from the specified reader or buffer.
                      * @function decode
@@ -7843,12 +9596,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.result = reader.int32();
-                                break;
-                            case 2:
-                                message.reason = reader.string();
-                                break;
+                            case 1: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.reason = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -7858,7 +9613,7 @@
                             throw $util.ProtocolError("missing required 'result'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes an UpdatePersistentSubscriptionCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -7874,7 +9629,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies an UpdatePersistentSubscriptionCompleted message.
                      * @function verify
@@ -7900,7 +9655,7 @@
                                 return "reason: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates an UpdatePersistentSubscriptionCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -7914,6 +9669,12 @@
                             return object;
                         var message = new $root.EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -7935,7 +9696,7 @@
                             message.reason = String(object.reason);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from an UpdatePersistentSubscriptionCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -7954,12 +9715,12 @@
                             object.reason = "";
                         }
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted.UpdatePersistentSubscriptionResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted.UpdatePersistentSubscriptionResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted.UpdatePersistentSubscriptionResult[message.result] : message.result;
                         if (message.reason != null && message.hasOwnProperty("reason"))
                             object.reason = message.reason;
                         return object;
                     };
-    
+
                     /**
                      * Converts this UpdatePersistentSubscriptionCompleted to JSON.
                      * @function toJSON
@@ -7970,11 +9731,26 @@
                     UpdatePersistentSubscriptionCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for UpdatePersistentSubscriptionCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    UpdatePersistentSubscriptionCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted";
+                    };
+
                     /**
                      * UpdatePersistentSubscriptionResult enum.
                      * @name EventStore.Client.Messages.UpdatePersistentSubscriptionCompleted.UpdatePersistentSubscriptionResult
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} Success=0 Success value
                      * @property {number} DoesNotExist=1 DoesNotExist value
                      * @property {number} Fail=2 Fail value
@@ -7988,12 +9764,12 @@
                         values[valuesById[3] = "AccessDenied"] = 3;
                         return values;
                     })();
-    
+
                     return UpdatePersistentSubscriptionCompleted;
                 })();
-    
+
                 Messages.CreatePersistentSubscriptionCompleted = (function() {
-    
+
                     /**
                      * Properties of a CreatePersistentSubscriptionCompleted.
                      * @memberof EventStore.Client.Messages
@@ -8001,7 +9777,7 @@
                      * @property {EventStore.Client.Messages.CreatePersistentSubscriptionCompleted.CreatePersistentSubscriptionResult} result CreatePersistentSubscriptionCompleted result
                      * @property {string|null} [reason] CreatePersistentSubscriptionCompleted reason
                      */
-    
+
                     /**
                      * Constructs a new CreatePersistentSubscriptionCompleted.
                      * @memberof EventStore.Client.Messages
@@ -8016,7 +9792,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * CreatePersistentSubscriptionCompleted result.
                      * @member {EventStore.Client.Messages.CreatePersistentSubscriptionCompleted.CreatePersistentSubscriptionResult} result
@@ -8024,7 +9800,7 @@
                      * @instance
                      */
                     CreatePersistentSubscriptionCompleted.prototype.result = 0;
-    
+
                     /**
                      * CreatePersistentSubscriptionCompleted reason.
                      * @member {string} reason
@@ -8032,7 +9808,7 @@
                      * @instance
                      */
                     CreatePersistentSubscriptionCompleted.prototype.reason = "";
-    
+
                     /**
                      * Creates a new CreatePersistentSubscriptionCompleted instance using the specified properties.
                      * @function create
@@ -8044,7 +9820,7 @@
                     CreatePersistentSubscriptionCompleted.create = function create(properties) {
                         return new CreatePersistentSubscriptionCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified CreatePersistentSubscriptionCompleted message. Does not implicitly {@link EventStore.Client.Messages.CreatePersistentSubscriptionCompleted.verify|verify} messages.
                      * @function encode
@@ -8058,11 +9834,11 @@
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.result);
-                        if (message.reason != null && message.hasOwnProperty("reason"))
+                        if (message.reason != null && Object.hasOwnProperty.call(message, "reason"))
                             writer.uint32(/* id 2, wireType 2 =*/18).string(message.reason);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified CreatePersistentSubscriptionCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.CreatePersistentSubscriptionCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -8075,7 +9851,7 @@
                     CreatePersistentSubscriptionCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a CreatePersistentSubscriptionCompleted message from the specified reader or buffer.
                      * @function decode
@@ -8094,12 +9870,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.result = reader.int32();
-                                break;
-                            case 2:
-                                message.reason = reader.string();
-                                break;
+                            case 1: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.reason = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -8109,7 +9887,7 @@
                             throw $util.ProtocolError("missing required 'result'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a CreatePersistentSubscriptionCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -8125,7 +9903,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a CreatePersistentSubscriptionCompleted message.
                      * @function verify
@@ -8151,7 +9929,7 @@
                                 return "reason: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a CreatePersistentSubscriptionCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -8165,6 +9943,12 @@
                             return object;
                         var message = new $root.EventStore.Client.Messages.CreatePersistentSubscriptionCompleted();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -8186,7 +9970,7 @@
                             message.reason = String(object.reason);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a CreatePersistentSubscriptionCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -8205,12 +9989,12 @@
                             object.reason = "";
                         }
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.CreatePersistentSubscriptionCompleted.CreatePersistentSubscriptionResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.CreatePersistentSubscriptionCompleted.CreatePersistentSubscriptionResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.CreatePersistentSubscriptionCompleted.CreatePersistentSubscriptionResult[message.result] : message.result;
                         if (message.reason != null && message.hasOwnProperty("reason"))
                             object.reason = message.reason;
                         return object;
                     };
-    
+
                     /**
                      * Converts this CreatePersistentSubscriptionCompleted to JSON.
                      * @function toJSON
@@ -8221,11 +10005,26 @@
                     CreatePersistentSubscriptionCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for CreatePersistentSubscriptionCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.CreatePersistentSubscriptionCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    CreatePersistentSubscriptionCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.CreatePersistentSubscriptionCompleted";
+                    };
+
                     /**
                      * CreatePersistentSubscriptionResult enum.
                      * @name EventStore.Client.Messages.CreatePersistentSubscriptionCompleted.CreatePersistentSubscriptionResult
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} Success=0 Success value
                      * @property {number} AlreadyExists=1 AlreadyExists value
                      * @property {number} Fail=2 Fail value
@@ -8239,12 +10038,12 @@
                         values[valuesById[3] = "AccessDenied"] = 3;
                         return values;
                     })();
-    
+
                     return CreatePersistentSubscriptionCompleted;
                 })();
-    
+
                 Messages.DeletePersistentSubscriptionCompleted = (function() {
-    
+
                     /**
                      * Properties of a DeletePersistentSubscriptionCompleted.
                      * @memberof EventStore.Client.Messages
@@ -8252,7 +10051,7 @@
                      * @property {EventStore.Client.Messages.DeletePersistentSubscriptionCompleted.DeletePersistentSubscriptionResult} result DeletePersistentSubscriptionCompleted result
                      * @property {string|null} [reason] DeletePersistentSubscriptionCompleted reason
                      */
-    
+
                     /**
                      * Constructs a new DeletePersistentSubscriptionCompleted.
                      * @memberof EventStore.Client.Messages
@@ -8267,7 +10066,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * DeletePersistentSubscriptionCompleted result.
                      * @member {EventStore.Client.Messages.DeletePersistentSubscriptionCompleted.DeletePersistentSubscriptionResult} result
@@ -8275,7 +10074,7 @@
                      * @instance
                      */
                     DeletePersistentSubscriptionCompleted.prototype.result = 0;
-    
+
                     /**
                      * DeletePersistentSubscriptionCompleted reason.
                      * @member {string} reason
@@ -8283,7 +10082,7 @@
                      * @instance
                      */
                     DeletePersistentSubscriptionCompleted.prototype.reason = "";
-    
+
                     /**
                      * Creates a new DeletePersistentSubscriptionCompleted instance using the specified properties.
                      * @function create
@@ -8295,7 +10094,7 @@
                     DeletePersistentSubscriptionCompleted.create = function create(properties) {
                         return new DeletePersistentSubscriptionCompleted(properties);
                     };
-    
+
                     /**
                      * Encodes the specified DeletePersistentSubscriptionCompleted message. Does not implicitly {@link EventStore.Client.Messages.DeletePersistentSubscriptionCompleted.verify|verify} messages.
                      * @function encode
@@ -8309,11 +10108,11 @@
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.result);
-                        if (message.reason != null && message.hasOwnProperty("reason"))
+                        if (message.reason != null && Object.hasOwnProperty.call(message, "reason"))
                             writer.uint32(/* id 2, wireType 2 =*/18).string(message.reason);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified DeletePersistentSubscriptionCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.DeletePersistentSubscriptionCompleted.verify|verify} messages.
                      * @function encodeDelimited
@@ -8326,7 +10125,7 @@
                     DeletePersistentSubscriptionCompleted.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a DeletePersistentSubscriptionCompleted message from the specified reader or buffer.
                      * @function decode
@@ -8345,12 +10144,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.result = reader.int32();
-                                break;
-                            case 2:
-                                message.reason = reader.string();
-                                break;
+                            case 1: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.reason = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -8360,7 +10161,7 @@
                             throw $util.ProtocolError("missing required 'result'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a DeletePersistentSubscriptionCompleted message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -8376,7 +10177,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a DeletePersistentSubscriptionCompleted message.
                      * @function verify
@@ -8402,7 +10203,7 @@
                                 return "reason: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a DeletePersistentSubscriptionCompleted message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -8416,6 +10217,12 @@
                             return object;
                         var message = new $root.EventStore.Client.Messages.DeletePersistentSubscriptionCompleted();
                         switch (object.result) {
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
                         case "Success":
                         case 0:
                             message.result = 0;
@@ -8437,7 +10244,7 @@
                             message.reason = String(object.reason);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a DeletePersistentSubscriptionCompleted message. Also converts values to other types if specified.
                      * @function toObject
@@ -8456,12 +10263,12 @@
                             object.reason = "";
                         }
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.DeletePersistentSubscriptionCompleted.DeletePersistentSubscriptionResult[message.result] : message.result;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.DeletePersistentSubscriptionCompleted.DeletePersistentSubscriptionResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.DeletePersistentSubscriptionCompleted.DeletePersistentSubscriptionResult[message.result] : message.result;
                         if (message.reason != null && message.hasOwnProperty("reason"))
                             object.reason = message.reason;
                         return object;
                     };
-    
+
                     /**
                      * Converts this DeletePersistentSubscriptionCompleted to JSON.
                      * @function toJSON
@@ -8472,11 +10279,26 @@
                     DeletePersistentSubscriptionCompleted.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for DeletePersistentSubscriptionCompleted
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.DeletePersistentSubscriptionCompleted
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    DeletePersistentSubscriptionCompleted.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.DeletePersistentSubscriptionCompleted";
+                    };
+
                     /**
                      * DeletePersistentSubscriptionResult enum.
                      * @name EventStore.Client.Messages.DeletePersistentSubscriptionCompleted.DeletePersistentSubscriptionResult
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} Success=0 Success value
                      * @property {number} DoesNotExist=1 DoesNotExist value
                      * @property {number} Fail=2 Fail value
@@ -8490,12 +10312,12 @@
                         values[valuesById[3] = "AccessDenied"] = 3;
                         return values;
                     })();
-    
+
                     return DeletePersistentSubscriptionCompleted;
                 })();
-    
+
                 Messages.ConnectToPersistentSubscription = (function() {
-    
+
                     /**
                      * Properties of a ConnectToPersistentSubscription.
                      * @memberof EventStore.Client.Messages
@@ -8504,7 +10326,7 @@
                      * @property {string} eventStreamId ConnectToPersistentSubscription eventStreamId
                      * @property {number} allowedInFlightMessages ConnectToPersistentSubscription allowedInFlightMessages
                      */
-    
+
                     /**
                      * Constructs a new ConnectToPersistentSubscription.
                      * @memberof EventStore.Client.Messages
@@ -8519,7 +10341,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * ConnectToPersistentSubscription subscriptionId.
                      * @member {string} subscriptionId
@@ -8527,7 +10349,7 @@
                      * @instance
                      */
                     ConnectToPersistentSubscription.prototype.subscriptionId = "";
-    
+
                     /**
                      * ConnectToPersistentSubscription eventStreamId.
                      * @member {string} eventStreamId
@@ -8535,7 +10357,7 @@
                      * @instance
                      */
                     ConnectToPersistentSubscription.prototype.eventStreamId = "";
-    
+
                     /**
                      * ConnectToPersistentSubscription allowedInFlightMessages.
                      * @member {number} allowedInFlightMessages
@@ -8543,7 +10365,7 @@
                      * @instance
                      */
                     ConnectToPersistentSubscription.prototype.allowedInFlightMessages = 0;
-    
+
                     /**
                      * Creates a new ConnectToPersistentSubscription instance using the specified properties.
                      * @function create
@@ -8555,7 +10377,7 @@
                     ConnectToPersistentSubscription.create = function create(properties) {
                         return new ConnectToPersistentSubscription(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ConnectToPersistentSubscription message. Does not implicitly {@link EventStore.Client.Messages.ConnectToPersistentSubscription.verify|verify} messages.
                      * @function encode
@@ -8573,7 +10395,7 @@
                         writer.uint32(/* id 3, wireType 0 =*/24).int32(message.allowedInFlightMessages);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ConnectToPersistentSubscription message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ConnectToPersistentSubscription.verify|verify} messages.
                      * @function encodeDelimited
@@ -8586,7 +10408,7 @@
                     ConnectToPersistentSubscription.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ConnectToPersistentSubscription message from the specified reader or buffer.
                      * @function decode
@@ -8605,15 +10427,18 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.subscriptionId = reader.string();
-                                break;
-                            case 2:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 3:
-                                message.allowedInFlightMessages = reader.int32();
-                                break;
+                            case 1: {
+                                    message.subscriptionId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.allowedInFlightMessages = reader.int32();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -8627,7 +10452,7 @@
                             throw $util.ProtocolError("missing required 'allowedInFlightMessages'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ConnectToPersistentSubscription message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -8643,7 +10468,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ConnectToPersistentSubscription message.
                      * @function verify
@@ -8663,7 +10488,7 @@
                             return "allowedInFlightMessages: integer expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ConnectToPersistentSubscription message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -8684,7 +10509,7 @@
                             message.allowedInFlightMessages = object.allowedInFlightMessages | 0;
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a ConnectToPersistentSubscription message. Also converts values to other types if specified.
                      * @function toObject
@@ -8711,7 +10536,7 @@
                             object.allowedInFlightMessages = message.allowedInFlightMessages;
                         return object;
                     };
-    
+
                     /**
                      * Converts this ConnectToPersistentSubscription to JSON.
                      * @function toJSON
@@ -8722,12 +10547,27 @@
                     ConnectToPersistentSubscription.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ConnectToPersistentSubscription
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ConnectToPersistentSubscription
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ConnectToPersistentSubscription.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ConnectToPersistentSubscription";
+                    };
+
                     return ConnectToPersistentSubscription;
                 })();
-    
+
                 Messages.PersistentSubscriptionAckEvents = (function() {
-    
+
                     /**
                      * Properties of a PersistentSubscriptionAckEvents.
                      * @memberof EventStore.Client.Messages
@@ -8735,7 +10575,7 @@
                      * @property {string} subscriptionId PersistentSubscriptionAckEvents subscriptionId
                      * @property {Array.<Uint8Array>|null} [processedEventIds] PersistentSubscriptionAckEvents processedEventIds
                      */
-    
+
                     /**
                      * Constructs a new PersistentSubscriptionAckEvents.
                      * @memberof EventStore.Client.Messages
@@ -8751,7 +10591,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * PersistentSubscriptionAckEvents subscriptionId.
                      * @member {string} subscriptionId
@@ -8759,7 +10599,7 @@
                      * @instance
                      */
                     PersistentSubscriptionAckEvents.prototype.subscriptionId = "";
-    
+
                     /**
                      * PersistentSubscriptionAckEvents processedEventIds.
                      * @member {Array.<Uint8Array>} processedEventIds
@@ -8767,7 +10607,7 @@
                      * @instance
                      */
                     PersistentSubscriptionAckEvents.prototype.processedEventIds = $util.emptyArray;
-    
+
                     /**
                      * Creates a new PersistentSubscriptionAckEvents instance using the specified properties.
                      * @function create
@@ -8779,7 +10619,7 @@
                     PersistentSubscriptionAckEvents.create = function create(properties) {
                         return new PersistentSubscriptionAckEvents(properties);
                     };
-    
+
                     /**
                      * Encodes the specified PersistentSubscriptionAckEvents message. Does not implicitly {@link EventStore.Client.Messages.PersistentSubscriptionAckEvents.verify|verify} messages.
                      * @function encode
@@ -8798,7 +10638,7 @@
                                 writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.processedEventIds[i]);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified PersistentSubscriptionAckEvents message, length delimited. Does not implicitly {@link EventStore.Client.Messages.PersistentSubscriptionAckEvents.verify|verify} messages.
                      * @function encodeDelimited
@@ -8811,7 +10651,7 @@
                     PersistentSubscriptionAckEvents.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a PersistentSubscriptionAckEvents message from the specified reader or buffer.
                      * @function decode
@@ -8830,14 +10670,16 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.subscriptionId = reader.string();
-                                break;
-                            case 2:
-                                if (!(message.processedEventIds && message.processedEventIds.length))
-                                    message.processedEventIds = [];
-                                message.processedEventIds.push(reader.bytes());
-                                break;
+                            case 1: {
+                                    message.subscriptionId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    if (!(message.processedEventIds && message.processedEventIds.length))
+                                        message.processedEventIds = [];
+                                    message.processedEventIds.push(reader.bytes());
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -8847,7 +10689,7 @@
                             throw $util.ProtocolError("missing required 'subscriptionId'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a PersistentSubscriptionAckEvents message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -8863,7 +10705,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a PersistentSubscriptionAckEvents message.
                      * @function verify
@@ -8886,7 +10728,7 @@
                         }
                         return null;
                     };
-    
+
                     /**
                      * Creates a PersistentSubscriptionAckEvents message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -8908,12 +10750,12 @@
                             for (var i = 0; i < object.processedEventIds.length; ++i)
                                 if (typeof object.processedEventIds[i] === "string")
                                     $util.base64.decode(object.processedEventIds[i], message.processedEventIds[i] = $util.newBuffer($util.base64.length(object.processedEventIds[i])), 0);
-                                else if (object.processedEventIds[i].length)
+                                else if (object.processedEventIds[i].length >= 0)
                                     message.processedEventIds[i] = object.processedEventIds[i];
                         }
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a PersistentSubscriptionAckEvents message. Also converts values to other types if specified.
                      * @function toObject
@@ -8940,7 +10782,7 @@
                         }
                         return object;
                     };
-    
+
                     /**
                      * Converts this PersistentSubscriptionAckEvents to JSON.
                      * @function toJSON
@@ -8951,12 +10793,27 @@
                     PersistentSubscriptionAckEvents.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for PersistentSubscriptionAckEvents
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.PersistentSubscriptionAckEvents
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    PersistentSubscriptionAckEvents.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.PersistentSubscriptionAckEvents";
+                    };
+
                     return PersistentSubscriptionAckEvents;
                 })();
-    
+
                 Messages.PersistentSubscriptionNakEvents = (function() {
-    
+
                     /**
                      * Properties of a PersistentSubscriptionNakEvents.
                      * @memberof EventStore.Client.Messages
@@ -8966,7 +10823,7 @@
                      * @property {string|null} [message] PersistentSubscriptionNakEvents message
                      * @property {EventStore.Client.Messages.PersistentSubscriptionNakEvents.NakAction} action PersistentSubscriptionNakEvents action
                      */
-    
+
                     /**
                      * Constructs a new PersistentSubscriptionNakEvents.
                      * @memberof EventStore.Client.Messages
@@ -8982,7 +10839,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * PersistentSubscriptionNakEvents subscriptionId.
                      * @member {string} subscriptionId
@@ -8990,7 +10847,7 @@
                      * @instance
                      */
                     PersistentSubscriptionNakEvents.prototype.subscriptionId = "";
-    
+
                     /**
                      * PersistentSubscriptionNakEvents processedEventIds.
                      * @member {Array.<Uint8Array>} processedEventIds
@@ -8998,7 +10855,7 @@
                      * @instance
                      */
                     PersistentSubscriptionNakEvents.prototype.processedEventIds = $util.emptyArray;
-    
+
                     /**
                      * PersistentSubscriptionNakEvents message.
                      * @member {string} message
@@ -9006,7 +10863,7 @@
                      * @instance
                      */
                     PersistentSubscriptionNakEvents.prototype.message = "";
-    
+
                     /**
                      * PersistentSubscriptionNakEvents action.
                      * @member {EventStore.Client.Messages.PersistentSubscriptionNakEvents.NakAction} action
@@ -9014,7 +10871,7 @@
                      * @instance
                      */
                     PersistentSubscriptionNakEvents.prototype.action = 0;
-    
+
                     /**
                      * Creates a new PersistentSubscriptionNakEvents instance using the specified properties.
                      * @function create
@@ -9026,7 +10883,7 @@
                     PersistentSubscriptionNakEvents.create = function create(properties) {
                         return new PersistentSubscriptionNakEvents(properties);
                     };
-    
+
                     /**
                      * Encodes the specified PersistentSubscriptionNakEvents message. Does not implicitly {@link EventStore.Client.Messages.PersistentSubscriptionNakEvents.verify|verify} messages.
                      * @function encode
@@ -9043,12 +10900,12 @@
                         if (message.processedEventIds != null && message.processedEventIds.length)
                             for (var i = 0; i < message.processedEventIds.length; ++i)
                                 writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.processedEventIds[i]);
-                        if (message.message != null && message.hasOwnProperty("message"))
+                        if (message.message != null && Object.hasOwnProperty.call(message, "message"))
                             writer.uint32(/* id 3, wireType 2 =*/26).string(message.message);
                         writer.uint32(/* id 4, wireType 0 =*/32).int32(message.action);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified PersistentSubscriptionNakEvents message, length delimited. Does not implicitly {@link EventStore.Client.Messages.PersistentSubscriptionNakEvents.verify|verify} messages.
                      * @function encodeDelimited
@@ -9061,7 +10918,7 @@
                     PersistentSubscriptionNakEvents.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a PersistentSubscriptionNakEvents message from the specified reader or buffer.
                      * @function decode
@@ -9080,20 +10937,24 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.subscriptionId = reader.string();
-                                break;
-                            case 2:
-                                if (!(message.processedEventIds && message.processedEventIds.length))
-                                    message.processedEventIds = [];
-                                message.processedEventIds.push(reader.bytes());
-                                break;
-                            case 3:
-                                message.message = reader.string();
-                                break;
-                            case 4:
-                                message.action = reader.int32();
-                                break;
+                            case 1: {
+                                    message.subscriptionId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    if (!(message.processedEventIds && message.processedEventIds.length))
+                                        message.processedEventIds = [];
+                                    message.processedEventIds.push(reader.bytes());
+                                    break;
+                                }
+                            case 3: {
+                                    message.message = reader.string();
+                                    break;
+                                }
+                            case 4: {
+                                    message.action = reader.int32();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -9105,7 +10966,7 @@
                             throw $util.ProtocolError("missing required 'action'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a PersistentSubscriptionNakEvents message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -9121,7 +10982,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a PersistentSubscriptionNakEvents message.
                      * @function verify
@@ -9157,7 +11018,7 @@
                         }
                         return null;
                     };
-    
+
                     /**
                      * Creates a PersistentSubscriptionNakEvents message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -9179,12 +11040,18 @@
                             for (var i = 0; i < object.processedEventIds.length; ++i)
                                 if (typeof object.processedEventIds[i] === "string")
                                     $util.base64.decode(object.processedEventIds[i], message.processedEventIds[i] = $util.newBuffer($util.base64.length(object.processedEventIds[i])), 0);
-                                else if (object.processedEventIds[i].length)
+                                else if (object.processedEventIds[i].length >= 0)
                                     message.processedEventIds[i] = object.processedEventIds[i];
                         }
                         if (object.message != null)
                             message.message = String(object.message);
                         switch (object.action) {
+                        default:
+                            if (typeof object.action === "number") {
+                                message.action = object.action;
+                                break;
+                            }
+                            break;
                         case "Unknown":
                         case 0:
                             message.action = 0;
@@ -9208,7 +11075,7 @@
                         }
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a PersistentSubscriptionNakEvents message. Also converts values to other types if specified.
                      * @function toObject
@@ -9239,10 +11106,10 @@
                         if (message.message != null && message.hasOwnProperty("message"))
                             object.message = message.message;
                         if (message.action != null && message.hasOwnProperty("action"))
-                            object.action = options.enums === String ? $root.EventStore.Client.Messages.PersistentSubscriptionNakEvents.NakAction[message.action] : message.action;
+                            object.action = options.enums === String ? $root.EventStore.Client.Messages.PersistentSubscriptionNakEvents.NakAction[message.action] === undefined ? message.action : $root.EventStore.Client.Messages.PersistentSubscriptionNakEvents.NakAction[message.action] : message.action;
                         return object;
                     };
-    
+
                     /**
                      * Converts this PersistentSubscriptionNakEvents to JSON.
                      * @function toJSON
@@ -9253,11 +11120,26 @@
                     PersistentSubscriptionNakEvents.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for PersistentSubscriptionNakEvents
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.PersistentSubscriptionNakEvents
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    PersistentSubscriptionNakEvents.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.PersistentSubscriptionNakEvents";
+                    };
+
                     /**
                      * NakAction enum.
                      * @name EventStore.Client.Messages.PersistentSubscriptionNakEvents.NakAction
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} Unknown=0 Unknown value
                      * @property {number} Park=1 Park value
                      * @property {number} Retry=2 Retry value
@@ -9273,21 +11155,21 @@
                         values[valuesById[4] = "Stop"] = 4;
                         return values;
                     })();
-    
+
                     return PersistentSubscriptionNakEvents;
                 })();
-    
+
                 Messages.PersistentSubscriptionConfirmation = (function() {
-    
+
                     /**
                      * Properties of a PersistentSubscriptionConfirmation.
                      * @memberof EventStore.Client.Messages
                      * @interface IPersistentSubscriptionConfirmation
-                     * @property {number|Long} lastCommitPosition PersistentSubscriptionConfirmation lastCommitPosition
+                     * @property {Long} lastCommitPosition PersistentSubscriptionConfirmation lastCommitPosition
                      * @property {string} subscriptionId PersistentSubscriptionConfirmation subscriptionId
-                     * @property {number|Long|null} [lastEventNumber] PersistentSubscriptionConfirmation lastEventNumber
+                     * @property {Long|null} [lastEventNumber] PersistentSubscriptionConfirmation lastEventNumber
                      */
-    
+
                     /**
                      * Constructs a new PersistentSubscriptionConfirmation.
                      * @memberof EventStore.Client.Messages
@@ -9302,15 +11184,15 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * PersistentSubscriptionConfirmation lastCommitPosition.
-                     * @member {number|Long} lastCommitPosition
+                     * @member {Long} lastCommitPosition
                      * @memberof EventStore.Client.Messages.PersistentSubscriptionConfirmation
                      * @instance
                      */
                     PersistentSubscriptionConfirmation.prototype.lastCommitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * PersistentSubscriptionConfirmation subscriptionId.
                      * @member {string} subscriptionId
@@ -9318,15 +11200,15 @@
                      * @instance
                      */
                     PersistentSubscriptionConfirmation.prototype.subscriptionId = "";
-    
+
                     /**
                      * PersistentSubscriptionConfirmation lastEventNumber.
-                     * @member {number|Long} lastEventNumber
+                     * @member {Long} lastEventNumber
                      * @memberof EventStore.Client.Messages.PersistentSubscriptionConfirmation
                      * @instance
                      */
                     PersistentSubscriptionConfirmation.prototype.lastEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * Creates a new PersistentSubscriptionConfirmation instance using the specified properties.
                      * @function create
@@ -9338,7 +11220,7 @@
                     PersistentSubscriptionConfirmation.create = function create(properties) {
                         return new PersistentSubscriptionConfirmation(properties);
                     };
-    
+
                     /**
                      * Encodes the specified PersistentSubscriptionConfirmation message. Does not implicitly {@link EventStore.Client.Messages.PersistentSubscriptionConfirmation.verify|verify} messages.
                      * @function encode
@@ -9353,11 +11235,11 @@
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.lastCommitPosition);
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.subscriptionId);
-                        if (message.lastEventNumber != null && message.hasOwnProperty("lastEventNumber"))
+                        if (message.lastEventNumber != null && Object.hasOwnProperty.call(message, "lastEventNumber"))
                             writer.uint32(/* id 3, wireType 0 =*/24).int64(message.lastEventNumber);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified PersistentSubscriptionConfirmation message, length delimited. Does not implicitly {@link EventStore.Client.Messages.PersistentSubscriptionConfirmation.verify|verify} messages.
                      * @function encodeDelimited
@@ -9370,7 +11252,7 @@
                     PersistentSubscriptionConfirmation.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a PersistentSubscriptionConfirmation message from the specified reader or buffer.
                      * @function decode
@@ -9389,15 +11271,18 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.lastCommitPosition = reader.int64();
-                                break;
-                            case 2:
-                                message.subscriptionId = reader.string();
-                                break;
-                            case 3:
-                                message.lastEventNumber = reader.int64();
-                                break;
+                            case 1: {
+                                    message.lastCommitPosition = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.subscriptionId = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.lastEventNumber = reader.int64();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -9409,7 +11294,7 @@
                             throw $util.ProtocolError("missing required 'subscriptionId'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a PersistentSubscriptionConfirmation message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -9425,7 +11310,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a PersistentSubscriptionConfirmation message.
                      * @function verify
@@ -9446,7 +11331,7 @@
                                 return "lastEventNumber: integer|Long expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a PersistentSubscriptionConfirmation message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -9481,7 +11366,7 @@
                                 message.lastEventNumber = new $util.LongBits(object.lastEventNumber.low >>> 0, object.lastEventNumber.high >>> 0).toNumber();
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a PersistentSubscriptionConfirmation message. Also converts values to other types if specified.
                      * @function toObject
@@ -9522,7 +11407,7 @@
                                 object.lastEventNumber = options.longs === String ? $util.Long.prototype.toString.call(message.lastEventNumber) : options.longs === Number ? new $util.LongBits(message.lastEventNumber.low >>> 0, message.lastEventNumber.high >>> 0).toNumber() : message.lastEventNumber;
                         return object;
                     };
-    
+
                     /**
                      * Converts this PersistentSubscriptionConfirmation to JSON.
                      * @function toJSON
@@ -9533,19 +11418,35 @@
                     PersistentSubscriptionConfirmation.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for PersistentSubscriptionConfirmation
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.PersistentSubscriptionConfirmation
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    PersistentSubscriptionConfirmation.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.PersistentSubscriptionConfirmation";
+                    };
+
                     return PersistentSubscriptionConfirmation;
                 })();
-    
+
                 Messages.PersistentSubscriptionStreamEventAppeared = (function() {
-    
+
                     /**
                      * Properties of a PersistentSubscriptionStreamEventAppeared.
                      * @memberof EventStore.Client.Messages
                      * @interface IPersistentSubscriptionStreamEventAppeared
                      * @property {EventStore.Client.Messages.IResolvedIndexedEvent} event PersistentSubscriptionStreamEventAppeared event
+                     * @property {number|null} [retryCount] PersistentSubscriptionStreamEventAppeared retryCount
                      */
-    
+
                     /**
                      * Constructs a new PersistentSubscriptionStreamEventAppeared.
                      * @memberof EventStore.Client.Messages
@@ -9560,7 +11461,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * PersistentSubscriptionStreamEventAppeared event.
                      * @member {EventStore.Client.Messages.IResolvedIndexedEvent} event
@@ -9568,7 +11469,15 @@
                      * @instance
                      */
                     PersistentSubscriptionStreamEventAppeared.prototype.event = null;
-    
+
+                    /**
+                     * PersistentSubscriptionStreamEventAppeared retryCount.
+                     * @member {number} retryCount
+                     * @memberof EventStore.Client.Messages.PersistentSubscriptionStreamEventAppeared
+                     * @instance
+                     */
+                    PersistentSubscriptionStreamEventAppeared.prototype.retryCount = 0;
+
                     /**
                      * Creates a new PersistentSubscriptionStreamEventAppeared instance using the specified properties.
                      * @function create
@@ -9580,7 +11489,7 @@
                     PersistentSubscriptionStreamEventAppeared.create = function create(properties) {
                         return new PersistentSubscriptionStreamEventAppeared(properties);
                     };
-    
+
                     /**
                      * Encodes the specified PersistentSubscriptionStreamEventAppeared message. Does not implicitly {@link EventStore.Client.Messages.PersistentSubscriptionStreamEventAppeared.verify|verify} messages.
                      * @function encode
@@ -9594,9 +11503,11 @@
                         if (!writer)
                             writer = $Writer.create();
                         $root.EventStore.Client.Messages.ResolvedIndexedEvent.encode(message.event, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                        if (message.retryCount != null && Object.hasOwnProperty.call(message, "retryCount"))
+                            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.retryCount);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified PersistentSubscriptionStreamEventAppeared message, length delimited. Does not implicitly {@link EventStore.Client.Messages.PersistentSubscriptionStreamEventAppeared.verify|verify} messages.
                      * @function encodeDelimited
@@ -9609,7 +11520,7 @@
                     PersistentSubscriptionStreamEventAppeared.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a PersistentSubscriptionStreamEventAppeared message from the specified reader or buffer.
                      * @function decode
@@ -9628,9 +11539,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.event = $root.EventStore.Client.Messages.ResolvedIndexedEvent.decode(reader, reader.uint32());
-                                break;
+                            case 1: {
+                                    message.event = $root.EventStore.Client.Messages.ResolvedIndexedEvent.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 2: {
+                                    message.retryCount = reader.int32();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -9640,7 +11556,7 @@
                             throw $util.ProtocolError("missing required 'event'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a PersistentSubscriptionStreamEventAppeared message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -9656,7 +11572,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a PersistentSubscriptionStreamEventAppeared message.
                      * @function verify
@@ -9673,9 +11589,12 @@
                             if (error)
                                 return "event." + error;
                         }
+                        if (message.retryCount != null && message.hasOwnProperty("retryCount"))
+                            if (!$util.isInteger(message.retryCount))
+                                return "retryCount: integer expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a PersistentSubscriptionStreamEventAppeared message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -9693,9 +11612,11 @@
                                 throw TypeError(".EventStore.Client.Messages.PersistentSubscriptionStreamEventAppeared.event: object expected");
                             message.event = $root.EventStore.Client.Messages.ResolvedIndexedEvent.fromObject(object.event);
                         }
+                        if (object.retryCount != null)
+                            message.retryCount = object.retryCount | 0;
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a PersistentSubscriptionStreamEventAppeared message. Also converts values to other types if specified.
                      * @function toObject
@@ -9709,13 +11630,17 @@
                         if (!options)
                             options = {};
                         var object = {};
-                        if (options.defaults)
+                        if (options.defaults) {
                             object.event = null;
+                            object.retryCount = 0;
+                        }
                         if (message.event != null && message.hasOwnProperty("event"))
                             object.event = $root.EventStore.Client.Messages.ResolvedIndexedEvent.toObject(message.event, options);
+                        if (message.retryCount != null && message.hasOwnProperty("retryCount"))
+                            object.retryCount = message.retryCount;
                         return object;
                     };
-    
+
                     /**
                      * Converts this PersistentSubscriptionStreamEventAppeared to JSON.
                      * @function toJSON
@@ -9726,12 +11651,27 @@
                     PersistentSubscriptionStreamEventAppeared.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for PersistentSubscriptionStreamEventAppeared
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.PersistentSubscriptionStreamEventAppeared
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    PersistentSubscriptionStreamEventAppeared.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.PersistentSubscriptionStreamEventAppeared";
+                    };
+
                     return PersistentSubscriptionStreamEventAppeared;
                 })();
-    
+
                 Messages.SubscribeToStream = (function() {
-    
+
                     /**
                      * Properties of a SubscribeToStream.
                      * @memberof EventStore.Client.Messages
@@ -9739,7 +11679,7 @@
                      * @property {string} eventStreamId SubscribeToStream eventStreamId
                      * @property {boolean} resolveLinkTos SubscribeToStream resolveLinkTos
                      */
-    
+
                     /**
                      * Constructs a new SubscribeToStream.
                      * @memberof EventStore.Client.Messages
@@ -9754,7 +11694,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * SubscribeToStream eventStreamId.
                      * @member {string} eventStreamId
@@ -9762,7 +11702,7 @@
                      * @instance
                      */
                     SubscribeToStream.prototype.eventStreamId = "";
-    
+
                     /**
                      * SubscribeToStream resolveLinkTos.
                      * @member {boolean} resolveLinkTos
@@ -9770,7 +11710,7 @@
                      * @instance
                      */
                     SubscribeToStream.prototype.resolveLinkTos = false;
-    
+
                     /**
                      * Creates a new SubscribeToStream instance using the specified properties.
                      * @function create
@@ -9782,7 +11722,7 @@
                     SubscribeToStream.create = function create(properties) {
                         return new SubscribeToStream(properties);
                     };
-    
+
                     /**
                      * Encodes the specified SubscribeToStream message. Does not implicitly {@link EventStore.Client.Messages.SubscribeToStream.verify|verify} messages.
                      * @function encode
@@ -9799,7 +11739,7 @@
                         writer.uint32(/* id 2, wireType 0 =*/16).bool(message.resolveLinkTos);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified SubscribeToStream message, length delimited. Does not implicitly {@link EventStore.Client.Messages.SubscribeToStream.verify|verify} messages.
                      * @function encodeDelimited
@@ -9812,7 +11752,7 @@
                     SubscribeToStream.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a SubscribeToStream message from the specified reader or buffer.
                      * @function decode
@@ -9831,12 +11771,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.eventStreamId = reader.string();
-                                break;
-                            case 2:
-                                message.resolveLinkTos = reader.bool();
-                                break;
+                            case 1: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.resolveLinkTos = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -9848,7 +11790,7 @@
                             throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a SubscribeToStream message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -9864,7 +11806,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a SubscribeToStream message.
                      * @function verify
@@ -9882,7 +11824,7 @@
                             return "resolveLinkTos: boolean expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a SubscribeToStream message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -9901,7 +11843,7 @@
                             message.resolveLinkTos = Boolean(object.resolveLinkTos);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a SubscribeToStream message. Also converts values to other types if specified.
                      * @function toObject
@@ -9925,7 +11867,7 @@
                             object.resolveLinkTos = message.resolveLinkTos;
                         return object;
                     };
-    
+
                     /**
                      * Converts this SubscribeToStream to JSON.
                      * @function toJSON
@@ -9936,20 +11878,569 @@
                     SubscribeToStream.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for SubscribeToStream
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.SubscribeToStream
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    SubscribeToStream.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.SubscribeToStream";
+                    };
+
                     return SubscribeToStream;
                 })();
-    
+
+                Messages.FilteredSubscribeToStream = (function() {
+
+                    /**
+                     * Properties of a FilteredSubscribeToStream.
+                     * @memberof EventStore.Client.Messages
+                     * @interface IFilteredSubscribeToStream
+                     * @property {string} eventStreamId FilteredSubscribeToStream eventStreamId
+                     * @property {boolean} resolveLinkTos FilteredSubscribeToStream resolveLinkTos
+                     * @property {EventStore.Client.Messages.IFilter} filter FilteredSubscribeToStream filter
+                     * @property {number} checkpointInterval FilteredSubscribeToStream checkpointInterval
+                     */
+
+                    /**
+                     * Constructs a new FilteredSubscribeToStream.
+                     * @memberof EventStore.Client.Messages
+                     * @classdesc Represents a FilteredSubscribeToStream.
+                     * @implements IFilteredSubscribeToStream
+                     * @constructor
+                     * @param {EventStore.Client.Messages.IFilteredSubscribeToStream=} [properties] Properties to set
+                     */
+                    function FilteredSubscribeToStream(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * FilteredSubscribeToStream eventStreamId.
+                     * @member {string} eventStreamId
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @instance
+                     */
+                    FilteredSubscribeToStream.prototype.eventStreamId = "";
+
+                    /**
+                     * FilteredSubscribeToStream resolveLinkTos.
+                     * @member {boolean} resolveLinkTos
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @instance
+                     */
+                    FilteredSubscribeToStream.prototype.resolveLinkTos = false;
+
+                    /**
+                     * FilteredSubscribeToStream filter.
+                     * @member {EventStore.Client.Messages.IFilter} filter
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @instance
+                     */
+                    FilteredSubscribeToStream.prototype.filter = null;
+
+                    /**
+                     * FilteredSubscribeToStream checkpointInterval.
+                     * @member {number} checkpointInterval
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @instance
+                     */
+                    FilteredSubscribeToStream.prototype.checkpointInterval = 0;
+
+                    /**
+                     * Creates a new FilteredSubscribeToStream instance using the specified properties.
+                     * @function create
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilteredSubscribeToStream=} [properties] Properties to set
+                     * @returns {EventStore.Client.Messages.FilteredSubscribeToStream} FilteredSubscribeToStream instance
+                     */
+                    FilteredSubscribeToStream.create = function create(properties) {
+                        return new FilteredSubscribeToStream(properties);
+                    };
+
+                    /**
+                     * Encodes the specified FilteredSubscribeToStream message. Does not implicitly {@link EventStore.Client.Messages.FilteredSubscribeToStream.verify|verify} messages.
+                     * @function encode
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilteredSubscribeToStream} message FilteredSubscribeToStream message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    FilteredSubscribeToStream.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.eventStreamId);
+                        writer.uint32(/* id 2, wireType 0 =*/16).bool(message.resolveLinkTos);
+                        $root.EventStore.Client.Messages.Filter.encode(message.filter, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                        writer.uint32(/* id 4, wireType 0 =*/32).int32(message.checkpointInterval);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified FilteredSubscribeToStream message, length delimited. Does not implicitly {@link EventStore.Client.Messages.FilteredSubscribeToStream.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @static
+                     * @param {EventStore.Client.Messages.IFilteredSubscribeToStream} message FilteredSubscribeToStream message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    FilteredSubscribeToStream.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes a FilteredSubscribeToStream message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {EventStore.Client.Messages.FilteredSubscribeToStream} FilteredSubscribeToStream
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    FilteredSubscribeToStream.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.FilteredSubscribeToStream();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.eventStreamId = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.resolveLinkTos = reader.bool();
+                                    break;
+                                }
+                            case 3: {
+                                    message.filter = $root.EventStore.Client.Messages.Filter.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 4: {
+                                    message.checkpointInterval = reader.int32();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        if (!message.hasOwnProperty("eventStreamId"))
+                            throw $util.ProtocolError("missing required 'eventStreamId'", { instance: message });
+                        if (!message.hasOwnProperty("resolveLinkTos"))
+                            throw $util.ProtocolError("missing required 'resolveLinkTos'", { instance: message });
+                        if (!message.hasOwnProperty("filter"))
+                            throw $util.ProtocolError("missing required 'filter'", { instance: message });
+                        if (!message.hasOwnProperty("checkpointInterval"))
+                            throw $util.ProtocolError("missing required 'checkpointInterval'", { instance: message });
+                        return message;
+                    };
+
+                    /**
+                     * Decodes a FilteredSubscribeToStream message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {EventStore.Client.Messages.FilteredSubscribeToStream} FilteredSubscribeToStream
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    FilteredSubscribeToStream.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies a FilteredSubscribeToStream message.
+                     * @function verify
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    FilteredSubscribeToStream.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (!$util.isString(message.eventStreamId))
+                            return "eventStreamId: string expected";
+                        if (typeof message.resolveLinkTos !== "boolean")
+                            return "resolveLinkTos: boolean expected";
+                        {
+                            var error = $root.EventStore.Client.Messages.Filter.verify(message.filter);
+                            if (error)
+                                return "filter." + error;
+                        }
+                        if (!$util.isInteger(message.checkpointInterval))
+                            return "checkpointInterval: integer expected";
+                        return null;
+                    };
+
+                    /**
+                     * Creates a FilteredSubscribeToStream message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {EventStore.Client.Messages.FilteredSubscribeToStream} FilteredSubscribeToStream
+                     */
+                    FilteredSubscribeToStream.fromObject = function fromObject(object) {
+                        if (object instanceof $root.EventStore.Client.Messages.FilteredSubscribeToStream)
+                            return object;
+                        var message = new $root.EventStore.Client.Messages.FilteredSubscribeToStream();
+                        if (object.eventStreamId != null)
+                            message.eventStreamId = String(object.eventStreamId);
+                        if (object.resolveLinkTos != null)
+                            message.resolveLinkTos = Boolean(object.resolveLinkTos);
+                        if (object.filter != null) {
+                            if (typeof object.filter !== "object")
+                                throw TypeError(".EventStore.Client.Messages.FilteredSubscribeToStream.filter: object expected");
+                            message.filter = $root.EventStore.Client.Messages.Filter.fromObject(object.filter);
+                        }
+                        if (object.checkpointInterval != null)
+                            message.checkpointInterval = object.checkpointInterval | 0;
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from a FilteredSubscribeToStream message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @static
+                     * @param {EventStore.Client.Messages.FilteredSubscribeToStream} message FilteredSubscribeToStream
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    FilteredSubscribeToStream.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.eventStreamId = "";
+                            object.resolveLinkTos = false;
+                            object.filter = null;
+                            object.checkpointInterval = 0;
+                        }
+                        if (message.eventStreamId != null && message.hasOwnProperty("eventStreamId"))
+                            object.eventStreamId = message.eventStreamId;
+                        if (message.resolveLinkTos != null && message.hasOwnProperty("resolveLinkTos"))
+                            object.resolveLinkTos = message.resolveLinkTos;
+                        if (message.filter != null && message.hasOwnProperty("filter"))
+                            object.filter = $root.EventStore.Client.Messages.Filter.toObject(message.filter, options);
+                        if (message.checkpointInterval != null && message.hasOwnProperty("checkpointInterval"))
+                            object.checkpointInterval = message.checkpointInterval;
+                        return object;
+                    };
+
+                    /**
+                     * Converts this FilteredSubscribeToStream to JSON.
+                     * @function toJSON
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    FilteredSubscribeToStream.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for FilteredSubscribeToStream
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.FilteredSubscribeToStream
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    FilteredSubscribeToStream.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.FilteredSubscribeToStream";
+                    };
+
+                    return FilteredSubscribeToStream;
+                })();
+
+                Messages.CheckpointReached = (function() {
+
+                    /**
+                     * Properties of a CheckpointReached.
+                     * @memberof EventStore.Client.Messages
+                     * @interface ICheckpointReached
+                     * @property {Long} commitPosition CheckpointReached commitPosition
+                     * @property {Long} preparePosition CheckpointReached preparePosition
+                     */
+
+                    /**
+                     * Constructs a new CheckpointReached.
+                     * @memberof EventStore.Client.Messages
+                     * @classdesc Represents a CheckpointReached.
+                     * @implements ICheckpointReached
+                     * @constructor
+                     * @param {EventStore.Client.Messages.ICheckpointReached=} [properties] Properties to set
+                     */
+                    function CheckpointReached(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * CheckpointReached commitPosition.
+                     * @member {Long} commitPosition
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @instance
+                     */
+                    CheckpointReached.prototype.commitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                    /**
+                     * CheckpointReached preparePosition.
+                     * @member {Long} preparePosition
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @instance
+                     */
+                    CheckpointReached.prototype.preparePosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                    /**
+                     * Creates a new CheckpointReached instance using the specified properties.
+                     * @function create
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @static
+                     * @param {EventStore.Client.Messages.ICheckpointReached=} [properties] Properties to set
+                     * @returns {EventStore.Client.Messages.CheckpointReached} CheckpointReached instance
+                     */
+                    CheckpointReached.create = function create(properties) {
+                        return new CheckpointReached(properties);
+                    };
+
+                    /**
+                     * Encodes the specified CheckpointReached message. Does not implicitly {@link EventStore.Client.Messages.CheckpointReached.verify|verify} messages.
+                     * @function encode
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @static
+                     * @param {EventStore.Client.Messages.ICheckpointReached} message CheckpointReached message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    CheckpointReached.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.commitPosition);
+                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.preparePosition);
+                        return writer;
+                    };
+
+                    /**
+                     * Encodes the specified CheckpointReached message, length delimited. Does not implicitly {@link EventStore.Client.Messages.CheckpointReached.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @static
+                     * @param {EventStore.Client.Messages.ICheckpointReached} message CheckpointReached message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    CheckpointReached.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+
+                    /**
+                     * Decodes a CheckpointReached message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {EventStore.Client.Messages.CheckpointReached} CheckpointReached
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    CheckpointReached.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.CheckpointReached();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.commitPosition = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.preparePosition = reader.int64();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        if (!message.hasOwnProperty("commitPosition"))
+                            throw $util.ProtocolError("missing required 'commitPosition'", { instance: message });
+                        if (!message.hasOwnProperty("preparePosition"))
+                            throw $util.ProtocolError("missing required 'preparePosition'", { instance: message });
+                        return message;
+                    };
+
+                    /**
+                     * Decodes a CheckpointReached message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {EventStore.Client.Messages.CheckpointReached} CheckpointReached
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    CheckpointReached.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+
+                    /**
+                     * Verifies a CheckpointReached message.
+                     * @function verify
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    CheckpointReached.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (!$util.isInteger(message.commitPosition) && !(message.commitPosition && $util.isInteger(message.commitPosition.low) && $util.isInteger(message.commitPosition.high)))
+                            return "commitPosition: integer|Long expected";
+                        if (!$util.isInteger(message.preparePosition) && !(message.preparePosition && $util.isInteger(message.preparePosition.low) && $util.isInteger(message.preparePosition.high)))
+                            return "preparePosition: integer|Long expected";
+                        return null;
+                    };
+
+                    /**
+                     * Creates a CheckpointReached message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {EventStore.Client.Messages.CheckpointReached} CheckpointReached
+                     */
+                    CheckpointReached.fromObject = function fromObject(object) {
+                        if (object instanceof $root.EventStore.Client.Messages.CheckpointReached)
+                            return object;
+                        var message = new $root.EventStore.Client.Messages.CheckpointReached();
+                        if (object.commitPosition != null)
+                            if ($util.Long)
+                                (message.commitPosition = $util.Long.fromValue(object.commitPosition)).unsigned = false;
+                            else if (typeof object.commitPosition === "string")
+                                message.commitPosition = parseInt(object.commitPosition, 10);
+                            else if (typeof object.commitPosition === "number")
+                                message.commitPosition = object.commitPosition;
+                            else if (typeof object.commitPosition === "object")
+                                message.commitPosition = new $util.LongBits(object.commitPosition.low >>> 0, object.commitPosition.high >>> 0).toNumber();
+                        if (object.preparePosition != null)
+                            if ($util.Long)
+                                (message.preparePosition = $util.Long.fromValue(object.preparePosition)).unsigned = false;
+                            else if (typeof object.preparePosition === "string")
+                                message.preparePosition = parseInt(object.preparePosition, 10);
+                            else if (typeof object.preparePosition === "number")
+                                message.preparePosition = object.preparePosition;
+                            else if (typeof object.preparePosition === "object")
+                                message.preparePosition = new $util.LongBits(object.preparePosition.low >>> 0, object.preparePosition.high >>> 0).toNumber();
+                        return message;
+                    };
+
+                    /**
+                     * Creates a plain object from a CheckpointReached message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @static
+                     * @param {EventStore.Client.Messages.CheckpointReached} message CheckpointReached
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    CheckpointReached.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.commitPosition = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.commitPosition = options.longs === String ? "0" : 0;
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.preparePosition = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.preparePosition = options.longs === String ? "0" : 0;
+                        }
+                        if (message.commitPosition != null && message.hasOwnProperty("commitPosition"))
+                            if (typeof message.commitPosition === "number")
+                                object.commitPosition = options.longs === String ? String(message.commitPosition) : message.commitPosition;
+                            else
+                                object.commitPosition = options.longs === String ? $util.Long.prototype.toString.call(message.commitPosition) : options.longs === Number ? new $util.LongBits(message.commitPosition.low >>> 0, message.commitPosition.high >>> 0).toNumber() : message.commitPosition;
+                        if (message.preparePosition != null && message.hasOwnProperty("preparePosition"))
+                            if (typeof message.preparePosition === "number")
+                                object.preparePosition = options.longs === String ? String(message.preparePosition) : message.preparePosition;
+                            else
+                                object.preparePosition = options.longs === String ? $util.Long.prototype.toString.call(message.preparePosition) : options.longs === Number ? new $util.LongBits(message.preparePosition.low >>> 0, message.preparePosition.high >>> 0).toNumber() : message.preparePosition;
+                        return object;
+                    };
+
+                    /**
+                     * Converts this CheckpointReached to JSON.
+                     * @function toJSON
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    CheckpointReached.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+
+                    /**
+                     * Gets the default type url for CheckpointReached
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.CheckpointReached
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    CheckpointReached.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.CheckpointReached";
+                    };
+
+                    return CheckpointReached;
+                })();
+
                 Messages.SubscriptionConfirmation = (function() {
-    
+
                     /**
                      * Properties of a SubscriptionConfirmation.
                      * @memberof EventStore.Client.Messages
                      * @interface ISubscriptionConfirmation
-                     * @property {number|Long} lastCommitPosition SubscriptionConfirmation lastCommitPosition
-                     * @property {number|Long|null} [lastEventNumber] SubscriptionConfirmation lastEventNumber
+                     * @property {Long} lastCommitPosition SubscriptionConfirmation lastCommitPosition
+                     * @property {Long|null} [lastEventNumber] SubscriptionConfirmation lastEventNumber
                      */
-    
+
                     /**
                      * Constructs a new SubscriptionConfirmation.
                      * @memberof EventStore.Client.Messages
@@ -9964,23 +12455,23 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * SubscriptionConfirmation lastCommitPosition.
-                     * @member {number|Long} lastCommitPosition
+                     * @member {Long} lastCommitPosition
                      * @memberof EventStore.Client.Messages.SubscriptionConfirmation
                      * @instance
                      */
                     SubscriptionConfirmation.prototype.lastCommitPosition = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * SubscriptionConfirmation lastEventNumber.
-                     * @member {number|Long} lastEventNumber
+                     * @member {Long} lastEventNumber
                      * @memberof EventStore.Client.Messages.SubscriptionConfirmation
                      * @instance
                      */
                     SubscriptionConfirmation.prototype.lastEventNumber = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
+
                     /**
                      * Creates a new SubscriptionConfirmation instance using the specified properties.
                      * @function create
@@ -9992,7 +12483,7 @@
                     SubscriptionConfirmation.create = function create(properties) {
                         return new SubscriptionConfirmation(properties);
                     };
-    
+
                     /**
                      * Encodes the specified SubscriptionConfirmation message. Does not implicitly {@link EventStore.Client.Messages.SubscriptionConfirmation.verify|verify} messages.
                      * @function encode
@@ -10006,11 +12497,11 @@
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.lastCommitPosition);
-                        if (message.lastEventNumber != null && message.hasOwnProperty("lastEventNumber"))
+                        if (message.lastEventNumber != null && Object.hasOwnProperty.call(message, "lastEventNumber"))
                             writer.uint32(/* id 2, wireType 0 =*/16).int64(message.lastEventNumber);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified SubscriptionConfirmation message, length delimited. Does not implicitly {@link EventStore.Client.Messages.SubscriptionConfirmation.verify|verify} messages.
                      * @function encodeDelimited
@@ -10023,7 +12514,7 @@
                     SubscriptionConfirmation.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a SubscriptionConfirmation message from the specified reader or buffer.
                      * @function decode
@@ -10042,12 +12533,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.lastCommitPosition = reader.int64();
-                                break;
-                            case 2:
-                                message.lastEventNumber = reader.int64();
-                                break;
+                            case 1: {
+                                    message.lastCommitPosition = reader.int64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.lastEventNumber = reader.int64();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -10057,7 +12550,7 @@
                             throw $util.ProtocolError("missing required 'lastCommitPosition'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a SubscriptionConfirmation message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -10073,7 +12566,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a SubscriptionConfirmation message.
                      * @function verify
@@ -10092,7 +12585,7 @@
                                 return "lastEventNumber: integer|Long expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a SubscriptionConfirmation message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -10125,7 +12618,7 @@
                                 message.lastEventNumber = new $util.LongBits(object.lastEventNumber.low >>> 0, object.lastEventNumber.high >>> 0).toNumber();
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a SubscriptionConfirmation message. Also converts values to other types if specified.
                      * @function toObject
@@ -10163,7 +12656,7 @@
                                 object.lastEventNumber = options.longs === String ? $util.Long.prototype.toString.call(message.lastEventNumber) : options.longs === Number ? new $util.LongBits(message.lastEventNumber.low >>> 0, message.lastEventNumber.high >>> 0).toNumber() : message.lastEventNumber;
                         return object;
                     };
-    
+
                     /**
                      * Converts this SubscriptionConfirmation to JSON.
                      * @function toJSON
@@ -10174,19 +12667,34 @@
                     SubscriptionConfirmation.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for SubscriptionConfirmation
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.SubscriptionConfirmation
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    SubscriptionConfirmation.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.SubscriptionConfirmation";
+                    };
+
                     return SubscriptionConfirmation;
                 })();
-    
+
                 Messages.StreamEventAppeared = (function() {
-    
+
                     /**
                      * Properties of a StreamEventAppeared.
                      * @memberof EventStore.Client.Messages
                      * @interface IStreamEventAppeared
                      * @property {EventStore.Client.Messages.IResolvedEvent} event StreamEventAppeared event
                      */
-    
+
                     /**
                      * Constructs a new StreamEventAppeared.
                      * @memberof EventStore.Client.Messages
@@ -10201,7 +12709,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * StreamEventAppeared event.
                      * @member {EventStore.Client.Messages.IResolvedEvent} event
@@ -10209,7 +12717,7 @@
                      * @instance
                      */
                     StreamEventAppeared.prototype.event = null;
-    
+
                     /**
                      * Creates a new StreamEventAppeared instance using the specified properties.
                      * @function create
@@ -10221,7 +12729,7 @@
                     StreamEventAppeared.create = function create(properties) {
                         return new StreamEventAppeared(properties);
                     };
-    
+
                     /**
                      * Encodes the specified StreamEventAppeared message. Does not implicitly {@link EventStore.Client.Messages.StreamEventAppeared.verify|verify} messages.
                      * @function encode
@@ -10237,7 +12745,7 @@
                         $root.EventStore.Client.Messages.ResolvedEvent.encode(message.event, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified StreamEventAppeared message, length delimited. Does not implicitly {@link EventStore.Client.Messages.StreamEventAppeared.verify|verify} messages.
                      * @function encodeDelimited
@@ -10250,7 +12758,7 @@
                     StreamEventAppeared.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a StreamEventAppeared message from the specified reader or buffer.
                      * @function decode
@@ -10269,9 +12777,10 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.event = $root.EventStore.Client.Messages.ResolvedEvent.decode(reader, reader.uint32());
-                                break;
+                            case 1: {
+                                    message.event = $root.EventStore.Client.Messages.ResolvedEvent.decode(reader, reader.uint32());
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -10281,7 +12790,7 @@
                             throw $util.ProtocolError("missing required 'event'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a StreamEventAppeared message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -10297,7 +12806,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a StreamEventAppeared message.
                      * @function verify
@@ -10316,7 +12825,7 @@
                         }
                         return null;
                     };
-    
+
                     /**
                      * Creates a StreamEventAppeared message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -10336,7 +12845,7 @@
                         }
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a StreamEventAppeared message. Also converts values to other types if specified.
                      * @function toObject
@@ -10356,7 +12865,7 @@
                             object.event = $root.EventStore.Client.Messages.ResolvedEvent.toObject(message.event, options);
                         return object;
                     };
-    
+
                     /**
                      * Converts this StreamEventAppeared to JSON.
                      * @function toJSON
@@ -10367,18 +12876,33 @@
                     StreamEventAppeared.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for StreamEventAppeared
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.StreamEventAppeared
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    StreamEventAppeared.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.StreamEventAppeared";
+                    };
+
                     return StreamEventAppeared;
                 })();
-    
+
                 Messages.UnsubscribeFromStream = (function() {
-    
+
                     /**
                      * Properties of an UnsubscribeFromStream.
                      * @memberof EventStore.Client.Messages
                      * @interface IUnsubscribeFromStream
                      */
-    
+
                     /**
                      * Constructs a new UnsubscribeFromStream.
                      * @memberof EventStore.Client.Messages
@@ -10393,7 +12917,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * Creates a new UnsubscribeFromStream instance using the specified properties.
                      * @function create
@@ -10405,7 +12929,7 @@
                     UnsubscribeFromStream.create = function create(properties) {
                         return new UnsubscribeFromStream(properties);
                     };
-    
+
                     /**
                      * Encodes the specified UnsubscribeFromStream message. Does not implicitly {@link EventStore.Client.Messages.UnsubscribeFromStream.verify|verify} messages.
                      * @function encode
@@ -10420,7 +12944,7 @@
                             writer = $Writer.create();
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified UnsubscribeFromStream message, length delimited. Does not implicitly {@link EventStore.Client.Messages.UnsubscribeFromStream.verify|verify} messages.
                      * @function encodeDelimited
@@ -10433,7 +12957,7 @@
                     UnsubscribeFromStream.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes an UnsubscribeFromStream message from the specified reader or buffer.
                      * @function decode
@@ -10459,7 +12983,7 @@
                         }
                         return message;
                     };
-    
+
                     /**
                      * Decodes an UnsubscribeFromStream message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -10475,7 +12999,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies an UnsubscribeFromStream message.
                      * @function verify
@@ -10489,7 +13013,7 @@
                             return "object expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates an UnsubscribeFromStream message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -10503,7 +13027,7 @@
                             return object;
                         return new $root.EventStore.Client.Messages.UnsubscribeFromStream();
                     };
-    
+
                     /**
                      * Creates a plain object from an UnsubscribeFromStream message. Also converts values to other types if specified.
                      * @function toObject
@@ -10516,7 +13040,7 @@
                     UnsubscribeFromStream.toObject = function toObject() {
                         return {};
                     };
-    
+
                     /**
                      * Converts this UnsubscribeFromStream to JSON.
                      * @function toJSON
@@ -10527,19 +13051,34 @@
                     UnsubscribeFromStream.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for UnsubscribeFromStream
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.UnsubscribeFromStream
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    UnsubscribeFromStream.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.UnsubscribeFromStream";
+                    };
+
                     return UnsubscribeFromStream;
                 })();
-    
+
                 Messages.SubscriptionDropped = (function() {
-    
+
                     /**
                      * Properties of a SubscriptionDropped.
                      * @memberof EventStore.Client.Messages
                      * @interface ISubscriptionDropped
                      * @property {EventStore.Client.Messages.SubscriptionDropped.SubscriptionDropReason|null} [reason] SubscriptionDropped reason
                      */
-    
+
                     /**
                      * Constructs a new SubscriptionDropped.
                      * @memberof EventStore.Client.Messages
@@ -10554,7 +13093,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * SubscriptionDropped reason.
                      * @member {EventStore.Client.Messages.SubscriptionDropped.SubscriptionDropReason} reason
@@ -10562,7 +13101,7 @@
                      * @instance
                      */
                     SubscriptionDropped.prototype.reason = 0;
-    
+
                     /**
                      * Creates a new SubscriptionDropped instance using the specified properties.
                      * @function create
@@ -10574,7 +13113,7 @@
                     SubscriptionDropped.create = function create(properties) {
                         return new SubscriptionDropped(properties);
                     };
-    
+
                     /**
                      * Encodes the specified SubscriptionDropped message. Does not implicitly {@link EventStore.Client.Messages.SubscriptionDropped.verify|verify} messages.
                      * @function encode
@@ -10587,11 +13126,11 @@
                     SubscriptionDropped.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.reason != null && message.hasOwnProperty("reason"))
+                        if (message.reason != null && Object.hasOwnProperty.call(message, "reason"))
                             writer.uint32(/* id 1, wireType 0 =*/8).int32(message.reason);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified SubscriptionDropped message, length delimited. Does not implicitly {@link EventStore.Client.Messages.SubscriptionDropped.verify|verify} messages.
                      * @function encodeDelimited
@@ -10604,7 +13143,7 @@
                     SubscriptionDropped.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a SubscriptionDropped message from the specified reader or buffer.
                      * @function decode
@@ -10623,9 +13162,10 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.reason = reader.int32();
-                                break;
+                            case 1: {
+                                    message.reason = reader.int32();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -10633,7 +13173,7 @@
                         }
                         return message;
                     };
-    
+
                     /**
                      * Decodes a SubscriptionDropped message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -10649,7 +13189,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a SubscriptionDropped message.
                      * @function verify
@@ -10674,7 +13214,7 @@
                             }
                         return null;
                     };
-    
+
                     /**
                      * Creates a SubscriptionDropped message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -10688,6 +13228,12 @@
                             return object;
                         var message = new $root.EventStore.Client.Messages.SubscriptionDropped();
                         switch (object.reason) {
+                        default:
+                            if (typeof object.reason === "number") {
+                                message.reason = object.reason;
+                                break;
+                            }
+                            break;
                         case "Unsubscribed":
                         case 0:
                             message.reason = 0;
@@ -10711,7 +13257,7 @@
                         }
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a SubscriptionDropped message. Also converts values to other types if specified.
                      * @function toObject
@@ -10728,10 +13274,10 @@
                         if (options.defaults)
                             object.reason = options.enums === String ? "Unsubscribed" : 0;
                         if (message.reason != null && message.hasOwnProperty("reason"))
-                            object.reason = options.enums === String ? $root.EventStore.Client.Messages.SubscriptionDropped.SubscriptionDropReason[message.reason] : message.reason;
+                            object.reason = options.enums === String ? $root.EventStore.Client.Messages.SubscriptionDropped.SubscriptionDropReason[message.reason] === undefined ? message.reason : $root.EventStore.Client.Messages.SubscriptionDropped.SubscriptionDropReason[message.reason] : message.reason;
                         return object;
                     };
-    
+
                     /**
                      * Converts this SubscriptionDropped to JSON.
                      * @function toJSON
@@ -10742,11 +13288,26 @@
                     SubscriptionDropped.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for SubscriptionDropped
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.SubscriptionDropped
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    SubscriptionDropped.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.SubscriptionDropped";
+                    };
+
                     /**
                      * SubscriptionDropReason enum.
                      * @name EventStore.Client.Messages.SubscriptionDropped.SubscriptionDropReason
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} Unsubscribed=0 Unsubscribed value
                      * @property {number} AccessDenied=1 AccessDenied value
                      * @property {number} NotFound=2 NotFound value
@@ -10762,12 +13323,12 @@
                         values[valuesById[4] = "SubscriberMaxCountReached"] = 4;
                         return values;
                     })();
-    
+
                     return SubscriptionDropped;
                 })();
-    
+
                 Messages.NotHandled = (function() {
-    
+
                     /**
                      * Properties of a NotHandled.
                      * @memberof EventStore.Client.Messages
@@ -10775,7 +13336,7 @@
                      * @property {EventStore.Client.Messages.NotHandled.NotHandledReason} reason NotHandled reason
                      * @property {Uint8Array|null} [additionalInfo] NotHandled additionalInfo
                      */
-    
+
                     /**
                      * Constructs a new NotHandled.
                      * @memberof EventStore.Client.Messages
@@ -10790,7 +13351,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * NotHandled reason.
                      * @member {EventStore.Client.Messages.NotHandled.NotHandledReason} reason
@@ -10798,7 +13359,7 @@
                      * @instance
                      */
                     NotHandled.prototype.reason = 0;
-    
+
                     /**
                      * NotHandled additionalInfo.
                      * @member {Uint8Array} additionalInfo
@@ -10806,7 +13367,7 @@
                      * @instance
                      */
                     NotHandled.prototype.additionalInfo = $util.newBuffer([]);
-    
+
                     /**
                      * Creates a new NotHandled instance using the specified properties.
                      * @function create
@@ -10818,7 +13379,7 @@
                     NotHandled.create = function create(properties) {
                         return new NotHandled(properties);
                     };
-    
+
                     /**
                      * Encodes the specified NotHandled message. Does not implicitly {@link EventStore.Client.Messages.NotHandled.verify|verify} messages.
                      * @function encode
@@ -10832,11 +13393,11 @@
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.reason);
-                        if (message.additionalInfo != null && message.hasOwnProperty("additionalInfo"))
+                        if (message.additionalInfo != null && Object.hasOwnProperty.call(message, "additionalInfo"))
                             writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.additionalInfo);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified NotHandled message, length delimited. Does not implicitly {@link EventStore.Client.Messages.NotHandled.verify|verify} messages.
                      * @function encodeDelimited
@@ -10849,7 +13410,7 @@
                     NotHandled.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a NotHandled message from the specified reader or buffer.
                      * @function decode
@@ -10868,12 +13429,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.reason = reader.int32();
-                                break;
-                            case 2:
-                                message.additionalInfo = reader.bytes();
-                                break;
+                            case 1: {
+                                    message.reason = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.additionalInfo = reader.bytes();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -10883,7 +13446,7 @@
                             throw $util.ProtocolError("missing required 'reason'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes a NotHandled message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -10899,7 +13462,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a NotHandled message.
                      * @function verify
@@ -10917,6 +13480,7 @@
                         case 0:
                         case 1:
                         case 2:
+                        case 3:
                             break;
                         }
                         if (message.additionalInfo != null && message.hasOwnProperty("additionalInfo"))
@@ -10924,7 +13488,7 @@
                                 return "additionalInfo: buffer expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a NotHandled message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -10938,6 +13502,12 @@
                             return object;
                         var message = new $root.EventStore.Client.Messages.NotHandled();
                         switch (object.reason) {
+                        default:
+                            if (typeof object.reason === "number") {
+                                message.reason = object.reason;
+                                break;
+                            }
+                            break;
                         case "NotReady":
                         case 0:
                             message.reason = 0;
@@ -10946,19 +13516,23 @@
                         case 1:
                             message.reason = 1;
                             break;
-                        case "NotMaster":
+                        case "NotLeader":
                         case 2:
                             message.reason = 2;
+                            break;
+                        case "IsReadOnly":
+                        case 3:
+                            message.reason = 3;
                             break;
                         }
                         if (object.additionalInfo != null)
                             if (typeof object.additionalInfo === "string")
                                 $util.base64.decode(object.additionalInfo, message.additionalInfo = $util.newBuffer($util.base64.length(object.additionalInfo)), 0);
-                            else if (object.additionalInfo.length)
+                            else if (object.additionalInfo.length >= 0)
                                 message.additionalInfo = object.additionalInfo;
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from a NotHandled message. Also converts values to other types if specified.
                      * @function toObject
@@ -10983,12 +13557,12 @@
                             }
                         }
                         if (message.reason != null && message.hasOwnProperty("reason"))
-                            object.reason = options.enums === String ? $root.EventStore.Client.Messages.NotHandled.NotHandledReason[message.reason] : message.reason;
+                            object.reason = options.enums === String ? $root.EventStore.Client.Messages.NotHandled.NotHandledReason[message.reason] === undefined ? message.reason : $root.EventStore.Client.Messages.NotHandled.NotHandledReason[message.reason] : message.reason;
                         if (message.additionalInfo != null && message.hasOwnProperty("additionalInfo"))
                             object.additionalInfo = options.bytes === String ? $util.base64.encode(message.additionalInfo, 0, message.additionalInfo.length) : options.bytes === Array ? Array.prototype.slice.call(message.additionalInfo) : message.additionalInfo;
                         return object;
                     };
-    
+
                     /**
                      * Converts this NotHandled to JSON.
                      * @function toJSON
@@ -10999,235 +13573,258 @@
                     NotHandled.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for NotHandled
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.NotHandled
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    NotHandled.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.NotHandled";
+                    };
+
                     /**
                      * NotHandledReason enum.
                      * @name EventStore.Client.Messages.NotHandled.NotHandledReason
-                     * @enum {string}
+                     * @enum {number}
                      * @property {number} NotReady=0 NotReady value
                      * @property {number} TooBusy=1 TooBusy value
-                     * @property {number} NotMaster=2 NotMaster value
+                     * @property {number} NotLeader=2 NotLeader value
+                     * @property {number} IsReadOnly=3 IsReadOnly value
                      */
                     NotHandled.NotHandledReason = (function() {
                         var valuesById = {}, values = Object.create(valuesById);
                         values[valuesById[0] = "NotReady"] = 0;
                         values[valuesById[1] = "TooBusy"] = 1;
-                        values[valuesById[2] = "NotMaster"] = 2;
+                        values[valuesById[2] = "NotLeader"] = 2;
+                        values[valuesById[3] = "IsReadOnly"] = 3;
                         return values;
                     })();
-    
-                    NotHandled.MasterInfo = (function() {
-    
+
+                    NotHandled.LeaderInfo = (function() {
+
                         /**
-                         * Properties of a MasterInfo.
+                         * Properties of a LeaderInfo.
                          * @memberof EventStore.Client.Messages.NotHandled
-                         * @interface IMasterInfo
-                         * @property {string} externalTcpAddress MasterInfo externalTcpAddress
-                         * @property {number} externalTcpPort MasterInfo externalTcpPort
-                         * @property {string} externalHttpAddress MasterInfo externalHttpAddress
-                         * @property {number} externalHttpPort MasterInfo externalHttpPort
-                         * @property {string|null} [externalSecureTcpAddress] MasterInfo externalSecureTcpAddress
-                         * @property {number|null} [externalSecureTcpPort] MasterInfo externalSecureTcpPort
+                         * @interface ILeaderInfo
+                         * @property {string|null} [externalTcpAddress] LeaderInfo externalTcpAddress
+                         * @property {number|null} [externalTcpPort] LeaderInfo externalTcpPort
+                         * @property {string} httpAddress LeaderInfo httpAddress
+                         * @property {number} httpPort LeaderInfo httpPort
+                         * @property {string|null} [externalSecureTcpAddress] LeaderInfo externalSecureTcpAddress
+                         * @property {number|null} [externalSecureTcpPort] LeaderInfo externalSecureTcpPort
                          */
-    
+
                         /**
-                         * Constructs a new MasterInfo.
+                         * Constructs a new LeaderInfo.
                          * @memberof EventStore.Client.Messages.NotHandled
-                         * @classdesc Represents a MasterInfo.
-                         * @implements IMasterInfo
+                         * @classdesc Represents a LeaderInfo.
+                         * @implements ILeaderInfo
                          * @constructor
-                         * @param {EventStore.Client.Messages.NotHandled.IMasterInfo=} [properties] Properties to set
+                         * @param {EventStore.Client.Messages.NotHandled.ILeaderInfo=} [properties] Properties to set
                          */
-                        function MasterInfo(properties) {
+                        function LeaderInfo(properties) {
                             if (properties)
                                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                                     if (properties[keys[i]] != null)
                                         this[keys[i]] = properties[keys[i]];
                         }
-    
+
                         /**
-                         * MasterInfo externalTcpAddress.
+                         * LeaderInfo externalTcpAddress.
                          * @member {string} externalTcpAddress
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @instance
                          */
-                        MasterInfo.prototype.externalTcpAddress = "";
-    
+                        LeaderInfo.prototype.externalTcpAddress = "";
+
                         /**
-                         * MasterInfo externalTcpPort.
+                         * LeaderInfo externalTcpPort.
                          * @member {number} externalTcpPort
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @instance
                          */
-                        MasterInfo.prototype.externalTcpPort = 0;
-    
+                        LeaderInfo.prototype.externalTcpPort = 0;
+
                         /**
-                         * MasterInfo externalHttpAddress.
-                         * @member {string} externalHttpAddress
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * LeaderInfo httpAddress.
+                         * @member {string} httpAddress
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @instance
                          */
-                        MasterInfo.prototype.externalHttpAddress = "";
-    
+                        LeaderInfo.prototype.httpAddress = "";
+
                         /**
-                         * MasterInfo externalHttpPort.
-                         * @member {number} externalHttpPort
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * LeaderInfo httpPort.
+                         * @member {number} httpPort
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @instance
                          */
-                        MasterInfo.prototype.externalHttpPort = 0;
-    
+                        LeaderInfo.prototype.httpPort = 0;
+
                         /**
-                         * MasterInfo externalSecureTcpAddress.
+                         * LeaderInfo externalSecureTcpAddress.
                          * @member {string} externalSecureTcpAddress
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @instance
                          */
-                        MasterInfo.prototype.externalSecureTcpAddress = "";
-    
+                        LeaderInfo.prototype.externalSecureTcpAddress = "";
+
                         /**
-                         * MasterInfo externalSecureTcpPort.
+                         * LeaderInfo externalSecureTcpPort.
                          * @member {number} externalSecureTcpPort
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @instance
                          */
-                        MasterInfo.prototype.externalSecureTcpPort = 0;
-    
+                        LeaderInfo.prototype.externalSecureTcpPort = 0;
+
                         /**
-                         * Creates a new MasterInfo instance using the specified properties.
+                         * Creates a new LeaderInfo instance using the specified properties.
                          * @function create
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @static
-                         * @param {EventStore.Client.Messages.NotHandled.IMasterInfo=} [properties] Properties to set
-                         * @returns {EventStore.Client.Messages.NotHandled.MasterInfo} MasterInfo instance
+                         * @param {EventStore.Client.Messages.NotHandled.ILeaderInfo=} [properties] Properties to set
+                         * @returns {EventStore.Client.Messages.NotHandled.LeaderInfo} LeaderInfo instance
                          */
-                        MasterInfo.create = function create(properties) {
-                            return new MasterInfo(properties);
+                        LeaderInfo.create = function create(properties) {
+                            return new LeaderInfo(properties);
                         };
-    
+
                         /**
-                         * Encodes the specified MasterInfo message. Does not implicitly {@link EventStore.Client.Messages.NotHandled.MasterInfo.verify|verify} messages.
+                         * Encodes the specified LeaderInfo message. Does not implicitly {@link EventStore.Client.Messages.NotHandled.LeaderInfo.verify|verify} messages.
                          * @function encode
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @static
-                         * @param {EventStore.Client.Messages.NotHandled.IMasterInfo} message MasterInfo message or plain object to encode
+                         * @param {EventStore.Client.Messages.NotHandled.ILeaderInfo} message LeaderInfo message or plain object to encode
                          * @param {$protobuf.Writer} [writer] Writer to encode to
                          * @returns {$protobuf.Writer} Writer
                          */
-                        MasterInfo.encode = function encode(message, writer) {
+                        LeaderInfo.encode = function encode(message, writer) {
                             if (!writer)
                                 writer = $Writer.create();
-                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.externalTcpAddress);
-                            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.externalTcpPort);
-                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.externalHttpAddress);
-                            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.externalHttpPort);
-                            if (message.externalSecureTcpAddress != null && message.hasOwnProperty("externalSecureTcpAddress"))
+                            if (message.externalTcpAddress != null && Object.hasOwnProperty.call(message, "externalTcpAddress"))
+                                writer.uint32(/* id 1, wireType 2 =*/10).string(message.externalTcpAddress);
+                            if (message.externalTcpPort != null && Object.hasOwnProperty.call(message, "externalTcpPort"))
+                                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.externalTcpPort);
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.httpAddress);
+                            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.httpPort);
+                            if (message.externalSecureTcpAddress != null && Object.hasOwnProperty.call(message, "externalSecureTcpAddress"))
                                 writer.uint32(/* id 5, wireType 2 =*/42).string(message.externalSecureTcpAddress);
-                            if (message.externalSecureTcpPort != null && message.hasOwnProperty("externalSecureTcpPort"))
+                            if (message.externalSecureTcpPort != null && Object.hasOwnProperty.call(message, "externalSecureTcpPort"))
                                 writer.uint32(/* id 6, wireType 0 =*/48).int32(message.externalSecureTcpPort);
                             return writer;
                         };
-    
+
                         /**
-                         * Encodes the specified MasterInfo message, length delimited. Does not implicitly {@link EventStore.Client.Messages.NotHandled.MasterInfo.verify|verify} messages.
+                         * Encodes the specified LeaderInfo message, length delimited. Does not implicitly {@link EventStore.Client.Messages.NotHandled.LeaderInfo.verify|verify} messages.
                          * @function encodeDelimited
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @static
-                         * @param {EventStore.Client.Messages.NotHandled.IMasterInfo} message MasterInfo message or plain object to encode
+                         * @param {EventStore.Client.Messages.NotHandled.ILeaderInfo} message LeaderInfo message or plain object to encode
                          * @param {$protobuf.Writer} [writer] Writer to encode to
                          * @returns {$protobuf.Writer} Writer
                          */
-                        MasterInfo.encodeDelimited = function encodeDelimited(message, writer) {
+                        LeaderInfo.encodeDelimited = function encodeDelimited(message, writer) {
                             return this.encode(message, writer).ldelim();
                         };
-    
+
                         /**
-                         * Decodes a MasterInfo message from the specified reader or buffer.
+                         * Decodes a LeaderInfo message from the specified reader or buffer.
                          * @function decode
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @static
                          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                          * @param {number} [length] Message length if known beforehand
-                         * @returns {EventStore.Client.Messages.NotHandled.MasterInfo} MasterInfo
+                         * @returns {EventStore.Client.Messages.NotHandled.LeaderInfo} LeaderInfo
                          * @throws {Error} If the payload is not a reader or valid buffer
                          * @throws {$protobuf.util.ProtocolError} If required fields are missing
                          */
-                        MasterInfo.decode = function decode(reader, length) {
+                        LeaderInfo.decode = function decode(reader, length) {
                             if (!(reader instanceof $Reader))
                                 reader = $Reader.create(reader);
-                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.NotHandled.MasterInfo();
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.NotHandled.LeaderInfo();
                             while (reader.pos < end) {
                                 var tag = reader.uint32();
                                 switch (tag >>> 3) {
-                                case 1:
-                                    message.externalTcpAddress = reader.string();
-                                    break;
-                                case 2:
-                                    message.externalTcpPort = reader.int32();
-                                    break;
-                                case 3:
-                                    message.externalHttpAddress = reader.string();
-                                    break;
-                                case 4:
-                                    message.externalHttpPort = reader.int32();
-                                    break;
-                                case 5:
-                                    message.externalSecureTcpAddress = reader.string();
-                                    break;
-                                case 6:
-                                    message.externalSecureTcpPort = reader.int32();
-                                    break;
+                                case 1: {
+                                        message.externalTcpAddress = reader.string();
+                                        break;
+                                    }
+                                case 2: {
+                                        message.externalTcpPort = reader.int32();
+                                        break;
+                                    }
+                                case 3: {
+                                        message.httpAddress = reader.string();
+                                        break;
+                                    }
+                                case 4: {
+                                        message.httpPort = reader.int32();
+                                        break;
+                                    }
+                                case 5: {
+                                        message.externalSecureTcpAddress = reader.string();
+                                        break;
+                                    }
+                                case 6: {
+                                        message.externalSecureTcpPort = reader.int32();
+                                        break;
+                                    }
                                 default:
                                     reader.skipType(tag & 7);
                                     break;
                                 }
                             }
-                            if (!message.hasOwnProperty("externalTcpAddress"))
-                                throw $util.ProtocolError("missing required 'externalTcpAddress'", { instance: message });
-                            if (!message.hasOwnProperty("externalTcpPort"))
-                                throw $util.ProtocolError("missing required 'externalTcpPort'", { instance: message });
-                            if (!message.hasOwnProperty("externalHttpAddress"))
-                                throw $util.ProtocolError("missing required 'externalHttpAddress'", { instance: message });
-                            if (!message.hasOwnProperty("externalHttpPort"))
-                                throw $util.ProtocolError("missing required 'externalHttpPort'", { instance: message });
+                            if (!message.hasOwnProperty("httpAddress"))
+                                throw $util.ProtocolError("missing required 'httpAddress'", { instance: message });
+                            if (!message.hasOwnProperty("httpPort"))
+                                throw $util.ProtocolError("missing required 'httpPort'", { instance: message });
                             return message;
                         };
-    
+
                         /**
-                         * Decodes a MasterInfo message from the specified reader or buffer, length delimited.
+                         * Decodes a LeaderInfo message from the specified reader or buffer, length delimited.
                          * @function decodeDelimited
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @static
                          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                         * @returns {EventStore.Client.Messages.NotHandled.MasterInfo} MasterInfo
+                         * @returns {EventStore.Client.Messages.NotHandled.LeaderInfo} LeaderInfo
                          * @throws {Error} If the payload is not a reader or valid buffer
                          * @throws {$protobuf.util.ProtocolError} If required fields are missing
                          */
-                        MasterInfo.decodeDelimited = function decodeDelimited(reader) {
+                        LeaderInfo.decodeDelimited = function decodeDelimited(reader) {
                             if (!(reader instanceof $Reader))
                                 reader = new $Reader(reader);
                             return this.decode(reader, reader.uint32());
                         };
-    
+
                         /**
-                         * Verifies a MasterInfo message.
+                         * Verifies a LeaderInfo message.
                          * @function verify
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @static
                          * @param {Object.<string,*>} message Plain object to verify
                          * @returns {string|null} `null` if valid, otherwise the reason why it is not
                          */
-                        MasterInfo.verify = function verify(message) {
+                        LeaderInfo.verify = function verify(message) {
                             if (typeof message !== "object" || message === null)
                                 return "object expected";
-                            if (!$util.isString(message.externalTcpAddress))
-                                return "externalTcpAddress: string expected";
-                            if (!$util.isInteger(message.externalTcpPort))
-                                return "externalTcpPort: integer expected";
-                            if (!$util.isString(message.externalHttpAddress))
-                                return "externalHttpAddress: string expected";
-                            if (!$util.isInteger(message.externalHttpPort))
-                                return "externalHttpPort: integer expected";
+                            if (message.externalTcpAddress != null && message.hasOwnProperty("externalTcpAddress"))
+                                if (!$util.isString(message.externalTcpAddress))
+                                    return "externalTcpAddress: string expected";
+                            if (message.externalTcpPort != null && message.hasOwnProperty("externalTcpPort"))
+                                if (!$util.isInteger(message.externalTcpPort))
+                                    return "externalTcpPort: integer expected";
+                            if (!$util.isString(message.httpAddress))
+                                return "httpAddress: string expected";
+                            if (!$util.isInteger(message.httpPort))
+                                return "httpPort: integer expected";
                             if (message.externalSecureTcpAddress != null && message.hasOwnProperty("externalSecureTcpAddress"))
                                 if (!$util.isString(message.externalSecureTcpAddress))
                                     return "externalSecureTcpAddress: string expected";
@@ -11236,52 +13833,52 @@
                                     return "externalSecureTcpPort: integer expected";
                             return null;
                         };
-    
+
                         /**
-                         * Creates a MasterInfo message from a plain object. Also converts values to their respective internal types.
+                         * Creates a LeaderInfo message from a plain object. Also converts values to their respective internal types.
                          * @function fromObject
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @static
                          * @param {Object.<string,*>} object Plain object
-                         * @returns {EventStore.Client.Messages.NotHandled.MasterInfo} MasterInfo
+                         * @returns {EventStore.Client.Messages.NotHandled.LeaderInfo} LeaderInfo
                          */
-                        MasterInfo.fromObject = function fromObject(object) {
-                            if (object instanceof $root.EventStore.Client.Messages.NotHandled.MasterInfo)
+                        LeaderInfo.fromObject = function fromObject(object) {
+                            if (object instanceof $root.EventStore.Client.Messages.NotHandled.LeaderInfo)
                                 return object;
-                            var message = new $root.EventStore.Client.Messages.NotHandled.MasterInfo();
+                            var message = new $root.EventStore.Client.Messages.NotHandled.LeaderInfo();
                             if (object.externalTcpAddress != null)
                                 message.externalTcpAddress = String(object.externalTcpAddress);
                             if (object.externalTcpPort != null)
                                 message.externalTcpPort = object.externalTcpPort | 0;
-                            if (object.externalHttpAddress != null)
-                                message.externalHttpAddress = String(object.externalHttpAddress);
-                            if (object.externalHttpPort != null)
-                                message.externalHttpPort = object.externalHttpPort | 0;
+                            if (object.httpAddress != null)
+                                message.httpAddress = String(object.httpAddress);
+                            if (object.httpPort != null)
+                                message.httpPort = object.httpPort | 0;
                             if (object.externalSecureTcpAddress != null)
                                 message.externalSecureTcpAddress = String(object.externalSecureTcpAddress);
                             if (object.externalSecureTcpPort != null)
                                 message.externalSecureTcpPort = object.externalSecureTcpPort | 0;
                             return message;
                         };
-    
+
                         /**
-                         * Creates a plain object from a MasterInfo message. Also converts values to other types if specified.
+                         * Creates a plain object from a LeaderInfo message. Also converts values to other types if specified.
                          * @function toObject
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @static
-                         * @param {EventStore.Client.Messages.NotHandled.MasterInfo} message MasterInfo
+                         * @param {EventStore.Client.Messages.NotHandled.LeaderInfo} message LeaderInfo
                          * @param {$protobuf.IConversionOptions} [options] Conversion options
                          * @returns {Object.<string,*>} Plain object
                          */
-                        MasterInfo.toObject = function toObject(message, options) {
+                        LeaderInfo.toObject = function toObject(message, options) {
                             if (!options)
                                 options = {};
                             var object = {};
                             if (options.defaults) {
                                 object.externalTcpAddress = "";
                                 object.externalTcpPort = 0;
-                                object.externalHttpAddress = "";
-                                object.externalHttpPort = 0;
+                                object.httpAddress = "";
+                                object.httpPort = 0;
                                 object.externalSecureTcpAddress = "";
                                 object.externalSecureTcpPort = 0;
                             }
@@ -11289,42 +13886,57 @@
                                 object.externalTcpAddress = message.externalTcpAddress;
                             if (message.externalTcpPort != null && message.hasOwnProperty("externalTcpPort"))
                                 object.externalTcpPort = message.externalTcpPort;
-                            if (message.externalHttpAddress != null && message.hasOwnProperty("externalHttpAddress"))
-                                object.externalHttpAddress = message.externalHttpAddress;
-                            if (message.externalHttpPort != null && message.hasOwnProperty("externalHttpPort"))
-                                object.externalHttpPort = message.externalHttpPort;
+                            if (message.httpAddress != null && message.hasOwnProperty("httpAddress"))
+                                object.httpAddress = message.httpAddress;
+                            if (message.httpPort != null && message.hasOwnProperty("httpPort"))
+                                object.httpPort = message.httpPort;
                             if (message.externalSecureTcpAddress != null && message.hasOwnProperty("externalSecureTcpAddress"))
                                 object.externalSecureTcpAddress = message.externalSecureTcpAddress;
                             if (message.externalSecureTcpPort != null && message.hasOwnProperty("externalSecureTcpPort"))
                                 object.externalSecureTcpPort = message.externalSecureTcpPort;
                             return object;
                         };
-    
+
                         /**
-                         * Converts this MasterInfo to JSON.
+                         * Converts this LeaderInfo to JSON.
                          * @function toJSON
-                         * @memberof EventStore.Client.Messages.NotHandled.MasterInfo
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
                          * @instance
                          * @returns {Object.<string,*>} JSON object
                          */
-                        MasterInfo.prototype.toJSON = function toJSON() {
+                        LeaderInfo.prototype.toJSON = function toJSON() {
                             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                         };
-    
-                        return MasterInfo;
+
+                        /**
+                         * Gets the default type url for LeaderInfo
+                         * @function getTypeUrl
+                         * @memberof EventStore.Client.Messages.NotHandled.LeaderInfo
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        LeaderInfo.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/EventStore.Client.Messages.NotHandled.LeaderInfo";
+                        };
+
+                        return LeaderInfo;
                     })();
-    
+
                     return NotHandled;
                 })();
-    
+
                 Messages.ScavengeDatabase = (function() {
-    
+
                     /**
                      * Properties of a ScavengeDatabase.
                      * @memberof EventStore.Client.Messages
                      * @interface IScavengeDatabase
                      */
-    
+
                     /**
                      * Constructs a new ScavengeDatabase.
                      * @memberof EventStore.Client.Messages
@@ -11339,7 +13951,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * Creates a new ScavengeDatabase instance using the specified properties.
                      * @function create
@@ -11351,7 +13963,7 @@
                     ScavengeDatabase.create = function create(properties) {
                         return new ScavengeDatabase(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ScavengeDatabase message. Does not implicitly {@link EventStore.Client.Messages.ScavengeDatabase.verify|verify} messages.
                      * @function encode
@@ -11366,7 +13978,7 @@
                             writer = $Writer.create();
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ScavengeDatabase message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ScavengeDatabase.verify|verify} messages.
                      * @function encodeDelimited
@@ -11379,7 +13991,7 @@
                     ScavengeDatabase.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ScavengeDatabase message from the specified reader or buffer.
                      * @function decode
@@ -11405,7 +14017,7 @@
                         }
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ScavengeDatabase message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -11421,7 +14033,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ScavengeDatabase message.
                      * @function verify
@@ -11435,7 +14047,7 @@
                             return "object expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ScavengeDatabase message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -11449,7 +14061,7 @@
                             return object;
                         return new $root.EventStore.Client.Messages.ScavengeDatabase();
                     };
-    
+
                     /**
                      * Creates a plain object from a ScavengeDatabase message. Also converts values to other types if specified.
                      * @function toObject
@@ -11462,7 +14074,7 @@
                     ScavengeDatabase.toObject = function toObject() {
                         return {};
                     };
-    
+
                     /**
                      * Converts this ScavengeDatabase to JSON.
                      * @function toJSON
@@ -11473,144 +14085,135 @@
                     ScavengeDatabase.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ScavengeDatabase
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ScavengeDatabase
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ScavengeDatabase.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ScavengeDatabase";
+                    };
+
                     return ScavengeDatabase;
                 })();
-    
-                Messages.ScavengeDatabaseCompleted = (function() {
-    
+
+                Messages.ScavengeDatabaseResponse = (function() {
+
                     /**
-                     * Properties of a ScavengeDatabaseCompleted.
+                     * Properties of a ScavengeDatabaseResponse.
                      * @memberof EventStore.Client.Messages
-                     * @interface IScavengeDatabaseCompleted
-                     * @property {EventStore.Client.Messages.ScavengeDatabaseCompleted.ScavengeResult} result ScavengeDatabaseCompleted result
-                     * @property {string|null} [error] ScavengeDatabaseCompleted error
-                     * @property {number} totalTimeMs ScavengeDatabaseCompleted totalTimeMs
-                     * @property {number|Long} totalSpaceSaved ScavengeDatabaseCompleted totalSpaceSaved
+                     * @interface IScavengeDatabaseResponse
+                     * @property {EventStore.Client.Messages.ScavengeDatabaseResponse.ScavengeResult} result ScavengeDatabaseResponse result
+                     * @property {string|null} [scavengeId] ScavengeDatabaseResponse scavengeId
                      */
-    
+
                     /**
-                     * Constructs a new ScavengeDatabaseCompleted.
+                     * Constructs a new ScavengeDatabaseResponse.
                      * @memberof EventStore.Client.Messages
-                     * @classdesc Represents a ScavengeDatabaseCompleted.
-                     * @implements IScavengeDatabaseCompleted
+                     * @classdesc Represents a ScavengeDatabaseResponse.
+                     * @implements IScavengeDatabaseResponse
                      * @constructor
-                     * @param {EventStore.Client.Messages.IScavengeDatabaseCompleted=} [properties] Properties to set
+                     * @param {EventStore.Client.Messages.IScavengeDatabaseResponse=} [properties] Properties to set
                      */
-                    function ScavengeDatabaseCompleted(properties) {
+                    function ScavengeDatabaseResponse(properties) {
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
-                     * ScavengeDatabaseCompleted result.
-                     * @member {EventStore.Client.Messages.ScavengeDatabaseCompleted.ScavengeResult} result
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * ScavengeDatabaseResponse result.
+                     * @member {EventStore.Client.Messages.ScavengeDatabaseResponse.ScavengeResult} result
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @instance
                      */
-                    ScavengeDatabaseCompleted.prototype.result = 0;
-    
+                    ScavengeDatabaseResponse.prototype.result = 0;
+
                     /**
-                     * ScavengeDatabaseCompleted error.
-                     * @member {string} error
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * ScavengeDatabaseResponse scavengeId.
+                     * @member {string} scavengeId
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @instance
                      */
-                    ScavengeDatabaseCompleted.prototype.error = "";
-    
+                    ScavengeDatabaseResponse.prototype.scavengeId = "";
+
                     /**
-                     * ScavengeDatabaseCompleted totalTimeMs.
-                     * @member {number} totalTimeMs
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
-                     * @instance
-                     */
-                    ScavengeDatabaseCompleted.prototype.totalTimeMs = 0;
-    
-                    /**
-                     * ScavengeDatabaseCompleted totalSpaceSaved.
-                     * @member {number|Long} totalSpaceSaved
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
-                     * @instance
-                     */
-                    ScavengeDatabaseCompleted.prototype.totalSpaceSaved = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
-                    /**
-                     * Creates a new ScavengeDatabaseCompleted instance using the specified properties.
+                     * Creates a new ScavengeDatabaseResponse instance using the specified properties.
                      * @function create
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @static
-                     * @param {EventStore.Client.Messages.IScavengeDatabaseCompleted=} [properties] Properties to set
-                     * @returns {EventStore.Client.Messages.ScavengeDatabaseCompleted} ScavengeDatabaseCompleted instance
+                     * @param {EventStore.Client.Messages.IScavengeDatabaseResponse=} [properties] Properties to set
+                     * @returns {EventStore.Client.Messages.ScavengeDatabaseResponse} ScavengeDatabaseResponse instance
                      */
-                    ScavengeDatabaseCompleted.create = function create(properties) {
-                        return new ScavengeDatabaseCompleted(properties);
+                    ScavengeDatabaseResponse.create = function create(properties) {
+                        return new ScavengeDatabaseResponse(properties);
                     };
-    
+
                     /**
-                     * Encodes the specified ScavengeDatabaseCompleted message. Does not implicitly {@link EventStore.Client.Messages.ScavengeDatabaseCompleted.verify|verify} messages.
+                     * Encodes the specified ScavengeDatabaseResponse message. Does not implicitly {@link EventStore.Client.Messages.ScavengeDatabaseResponse.verify|verify} messages.
                      * @function encode
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @static
-                     * @param {EventStore.Client.Messages.IScavengeDatabaseCompleted} message ScavengeDatabaseCompleted message or plain object to encode
+                     * @param {EventStore.Client.Messages.IScavengeDatabaseResponse} message ScavengeDatabaseResponse message or plain object to encode
                      * @param {$protobuf.Writer} [writer] Writer to encode to
                      * @returns {$protobuf.Writer} Writer
                      */
-                    ScavengeDatabaseCompleted.encode = function encode(message, writer) {
+                    ScavengeDatabaseResponse.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.result);
-                        if (message.error != null && message.hasOwnProperty("error"))
-                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.error);
-                        writer.uint32(/* id 3, wireType 0 =*/24).int32(message.totalTimeMs);
-                        writer.uint32(/* id 4, wireType 0 =*/32).int64(message.totalSpaceSaved);
+                        if (message.scavengeId != null && Object.hasOwnProperty.call(message, "scavengeId"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.scavengeId);
                         return writer;
                     };
-    
+
                     /**
-                     * Encodes the specified ScavengeDatabaseCompleted message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ScavengeDatabaseCompleted.verify|verify} messages.
+                     * Encodes the specified ScavengeDatabaseResponse message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ScavengeDatabaseResponse.verify|verify} messages.
                      * @function encodeDelimited
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @static
-                     * @param {EventStore.Client.Messages.IScavengeDatabaseCompleted} message ScavengeDatabaseCompleted message or plain object to encode
+                     * @param {EventStore.Client.Messages.IScavengeDatabaseResponse} message ScavengeDatabaseResponse message or plain object to encode
                      * @param {$protobuf.Writer} [writer] Writer to encode to
                      * @returns {$protobuf.Writer} Writer
                      */
-                    ScavengeDatabaseCompleted.encodeDelimited = function encodeDelimited(message, writer) {
+                    ScavengeDatabaseResponse.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
-                     * Decodes a ScavengeDatabaseCompleted message from the specified reader or buffer.
+                     * Decodes a ScavengeDatabaseResponse message from the specified reader or buffer.
                      * @function decode
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @static
                      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                      * @param {number} [length] Message length if known beforehand
-                     * @returns {EventStore.Client.Messages.ScavengeDatabaseCompleted} ScavengeDatabaseCompleted
+                     * @returns {EventStore.Client.Messages.ScavengeDatabaseResponse} ScavengeDatabaseResponse
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    ScavengeDatabaseCompleted.decode = function decode(reader, length) {
+                    ScavengeDatabaseResponse.decode = function decode(reader, length) {
                         if (!(reader instanceof $Reader))
                             reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.ScavengeDatabaseCompleted();
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.EventStore.Client.Messages.ScavengeDatabaseResponse();
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.result = reader.int32();
-                                break;
-                            case 2:
-                                message.error = reader.string();
-                                break;
-                            case 3:
-                                message.totalTimeMs = reader.int32();
-                                break;
-                            case 4:
-                                message.totalSpaceSaved = reader.int64();
-                                break;
+                            case 1: {
+                                    message.result = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.scavengeId = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -11618,38 +14221,34 @@
                         }
                         if (!message.hasOwnProperty("result"))
                             throw $util.ProtocolError("missing required 'result'", { instance: message });
-                        if (!message.hasOwnProperty("totalTimeMs"))
-                            throw $util.ProtocolError("missing required 'totalTimeMs'", { instance: message });
-                        if (!message.hasOwnProperty("totalSpaceSaved"))
-                            throw $util.ProtocolError("missing required 'totalSpaceSaved'", { instance: message });
                         return message;
                     };
-    
+
                     /**
-                     * Decodes a ScavengeDatabaseCompleted message from the specified reader or buffer, length delimited.
+                     * Decodes a ScavengeDatabaseResponse message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @static
                      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {EventStore.Client.Messages.ScavengeDatabaseCompleted} ScavengeDatabaseCompleted
+                     * @returns {EventStore.Client.Messages.ScavengeDatabaseResponse} ScavengeDatabaseResponse
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    ScavengeDatabaseCompleted.decodeDelimited = function decodeDelimited(reader) {
+                    ScavengeDatabaseResponse.decodeDelimited = function decodeDelimited(reader) {
                         if (!(reader instanceof $Reader))
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
-                     * Verifies a ScavengeDatabaseCompleted message.
+                     * Verifies a ScavengeDatabaseResponse message.
                      * @function verify
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @static
                      * @param {Object.<string,*>} message Plain object to verify
                      * @returns {string|null} `null` if valid, otherwise the reason why it is not
                      */
-                    ScavengeDatabaseCompleted.verify = function verify(message) {
+                    ScavengeDatabaseResponse.verify = function verify(message) {
                         if (typeof message !== "object" || message === null)
                             return "object expected";
                         switch (message.result) {
@@ -11660,30 +14259,32 @@
                         case 2:
                             break;
                         }
-                        if (message.error != null && message.hasOwnProperty("error"))
-                            if (!$util.isString(message.error))
-                                return "error: string expected";
-                        if (!$util.isInteger(message.totalTimeMs))
-                            return "totalTimeMs: integer expected";
-                        if (!$util.isInteger(message.totalSpaceSaved) && !(message.totalSpaceSaved && $util.isInteger(message.totalSpaceSaved.low) && $util.isInteger(message.totalSpaceSaved.high)))
-                            return "totalSpaceSaved: integer|Long expected";
+                        if (message.scavengeId != null && message.hasOwnProperty("scavengeId"))
+                            if (!$util.isString(message.scavengeId))
+                                return "scavengeId: string expected";
                         return null;
                     };
-    
+
                     /**
-                     * Creates a ScavengeDatabaseCompleted message from a plain object. Also converts values to their respective internal types.
+                     * Creates a ScavengeDatabaseResponse message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @static
                      * @param {Object.<string,*>} object Plain object
-                     * @returns {EventStore.Client.Messages.ScavengeDatabaseCompleted} ScavengeDatabaseCompleted
+                     * @returns {EventStore.Client.Messages.ScavengeDatabaseResponse} ScavengeDatabaseResponse
                      */
-                    ScavengeDatabaseCompleted.fromObject = function fromObject(object) {
-                        if (object instanceof $root.EventStore.Client.Messages.ScavengeDatabaseCompleted)
+                    ScavengeDatabaseResponse.fromObject = function fromObject(object) {
+                        if (object instanceof $root.EventStore.Client.Messages.ScavengeDatabaseResponse)
                             return object;
-                        var message = new $root.EventStore.Client.Messages.ScavengeDatabaseCompleted();
+                        var message = new $root.EventStore.Client.Messages.ScavengeDatabaseResponse();
                         switch (object.result) {
-                        case "Success":
+                        default:
+                            if (typeof object.result === "number") {
+                                message.result = object.result;
+                                break;
+                            }
+                            break;
+                        case "Started":
                         case 0:
                             message.result = 0;
                             break;
@@ -11691,96 +14292,87 @@
                         case 1:
                             message.result = 1;
                             break;
-                        case "Failed":
+                        case "Unauthorized":
                         case 2:
                             message.result = 2;
                             break;
                         }
-                        if (object.error != null)
-                            message.error = String(object.error);
-                        if (object.totalTimeMs != null)
-                            message.totalTimeMs = object.totalTimeMs | 0;
-                        if (object.totalSpaceSaved != null)
-                            if ($util.Long)
-                                (message.totalSpaceSaved = $util.Long.fromValue(object.totalSpaceSaved)).unsigned = false;
-                            else if (typeof object.totalSpaceSaved === "string")
-                                message.totalSpaceSaved = parseInt(object.totalSpaceSaved, 10);
-                            else if (typeof object.totalSpaceSaved === "number")
-                                message.totalSpaceSaved = object.totalSpaceSaved;
-                            else if (typeof object.totalSpaceSaved === "object")
-                                message.totalSpaceSaved = new $util.LongBits(object.totalSpaceSaved.low >>> 0, object.totalSpaceSaved.high >>> 0).toNumber();
+                        if (object.scavengeId != null)
+                            message.scavengeId = String(object.scavengeId);
                         return message;
                     };
-    
+
                     /**
-                     * Creates a plain object from a ScavengeDatabaseCompleted message. Also converts values to other types if specified.
+                     * Creates a plain object from a ScavengeDatabaseResponse message. Also converts values to other types if specified.
                      * @function toObject
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @static
-                     * @param {EventStore.Client.Messages.ScavengeDatabaseCompleted} message ScavengeDatabaseCompleted
+                     * @param {EventStore.Client.Messages.ScavengeDatabaseResponse} message ScavengeDatabaseResponse
                      * @param {$protobuf.IConversionOptions} [options] Conversion options
                      * @returns {Object.<string,*>} Plain object
                      */
-                    ScavengeDatabaseCompleted.toObject = function toObject(message, options) {
+                    ScavengeDatabaseResponse.toObject = function toObject(message, options) {
                         if (!options)
                             options = {};
                         var object = {};
                         if (options.defaults) {
-                            object.result = options.enums === String ? "Success" : 0;
-                            object.error = "";
-                            object.totalTimeMs = 0;
-                            if ($util.Long) {
-                                var long = new $util.Long(0, 0, false);
-                                object.totalSpaceSaved = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                            } else
-                                object.totalSpaceSaved = options.longs === String ? "0" : 0;
+                            object.result = options.enums === String ? "Started" : 0;
+                            object.scavengeId = "";
                         }
                         if (message.result != null && message.hasOwnProperty("result"))
-                            object.result = options.enums === String ? $root.EventStore.Client.Messages.ScavengeDatabaseCompleted.ScavengeResult[message.result] : message.result;
-                        if (message.error != null && message.hasOwnProperty("error"))
-                            object.error = message.error;
-                        if (message.totalTimeMs != null && message.hasOwnProperty("totalTimeMs"))
-                            object.totalTimeMs = message.totalTimeMs;
-                        if (message.totalSpaceSaved != null && message.hasOwnProperty("totalSpaceSaved"))
-                            if (typeof message.totalSpaceSaved === "number")
-                                object.totalSpaceSaved = options.longs === String ? String(message.totalSpaceSaved) : message.totalSpaceSaved;
-                            else
-                                object.totalSpaceSaved = options.longs === String ? $util.Long.prototype.toString.call(message.totalSpaceSaved) : options.longs === Number ? new $util.LongBits(message.totalSpaceSaved.low >>> 0, message.totalSpaceSaved.high >>> 0).toNumber() : message.totalSpaceSaved;
+                            object.result = options.enums === String ? $root.EventStore.Client.Messages.ScavengeDatabaseResponse.ScavengeResult[message.result] === undefined ? message.result : $root.EventStore.Client.Messages.ScavengeDatabaseResponse.ScavengeResult[message.result] : message.result;
+                        if (message.scavengeId != null && message.hasOwnProperty("scavengeId"))
+                            object.scavengeId = message.scavengeId;
                         return object;
                     };
-    
+
                     /**
-                     * Converts this ScavengeDatabaseCompleted to JSON.
+                     * Converts this ScavengeDatabaseResponse to JSON.
                      * @function toJSON
-                     * @memberof EventStore.Client.Messages.ScavengeDatabaseCompleted
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
                      * @instance
                      * @returns {Object.<string,*>} JSON object
                      */
-                    ScavengeDatabaseCompleted.prototype.toJSON = function toJSON() {
+                    ScavengeDatabaseResponse.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ScavengeDatabaseResponse
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ScavengeDatabaseResponse
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ScavengeDatabaseResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ScavengeDatabaseResponse";
+                    };
+
                     /**
                      * ScavengeResult enum.
-                     * @name EventStore.Client.Messages.ScavengeDatabaseCompleted.ScavengeResult
-                     * @enum {string}
-                     * @property {number} Success=0 Success value
+                     * @name EventStore.Client.Messages.ScavengeDatabaseResponse.ScavengeResult
+                     * @enum {number}
+                     * @property {number} Started=0 Started value
                      * @property {number} InProgress=1 InProgress value
-                     * @property {number} Failed=2 Failed value
+                     * @property {number} Unauthorized=2 Unauthorized value
                      */
-                    ScavengeDatabaseCompleted.ScavengeResult = (function() {
+                    ScavengeDatabaseResponse.ScavengeResult = (function() {
                         var valuesById = {}, values = Object.create(valuesById);
-                        values[valuesById[0] = "Success"] = 0;
+                        values[valuesById[0] = "Started"] = 0;
                         values[valuesById[1] = "InProgress"] = 1;
-                        values[valuesById[2] = "Failed"] = 2;
+                        values[valuesById[2] = "Unauthorized"] = 2;
                         return values;
                     })();
-    
-                    return ScavengeDatabaseCompleted;
+
+                    return ScavengeDatabaseResponse;
                 })();
-    
+
                 Messages.IdentifyClient = (function() {
-    
+
                     /**
                      * Properties of an IdentifyClient.
                      * @memberof EventStore.Client.Messages
@@ -11788,7 +14380,7 @@
                      * @property {number} version IdentifyClient version
                      * @property {string|null} [connectionName] IdentifyClient connectionName
                      */
-    
+
                     /**
                      * Constructs a new IdentifyClient.
                      * @memberof EventStore.Client.Messages
@@ -11803,7 +14395,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * IdentifyClient version.
                      * @member {number} version
@@ -11811,7 +14403,7 @@
                      * @instance
                      */
                     IdentifyClient.prototype.version = 0;
-    
+
                     /**
                      * IdentifyClient connectionName.
                      * @member {string} connectionName
@@ -11819,7 +14411,7 @@
                      * @instance
                      */
                     IdentifyClient.prototype.connectionName = "";
-    
+
                     /**
                      * Creates a new IdentifyClient instance using the specified properties.
                      * @function create
@@ -11831,7 +14423,7 @@
                     IdentifyClient.create = function create(properties) {
                         return new IdentifyClient(properties);
                     };
-    
+
                     /**
                      * Encodes the specified IdentifyClient message. Does not implicitly {@link EventStore.Client.Messages.IdentifyClient.verify|verify} messages.
                      * @function encode
@@ -11845,11 +14437,11 @@
                         if (!writer)
                             writer = $Writer.create();
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.version);
-                        if (message.connectionName != null && message.hasOwnProperty("connectionName"))
+                        if (message.connectionName != null && Object.hasOwnProperty.call(message, "connectionName"))
                             writer.uint32(/* id 2, wireType 2 =*/18).string(message.connectionName);
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified IdentifyClient message, length delimited. Does not implicitly {@link EventStore.Client.Messages.IdentifyClient.verify|verify} messages.
                      * @function encodeDelimited
@@ -11862,7 +14454,7 @@
                     IdentifyClient.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes an IdentifyClient message from the specified reader or buffer.
                      * @function decode
@@ -11881,12 +14473,14 @@
                         while (reader.pos < end) {
                             var tag = reader.uint32();
                             switch (tag >>> 3) {
-                            case 1:
-                                message.version = reader.int32();
-                                break;
-                            case 2:
-                                message.connectionName = reader.string();
-                                break;
+                            case 1: {
+                                    message.version = reader.int32();
+                                    break;
+                                }
+                            case 2: {
+                                    message.connectionName = reader.string();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -11896,7 +14490,7 @@
                             throw $util.ProtocolError("missing required 'version'", { instance: message });
                         return message;
                     };
-    
+
                     /**
                      * Decodes an IdentifyClient message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -11912,7 +14506,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies an IdentifyClient message.
                      * @function verify
@@ -11931,7 +14525,7 @@
                                 return "connectionName: string expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates an IdentifyClient message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -11950,7 +14544,7 @@
                             message.connectionName = String(object.connectionName);
                         return message;
                     };
-    
+
                     /**
                      * Creates a plain object from an IdentifyClient message. Also converts values to other types if specified.
                      * @function toObject
@@ -11974,7 +14568,7 @@
                             object.connectionName = message.connectionName;
                         return object;
                     };
-    
+
                     /**
                      * Converts this IdentifyClient to JSON.
                      * @function toJSON
@@ -11985,18 +14579,33 @@
                     IdentifyClient.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for IdentifyClient
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.IdentifyClient
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    IdentifyClient.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.IdentifyClient";
+                    };
+
                     return IdentifyClient;
                 })();
-    
+
                 Messages.ClientIdentified = (function() {
-    
+
                     /**
                      * Properties of a ClientIdentified.
                      * @memberof EventStore.Client.Messages
                      * @interface IClientIdentified
                      */
-    
+
                     /**
                      * Constructs a new ClientIdentified.
                      * @memberof EventStore.Client.Messages
@@ -12011,7 +14620,7 @@
                                 if (properties[keys[i]] != null)
                                     this[keys[i]] = properties[keys[i]];
                     }
-    
+
                     /**
                      * Creates a new ClientIdentified instance using the specified properties.
                      * @function create
@@ -12023,7 +14632,7 @@
                     ClientIdentified.create = function create(properties) {
                         return new ClientIdentified(properties);
                     };
-    
+
                     /**
                      * Encodes the specified ClientIdentified message. Does not implicitly {@link EventStore.Client.Messages.ClientIdentified.verify|verify} messages.
                      * @function encode
@@ -12038,7 +14647,7 @@
                             writer = $Writer.create();
                         return writer;
                     };
-    
+
                     /**
                      * Encodes the specified ClientIdentified message, length delimited. Does not implicitly {@link EventStore.Client.Messages.ClientIdentified.verify|verify} messages.
                      * @function encodeDelimited
@@ -12051,7 +14660,7 @@
                     ClientIdentified.encodeDelimited = function encodeDelimited(message, writer) {
                         return this.encode(message, writer).ldelim();
                     };
-    
+
                     /**
                      * Decodes a ClientIdentified message from the specified reader or buffer.
                      * @function decode
@@ -12077,7 +14686,7 @@
                         }
                         return message;
                     };
-    
+
                     /**
                      * Decodes a ClientIdentified message from the specified reader or buffer, length delimited.
                      * @function decodeDelimited
@@ -12093,7 +14702,7 @@
                             reader = new $Reader(reader);
                         return this.decode(reader, reader.uint32());
                     };
-    
+
                     /**
                      * Verifies a ClientIdentified message.
                      * @function verify
@@ -12107,7 +14716,7 @@
                             return "object expected";
                         return null;
                     };
-    
+
                     /**
                      * Creates a ClientIdentified message from a plain object. Also converts values to their respective internal types.
                      * @function fromObject
@@ -12121,7 +14730,7 @@
                             return object;
                         return new $root.EventStore.Client.Messages.ClientIdentified();
                     };
-    
+
                     /**
                      * Creates a plain object from a ClientIdentified message. Also converts values to other types if specified.
                      * @function toObject
@@ -12134,7 +14743,7 @@
                     ClientIdentified.toObject = function toObject() {
                         return {};
                     };
-    
+
                     /**
                      * Converts this ClientIdentified to JSON.
                      * @function toJSON
@@ -12145,16 +14754,31 @@
                     ClientIdentified.prototype.toJSON = function toJSON() {
                         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
                     };
-    
+
+                    /**
+                     * Gets the default type url for ClientIdentified
+                     * @function getTypeUrl
+                     * @memberof EventStore.Client.Messages.ClientIdentified
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    ClientIdentified.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/EventStore.Client.Messages.ClientIdentified";
+                    };
+
                     return ClientIdentified;
                 })();
-    
+
                 return Messages;
             })();
-    
+
             return Client;
         })();
-    
+
         return EventStore;
     })();
 

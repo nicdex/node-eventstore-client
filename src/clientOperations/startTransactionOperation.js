@@ -25,7 +25,7 @@ StartTransactionOperation.prototype._createRequestDto = function() {
   return new ClientMessage.TransactionStart({
       eventStreamId: this._stream,
       expectedVersion: this._expectedVersion,
-      requireMaster: this._requireMaster
+      requireLeader: this._requireMaster
   });
 };
 
