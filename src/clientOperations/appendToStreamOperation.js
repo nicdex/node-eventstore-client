@@ -37,7 +37,7 @@ AppendToStreamOperation.prototype._createRequestDto = function() {
     eventStreamId: this._stream,
     expectedVersion: this._expectedVersion,
     events: dtos,
-    requireMaster: this._requireMaster});
+    requireLeader: this._requireMaster});
 };
 
 AppendToStreamOperation.prototype._inspectResponse = function(response) {

@@ -31,7 +31,7 @@ ReadStreamEventsBackwardOperation.prototype._createRequestDto = function() {
       fromEventNumber: this._fromEventNumber,
       maxCount: this._maxCount,
       resolveLinkTos: this._resolveLinkTos,
-      requireMaster: this._requireMaster
+      requireLeader: this._requireMaster
   });
 };
 

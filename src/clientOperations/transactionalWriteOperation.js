@@ -32,7 +32,7 @@ TransactionalWriteOperation.prototype._createRequestDto = function() {
   return new ClientMessage.TransactionWrite({
     transactionId: this._transactionId,
     events: dtos,
-    requireMaster: this._requireMaster
+    requireLeader: this._requireMaster
   });
 };
 

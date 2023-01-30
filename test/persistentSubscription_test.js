@@ -41,7 +41,7 @@ module.exports = {
       done();
     }
     var self = this;
-    this.conn.connectToPersistentSubscription(testStreamName, 'consumer-1', eventAppeared, subscriptionDropped)
+    this.conn.connectToPersistentSubscription(testStreamName, 'consumer-1', eventAppeared, subscriptionDropped, adminCredentials)
       .then(function(subscription) {
         test.ok(subscription, "Subscription is null.");
         return self.conn.appendToStream(testStreamName, client.expectedVersion.any, [createRandomEvent(), createRandomEvent()]);

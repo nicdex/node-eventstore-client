@@ -78,7 +78,7 @@ ClusterDiscoverer.prototype._getGossipCandidates = async function (managerExtern
     this._settings.seeds && this._settings.seeds.length > 0
       ? this._settings.seeds
       : (await this._resolveDns(this._settings.clusterDns)).map(
-          (address) => new GossipSeed({ host: address, port: managerExternalHttpPort }, undefined)
+          (address) => new GossipSeed({ host: address, port: managerExternalHttpPort }, address, this._settings.clusterDns)
         );
   return shuffle(gossipSeeds);
 };
@@ -109,12 +109,14 @@ ClusterDiscoverer.prototype._resolveDns = async function (clusterDns) {
  * @returns {Promise.<ClusterInfo>}
  */
 ClusterDiscoverer.prototype._clusterInfo = async function (candidate, timeout) {
+  var self = this;
   return new Promise((resolve, reject) => {
     const options = {
       host: candidate.endPoint.host,
       port: candidate.endPoint.port,
       path: '/gossip?format=json',
       timeout: timeout,
+      rejectUnauthorized: self._settings.rejectUnauthorized
     };
     if (candidate.hostHeader) {
       options.headers = {
