@@ -1,17 +1,18 @@
 {
   "name": "node-eventstore-client",
-  "version": "0.2.17",
+  "version": "21.10.0",
   "description": "A port of the EventStore .Net ClientAPI to Node.js",
   "main": "index.js",
   "types": "index.d.ts",
   "engines": {
-    "node": ">=5.10"
+    "node": ">=14",
+    "npm": ">=6"
   },
   "engineStrict": true,
   "scripts": {
     "clean": "rm -f lib/dist.js",
     "prebuild": "npm run clean",
-    "build": "webpack -o ./lib/dist.js",
+    "build": "webpack",
     "pretest": "npm run build",
     "test": "nodeunit",
     "test-debug": "TESTS_VERBOSE_LOGGING=1 nodeunit",
@@ -23,10 +24,10 @@
     "compose:cluster:start": "docker-compose -f docker-compose-cluster.yaml up --build -d",
     "compose:single:stop": "docker-compose -f docker-compose-single.yaml down -v --remove-orphans",
     "compose:cluster:stop": "docker-compose -f docker-compose-cluster.yaml down -v --remove-orphans",
-    "compose:wait": "while [[ \"$(curl -s -o /dev/null -w ''%{http_code}'' localhost:2113/ping)\" != \"200\" ]]; do sleep 5; done",
-    "compose:single:test": "docker-compose -f docker-compose-single.yaml exec nodejs bash -c \"npm i && npm run build && EVENTSTORE_CONNECTION_TYPE=tcp EVENTSTORE_HOST=192.168.33.10 npm run test-debug\"",
-    "compose:cluster:test": "docker-compose -f docker-compose-cluster.yaml exec nodejs bash -c \"npm i && npm run build && EVENTSTORE_CONNECTION_TYPE=gossip EVENTSTORE_HOST=192.168.33.10 EVENTSTORE_HOST_1=192.168.33.10 EVENTSTORE_HOST_2=192.168.33.11 EVENTSTORE_HOST_3=192.168.33.12 npm run test-debug\"",
-    "compose:gossip:test": "docker-compose -f docker-compose-cluster.yaml exec nodejs bash -c \"npm i && npm run build && EVENTSTORE_CONNECTION_TYPE=dns EVENTSTORE_HOST=192.168.33.10 npm run test-debug\"",
+    "compose:wait": "while [ \"$(curl -s -o /dev/null -w ''%{http_code}'' -k https://localhost:2113/ping)\" != \"200\" ]; do sleep 5; done",
+    "compose:single:test": "docker-compose -f docker-compose-single.yaml exec nodejs bash -c \"EVENTSTORE_CONNECTION_TYPE=tcp EVENTSTORE_HOST=192.168.33.10 ./build-and-test.sh\"",
+    "compose:gossip:test": "docker-compose -f docker-compose-cluster.yaml exec nodejs bash -c \"EVENTSTORE_CONNECTION_TYPE=gossip EVENTSTORE_HOST=192.168.33.10 EVENTSTORE_HOST_1=192.168.33.10 EVENTSTORE_HOST_2=192.168.33.11 EVENTSTORE_HOST_3=192.168.33.12 ./build-and-test.sh\"",
+    "compose:cluster:test": "docker-compose -f docker-compose-cluster.yaml exec nodejs bash -c \"EVENTSTORE_CONNECTION_TYPE=dns EVENTSTORE_HOST=cluster.tests.node-eventstore-client.local ./build-and-test.sh\"",
     "prepublishOnly": "npm run build && npm run gendocs",
     "gendocs": "rm -rf docs && jsdoc src -r -d docs"
   },
@@ -58,18 +59,18 @@
   },
   "homepage": "https://github.com/nicdex/node-eventstore-client#readme",
   "dependencies": {
-    "@types/long": "^3.0.32",
-    "@types/node": ">=5.10",
-    "long": "^3.2.0",
-    "protobufjs": "^6.8.8",
+    "@types/node": ">=14",
+    "long": "^5.2.0",
+    "protobufjs": "^7.1.2",
+    "protobufjs-cli": "^1.0.2",
     "strict-event-emitter-types": "^1.2.0",
-    "uuid": "^3.0.1"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "jest": "^26.4.2",
-    "jsdoc": "^3.6.3",
+    "jest": "^29.4.1",
+    "jsdoc": "^4.0.0",
     "nodeunit": "^0.11.3",
-    "webpack": "^4.41.2",
+    "webpack": "^5.75.0",
     "webpack-cli": "^3.3.10"
   }
 }

@@ -1,3 +1,5 @@
+syntax = "proto2";
+
 package EventStore.Client.Messages;
 
 enum OperationResult
@@ -50,7 +52,7 @@ message WriteEvents {
 	required string event_stream_id = 1;
 	required int64 expected_version = 2;
 	repeated NewEvent events = 3;
-	required bool require_master = 4;
+	required bool require_leader = 4;
 }
 
 message WriteEventsCompleted {
@@ -66,7 +68,7 @@ message WriteEventsCompleted {
 message DeleteStream {
 	required string event_stream_id = 1;
 	required int64 expected_version = 2;
-	required bool require_master = 3;
+	required bool require_leader = 3;
 	optional bool hard_delete = 4;
 }
 
@@ -75,12 +77,13 @@ message DeleteStreamCompleted {
 	optional string message = 2;
 	optional int64 prepare_position = 3;
 	optional int64 commit_position = 4;
+	optional int64 current_version = 5;
 }
 
 message TransactionStart {
 	required string event_stream_id = 1;
 	required int64 expected_version = 2;
-	required bool require_master = 3;
+	required bool require_leader = 3;
 }
 
 message TransactionStartCompleted {
@@ -92,7 +95,7 @@ message TransactionStartCompleted {
 message TransactionWrite {
 	required int64 transaction_id = 1;
 	repeated NewEvent events = 2;
-	required bool require_master = 3;
+	required bool require_leader = 3;
 }
 
 message TransactionWriteCompleted {
@@ -103,7 +106,7 @@ message TransactionWriteCompleted {
 
 message TransactionCommit {
 	required int64 transaction_id = 1;
-	required bool require_master = 2;
+	required bool require_leader = 2;
 }
 
 message TransactionCommitCompleted {
@@ -120,7 +123,7 @@ message ReadEvent {
 	required string event_stream_id = 1;
 	required int64 event_number = 2;
 	required bool resolve_link_tos = 3;
-	required bool require_master = 4;
+	required bool require_leader = 4;
 }
 
 message ReadEventCompleted {
@@ -145,7 +148,7 @@ message ReadStreamEvents {
 	required int64 from_event_number = 2;
 	required int32 max_count = 3;
 	required bool resolve_link_tos = 4;
-	required bool require_master = 5;
+	required bool require_leader = 5;
 }
 
 message ReadStreamEventsCompleted {
@@ -174,7 +177,7 @@ message ReadAllEvents {
 	required int64 prepare_position = 2;
 	required int32 max_count = 3;
 	required bool resolve_link_tos = 4;
-	required bool require_master = 5;
+	required bool require_leader = 5;
 }
 
 message ReadAllEventsCompleted {
@@ -194,6 +197,54 @@ message ReadAllEventsCompleted {
 
 	optional ReadAllResult result = 6 [default = Success];
 	optional string error = 7;
+}
+
+message Filter{
+
+	enum FilterContext {
+        StreamId = 0;
+		EventType = 1;
+
+    }
+
+	enum FilterType {
+        Regex = 0;
+		Prefix = 1;
+    }
+
+    required FilterContext context = 1;
+    required FilterType type = 2;
+    repeated string data = 3;
+}
+
+message FilteredReadAllEvents {
+    required int64 commit_position = 1;
+    required int64 prepare_position = 2;
+    required int32 max_count = 3;
+    optional int32 max_search_window = 4;
+    required bool resolve_link_tos = 5;
+    required bool require_leader = 6;
+    required Filter filter = 7;
+}
+
+message FilteredReadAllEventsCompleted {
+
+    enum FilteredReadAllResult {
+        Success = 0;
+        NotModified = 1;
+        Error = 2;
+        AccessDenied = 3;
+    }
+
+    required int64 commit_position = 1;
+    required int64 prepare_position = 2;
+    repeated ResolvedEvent events = 3;
+    required int64 next_commit_position = 4;
+    required int64 next_prepare_position = 5;
+    required bool is_end_of_stream = 6;
+
+    optional FilteredReadAllResult result = 7 [default = Success];
+    optional string error = 8;
 }
 
 message CreatePersistentSubscription {
@@ -307,11 +358,24 @@ message PersistentSubscriptionConfirmation {
 
 message PersistentSubscriptionStreamEventAppeared {
 	required ResolvedIndexedEvent event = 1;
+	optional int32 retryCount = 2;
 }
 
 message SubscribeToStream {
 	required string event_stream_id = 1;
 	required bool resolve_link_tos = 2;
+}
+
+message FilteredSubscribeToStream {
+	required string event_stream_id = 1;
+	required bool resolve_link_tos = 2;
+	required Filter filter = 3;
+	required int32 checkpoint_interval = 4;
+}
+
+message CheckpointReached {
+	required int64 commit_position = 1;
+	required int64 prepare_position = 2;
 }
 
 message SubscriptionConfirmation {
@@ -344,17 +408,18 @@ message NotHandled {
 	enum NotHandledReason {
 		NotReady = 0;
 		TooBusy = 1;
-		NotMaster = 2;
+		NotLeader = 2;
+		IsReadOnly = 3;
 	}
 
 	required NotHandledReason reason = 1;
 	optional bytes additional_info = 2;
 
-	message MasterInfo {
-		required string external_tcp_address = 1;
-		required int32 external_tcp_port = 2;
-		required string external_http_address = 3;
-		required int32 external_http_port = 4;
+	message LeaderInfo {
+		optional string external_tcp_address = 1;
+		optional int32 external_tcp_port = 2;
+		required string http_address = 3;
+		required int32 http_port = 4;
 		optional string external_secure_tcp_address = 5;
 		optional int32 external_secure_tcp_port = 6;
 	}
@@ -363,18 +428,17 @@ message NotHandled {
 message ScavengeDatabase {
 }
 
-message ScavengeDatabaseCompleted {
+message ScavengeDatabaseResponse {
 
 	enum ScavengeResult {
-		Success = 0;
+		Started = 0;
 		InProgress = 1;
-		Failed = 2;
+		Unauthorized = 2;
 	}
 
 	required ScavengeResult result = 1;
-	optional string error = 2;
-	required int32 total_time_ms = 3;
-	required int64 total_space_saved = 4;
+	optional string scavengeId = 2;
+
 }
 
 message IdentifyClient {

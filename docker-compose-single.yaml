@@ -1,50 +1,50 @@
 version: '3.4'
 
 services:
-  eventstore.db:
-    image: eventstore/eventstore:release-5.0.8
+  eventstore:
+    image: eventstore/eventstore:21.10.9-buster-slim
     environment:
       - EVENTSTORE_CLUSTER_SIZE=1
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=True
-      - EVENTSTORE_DB=/var/lib/eventstore-data
-      - EVENTSTORE_INDEX=/var/lib/eventstore-index
-      - EVENTSTORE_LOG=/var/log/eventstore
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
       - EVENTSTORE_EXT_TCP_PORT=1113
-      - EVENTSTORE_EXT_HTTP_PORT=2113
+      - EVENTSTORE_HTTP_PORT=2113
       - EVENTSTORE_INT_IP=192.168.33.10
       - EVENTSTORE_EXT_IP=192.168.33.10
+      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node1/node1.crt
+      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node1/node1.key
+      - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
     ports:
       - "1113:1113"
       - "2113:2113"
+    tmpfs:
+      - /var/log/eventstore
     volumes:
-      - type: volume
-        source: eventstore-volume-data
-        target: /var/lib/eventstore-data
-      - type: volume
-        source: eventstore-volume-index
-        target: /var/lib/eventstore-index
-      - type: volume
-        source: eventstore-volume-logs
-        target: /var/log/eventstore
+      - eventstore-data:/var/lib/eventstore
+      - ./certs:/etc/eventstore/certs:ro
     networks:
       app_net:
+        aliases:
+          - node1.tests.node-eventstore-client.local
         ipv4_address: 192.168.33.10
 
   nodejs:
     image: node:14
-    working_dir: /var/code
+    working_dir: /var/build
     volumes:
-      - .:/var/code
-      - /var/code/node_modules
+      - ./:/var/code:ro
+      - ./build-and-test.sh:/var/build/build-and-test.sh:ro
+      - ./certs:/var/certs:ro
+    environment:
+      - NODE_EXTRA_CA_CERTS=/var/certs/ca/ca.crt
     command: bash -c "tail -f /dev/null"
     networks:
-      - app_net
+      app_net:
+        ipv4_address: 192.168.33.5
 
 volumes:
-  eventstore-volume-data:
-  eventstore-volume-index:
-  eventstore-volume-logs:
+  eventstore-data:
 
 networks:
   app_net:

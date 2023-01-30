@@ -12,6 +12,8 @@ protobufJS.configure();
 
 var settings = {
   log: new NoopLogger(),
+  useSslConnection: true,
+  validateServer: false
 };
 if (process.env.TESTS_VERBOSE_LOGGING === '1') {
   settings.verboseLogging = true;
@@ -53,7 +55,7 @@ function setUpWithGossipSeeds(cb) {
 }
 
 function setUpWithDns(cb) {
-  var clusterDns = 'discover://eventstore.local:2113';
+  var clusterDns = 'discover://' + process.env.EVENTSTORE_HOST + ':2113';
   this.log = settings.log;
   this.testStreamName = 'test-' + uuid.v4();
   var connected = false;

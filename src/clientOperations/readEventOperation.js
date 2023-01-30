@@ -25,7 +25,7 @@ ReadEventOperation.prototype._createRequestDto = function() {
       eventStreamId: this._stream,
       eventNumber: this._eventNumber,
       resolveLinkTos: this._resolveLinkTos,
-      requireMaster: this._requireMaster
+      requireLeader: this._requireMaster
   });
 };
 

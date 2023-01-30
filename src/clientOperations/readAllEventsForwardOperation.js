@@ -29,7 +29,7 @@ ReadAllEventsForwardOperation.prototype._createRequestDto = function() {
       preparePosition: this._position.preparePosition,
       maxCount: this._maxCount,
       resolveLinkTos: this._resolveLinkTos,
-      requireMaster: this._requireMaster
+      requireLeader: this._requireMaster
   });
 };
 

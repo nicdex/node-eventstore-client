@@ -27,7 +27,7 @@ DeleteStreamOperation.prototype._createRequestDto = function() {
   return new ClientMessage.DeleteStream({
     eventStreamId: this._stream,
     expectedVersion: this._expectedVersion,
-    requireMaster: this._requireMaster,
+    requireLeader: this._requireMaster,
     hardDelete: this._hardDelete
   });
 };
