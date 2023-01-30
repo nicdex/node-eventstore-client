@@ -30,8 +30,8 @@ Versions to install to match EventStore versions:
 - 0.2.x for ES from 3.9.4 to 5.x
 - 20.10.x for ES 20.10 LTS
 - 21.10.x for ES 21.10 LTS
+- 22.10.x for ES 22.10 LTS
 
-*I am working on making version match LTS and latest release of EventStore so that TCP protocol matches*
 
 ### Dependencies
 
