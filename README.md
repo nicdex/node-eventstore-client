@@ -27,14 +27,15 @@ Install using `npm install node-eventstore-client`
 Versions to install to match EventStore versions:
 
 - 0.1.x for ES prior to 3.9.4
-- 0.2.x for ES from 3.9.4 to 20.10
-- 21.10.x for ES 21.10
+- 0.2.x for ES from 3.9.4 to 5.x
+- 20.10.x for ES 20.10 LTS
+- 21.10.x for ES 21.10 LTS
 
 *I am working on making version match LTS and latest release of EventStore so that TCP protocol matches*
 
 ### Dependencies
 
-- Node.js >= 12
+- Node.js >= 14
 - Modules: [long](https://www.npmjs.org/package/long), [protobufjs](https://www.npmjs.org/package/protobufjs), [uuid](https://www.npmjs.org/package/uuid), [strict-event-emitter-types](https://www.npmjs.com/package/strict-event-emitter-types) (installed via `npm install`)
 
 ### Install and run an Eventstore on localhost

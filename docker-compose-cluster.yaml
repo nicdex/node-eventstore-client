@@ -1,15 +1,15 @@
-version: '3.4'
+version: '3.7'
 
 services:
-  eventstore.db:
-    image: eventstore/eventstore:21.10.8-buster-slim
+  eventstore1:
+    image: eventstore/eventstore:21.10.9-buster-slim
     environment:
       - EVENTSTORE_CLUSTER_SIZE=3
       - EVENTSTORE_CLUSTER_DNS=cluster.tests.node-eventstore-client.local
       - EVENTSTORE_ADVERTISE_HOST_TO_CLIENT_AS=node1.tests.node-eventstore-client.local
       - EVENTSTORE_ADVERTISE_HTTP_PORT_TO_CLIENT_AS=2113
       - EVENTSTORE_ADVERTISE_TCP_PORT_TO_CLIENT_AS=1113
-#      - EVENTSTORE_DISCOVER_VIA_DNS=false
+#      - EVENTSTORE_DISCOVER_VIA_DNS=False
 #      - EVENTSTORE_GOSSIP_SEED=192.168.33.10:2113,192.168.33.11:2113,192.168.33.12:2113
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=True
@@ -21,6 +21,10 @@ services:
       - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node1/node1.crt
       - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node1/node1.key
       - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
+    expose:
+      - "1112"
+      - "1113"
+      - "2113"
     ports:
       - "1112:1112"
       - "1113:1113"
@@ -35,15 +39,15 @@ services:
       - eventstore1-data:/var/lib/eventstore
       - ./certs:/etc/eventstore/certs:ro
 
-  eventstore.db2:
-    image: eventstore/eventstore:21.10.8-buster-slim
+  eventstore2:
+    image: eventstore/eventstore:21.10.9-buster-slim
     environment:
       - EVENTSTORE_CLUSTER_SIZE=3
       - EVENTSTORE_CLUSTER_DNS=cluster.tests.node-eventstore-client.local
       - EVENTSTORE_ADVERTISE_HOST_TO_CLIENT_AS=node2.tests.node-eventstore-client.local
       - EVENTSTORE_ADVERTISE_HTTP_PORT_TO_CLIENT_AS=2113
       - EVENTSTORE_ADVERTISE_TCP_PORT_TO_CLIENT_AS=1113
-#      - EVENTSTORE_DISCOVER_VIA_DNS=false
+#      - EVENTSTORE_DISCOVER_VIA_DNS=False
 #      - EVENTSTORE_GOSSIP_SEED=192.168.33.10:2113,192.168.33.11:2113,192.168.33.12:2113
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=True
@@ -69,15 +73,15 @@ services:
       - eventstore2-data:/var/lib/eventstore
       - ./certs:/etc/eventstore/certs:ro
 
-  eventstore.db3:
-    image: eventstore/eventstore:21.10.8-buster-slim
+  eventstore3:
+    image: eventstore/eventstore:21.10.9-buster-slim
     environment:
       - EVENTSTORE_CLUSTER_SIZE=3
       - EVENTSTORE_CLUSTER_DNS=cluster.tests.node-eventstore-client.local
       - EVENTSTORE_ADVERTISE_HOST_TO_CLIENT_AS=node3.tests.node-eventstore-client.local
       - EVENTSTORE_ADVERTISE_HTTP_PORT_TO_CLIENT_AS=2113
       - EVENTSTORE_ADVERTISE_TCP_PORT_TO_CLIENT_AS=1113
-#      - EVENTSTORE_DISCOVER_VIA_DNS=false
+#      - EVENTSTORE_DISCOVER_VIA_DNS=False
 #      - EVENTSTORE_GOSSIP_SEED=192.168.33.10:2113,192.168.33.11:2113,192.168.33.12:2113
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=True
@@ -104,14 +108,18 @@ services:
       - ./certs:/etc/eventstore/certs:ro
 
   nodejs:
-    image: node:12
-    working_dir: /var/code
+    image: node:14
+    working_dir: /var/build
     volumes:
-      - .:/var/code
-      - /var/code/node_modules
+      - ./:/var/code:ro
+      - ./build-and-test.sh:/var/build/build-and-test.sh:ro
+      - ./certs:/var/certs:ro
+    environment:
+      - NODE_EXTRA_CA_CERTS=/var/certs/ca/ca.crt
     command: bash -c "tail -f /dev/null"
     networks:
-      - app_net
+      app_net:
+        ipv4_address: 192.168.33.5
 
 volumes:
   eventstore1-data:
