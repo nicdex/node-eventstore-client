@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  eventstore.db:
+  eventstore:
     image: eventstore/eventstore:20.10.5-buster-slim
     environment:
       - EVENTSTORE_CLUSTER_SIZE=1
@@ -31,16 +31,17 @@ services:
 
   nodejs:
     image: node:14
-    working_dir: /var/code
+    working_dir: /var/build
     volumes:
-      - .:/var/code
-      - /var/code/node_modules
+      - ./:/var/code:ro
+      - ./build-and-test.sh:/var/build/build-and-test.sh:ro
       - ./certs:/var/certs:ro
     environment:
       - NODE_EXTRA_CA_CERTS=/var/certs/ca/ca.crt
     command: bash -c "tail -f /dev/null"
     networks:
-      - app_net
+      app_net:
+        ipv4_address: 192.168.33.5
 
 volumes:
   eventstore-data:
