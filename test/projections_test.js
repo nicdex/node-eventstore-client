@@ -2,7 +2,7 @@ const client = require('../lib/dist');
 const userCredentials = new client.UserCredentials('admin', 'changeit');
 
 const log = new client.NoopLogger();
-const httpEndpoint = `http://${process.env.EVENTSTORE_HOST || "localhost"}:2113`;
+const httpEndpoint = `https://${process.env.EVENTSTORE_HOST || "localhost"}:2113`;
 const operationTimeout = 5000;
 
 const simpleProjection = "\
@@ -21,7 +21,7 @@ fromStream('$stats-127.0.0.1:2113')\
 
 module.exports = {
   setUp: function(cb) {
-    this.projectionsManager = new client.ProjectionsManager(log, httpEndpoint, operationTimeout);
+    this.projectionsManager = new client.ProjectionsManager(log, httpEndpoint, operationTimeout, false);
     cb();
   },
   'Create One Time Projection Happy Path': function(test) {

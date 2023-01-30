@@ -27,7 +27,7 @@ switch(evenstStoreType){
         done();
       });
       conn.on('error', done);
-  
+
       function done(err) {
         conn.close();
         if (err) return test.done(err);
@@ -41,7 +41,7 @@ switch(evenstStoreType){
         new GossipSeed({host: '1.2.3.4', port: 1113}),
         new GossipSeed({host: '2.3.4.5', port: 2113}),
         new GossipSeed({host: '3.4.5.6', port: 3113})
-      ];      
+      ];
       var conn = client.EventStoreConnection.create(testBase.settings({maxDiscoverAttempts: 1}), gossipSeeds);
       conn.connect()
         .catch(function (err) {
@@ -62,7 +62,7 @@ switch(evenstStoreType){
   case 'dns':
     module.exports['Connect to Cluster using dns discover'] = function (test) {
       test.expect(1);
-      var clusterDns = 'discover://eventstore.local:2113';
+      var clusterDns = 'discover://' + process.env.EVENTSTORE_HOST + ':2113';
       var conn = client.EventStoreConnection.create(testBase.settings(), clusterDns);
       conn.connect()
         .catch(function(err) {
@@ -73,7 +73,7 @@ switch(evenstStoreType){
         done();
       });
       conn.on('error', done);
-  
+
       function done(err) {
         conn.close();
         if (err) return test.done(err);
@@ -83,7 +83,7 @@ switch(evenstStoreType){
 
     module.exports['Connect To Cluster with bad dns discover'] = function (test) {
       test.expect(3);
-      var clusterDns = 'discover://eventstore-bad.local:2113';
+      var clusterDns = 'discover://abc.def.com:2113';
       var conn = client.EventStoreConnection.create(testBase.settings({maxDiscoverAttempts: 1}), clusterDns);
       conn.connect()
         .catch(function (err) {
@@ -91,6 +91,7 @@ switch(evenstStoreType){
         });
       conn.on('connected', function () {
         test.ok(false, 'Should not be able to connect.');
+        conn.close();
       });
       conn.on('error', function (err) {
         test.ok(err.message.indexOf('Failed to discover candidate in 1 attempts') === 0, 'Wrong expected reason.');
@@ -116,7 +117,7 @@ switch(evenstStoreType){
         done();
       });
       conn.on('error', done);
-  
+
       function done(err) {
         conn.close();
         if (err) return test.done(err);
@@ -144,7 +145,7 @@ switch(evenstStoreType){
         test.done();
       });
     };
-    
+
     module.exports['Create a connection with tcp://host:port string'] = function (test) {
       var conn = client.createConnection({}, `tcp://${process.env.EVENTSTORE_HOST || 'localhost'}:1113`);
       conn.close();

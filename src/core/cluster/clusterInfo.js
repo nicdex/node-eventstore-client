@@ -2,16 +2,26 @@ const MemberInfo = require('./memberInfo.js');
 
 const VNodeStates = Object.freeze({
   Initializing: 0,
-  Unknown: 1,
-  PreReplica: 2,
-  CatchingUp: 3,
-  Clone: 4,
-  Slave: 5,
-  PreMaster: 6,
-  Master: 7,
-  Manager: 8,
-  ShuttingDown: 9,
-  Shutdown: 10
+  DiscoverLeader: 1,
+  Unknown: 2,
+  PreReplica: 3,
+  CatchingUp: 4,
+  Clone: 5,
+  Follower: 6,
+  Slave: 6,
+  PreLeader: 7,
+  PreMaster: 7,
+  Leader: 8,
+  Master: 8,
+  Manager: 9,
+  ShuttingDown: 10,
+  Shutdown: 11,
+  ReadOnlyLeaderless: 12,
+  ReadOnlyMasterless: 12,
+  PreReadOnlyReplica: 13,
+  ReadOnlyReplica: 14,
+  ResigningLeader: 15,
+  ResigningMaster: 15,
 });
 
 function ClusterInfo(members) {
@@ -27,7 +37,7 @@ function ClusterInfo(members) {
 
 ClusterInfo.prototype._getBestNode = function () {
   return this._members
-  .filter(member => member.isAlive && member.isAllowedToConnect)
+  .filter(member => member.isAlive && member.isAllowedToConnect && VNodeStates[member.state] <= VNodeStates.Master)
   .sort(function (a, b) {
     return VNodeStates[b.state] - VNodeStates[a.state];
   })[0];

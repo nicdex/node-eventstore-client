@@ -6,6 +6,7 @@ var ensure = require('./common/utils/ensure');
 
 const util = require('util');
 const http = require('http');
+const https = require('https');
 const dns = require('dns');
 
 const dnsService = {
@@ -95,13 +96,14 @@ function createFromClusterDns(connectionSettings, clusterDns, externalGossipPort
     managerExternalHttpPort: externalGossipPort,
     maxDiscoverAttempts: mergedSettings.maxDiscoverAttempts,
     discoverDelay: mergedSettings.discoverDelay,
-    gossipTimeout: mergedSettings.gossipTimeout
+    gossipTimeout: mergedSettings.gossipTimeout,
+    rejectUnauthorized: connectionSettings.useSslConnection ? connectionSettings.validateServer : undefined
   };
   var endPointDiscoverer = new ClusterDiscoverer(
     mergedSettings.log,
     clusterSettings,
     dnsService,
-    http
+    connectionSettings.useSslConnection ? https : http
   );
   return new EventStoreNodeConnection(mergedSettings, clusterSettings, endPointDiscoverer, connectionName);
 }
@@ -116,13 +118,14 @@ function createFromGossipSeeds(connectionSettings, gossipSeeds, connectionName) 
     externalGossipPort: 0,
     maxDiscoverAttempts: mergedSettings.maxDiscoverAttempts,
     discoverDelay: mergedSettings.discoverDelay,
-    gossipTimeout: mergedSettings.gossipTimeout
+    gossipTimeout: mergedSettings.gossipTimeout,
+    rejectUnauthorized: connectionSettings.useSslConnection ? connectionSettings.validateServer : undefined
   };
   var endPointDiscoverer = new ClusterDiscoverer(
     mergedSettings.log,
     clusterSettings,
     dnsService,
-    http
+    connectionSettings.useSslConnection ? https : http
   );
   return new EventStoreNodeConnection(mergedSettings, clusterSettings, endPointDiscoverer, connectionName);
 }
