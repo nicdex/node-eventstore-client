@@ -12,8 +12,8 @@ services:
       - EVENTSTORE_HTTP_PORT=2113
       - EVENTSTORE_INT_IP=192.168.33.10
       - EVENTSTORE_EXT_IP=192.168.33.10
-      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node1/node1.crt
-      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node1/node1.key
+      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node1/node.crt
+      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node1/node.key
       - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
     ports:
       - "1113:1113"

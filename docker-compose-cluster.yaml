@@ -18,8 +18,8 @@ services:
       - EVENTSTORE_HTTP_PORT=2113
       - EVENTSTORE_INT_IP=192.168.33.10
       - EVENTSTORE_EXT_IP=192.168.33.10
-      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node1/node1.crt
-      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node1/node1.key
+      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node1/node.crt
+      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node1/node.key
       - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
     expose:
       - "1112"
@@ -56,8 +56,8 @@ services:
       - EVENTSTORE_HTTP_PORT=2113
       - EVENTSTORE_INT_IP=192.168.33.11
       - EVENTSTORE_EXT_IP=192.168.33.11
-      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node2/node2.crt
-      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node2/node2.key
+      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node2/node.crt
+      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node2/node.key
       - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
     expose:
       - "1113"
@@ -90,8 +90,8 @@ services:
       - EVENTSTORE_HTTP_PORT=2113
       - EVENTSTORE_INT_IP=192.168.33.12
       - EVENTSTORE_EXT_IP=192.168.33.12
-      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node3/node3.crt
-      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node3/node3.key
+      - EVENTSTORE_CERTIFICATE_FILE=/etc/eventstore/certs/node3/node.crt
+      - EVENTSTORE_CERTIFICATE_PRIVATE_KEY_FILE=/etc/eventstore/certs/node3/node.key
       - EVENTSTORE_TRUSTED_ROOT_CERTIFICATES_PATH=/etc/eventstore/certs/ca
     expose:
       - "1113"
