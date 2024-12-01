@@ -15,7 +15,7 @@ const eventAppeared = (subscription, event) => console.log("Event received", res
 
 const subscriptionDropped = (subscription, reason, error) => console.log("Subscription dropped", reason, error);
 
-const libeProcessingStarted = () => console.log("Live processing started.");
+const liveProcessingStarted = () => console.log("Live processing started.");
 
 const credentials = new client.UserCredentials("admin", "changeit");
 
@@ -42,7 +42,7 @@ connection.once("connected", tcpEndPoint => {
     null,
     resolveLinkTos,
     eventAppeared,
-    libeProcessingStarted,
+    liveProcessingStarted,
     subscriptionDropped,
     credentials
   );
